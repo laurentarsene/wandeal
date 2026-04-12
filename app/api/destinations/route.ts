@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { buildPrompt } from "@/lib/destinations";
-import { searchLocation, searchFlights, buildFlightSearch } from "@/lib/kiwi";
+import { cityToIATA, searchFlights } from "@/lib/flights";
 import { getWeather } from "@/lib/weather";
 import type { SearchFormData, Destination } from "@/lib/types";
 
@@ -9,7 +9,7 @@ const openai = new OpenAI({
   apiKey: process.env.AI_API_KEY || "",
 });
 
-const kiwiKey = process.env.KIWI_API_KEY || "";
+const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
 export async function POST(request: Request) {
   try {
@@ -46,14 +46,11 @@ export async function POST(request: Request) {
 
     let destinations = parsed.destinations;
 
-    // --- Step 2: Enrich with real data (Kiwi flights + Open-Meteo weather) ---
-    // Only if Kiwi API key is configured
-    const hasKiwi = kiwiKey.length > 0;
-
-    // Resolve departure city code
-    let fromCode: string | null = null;
-    if (hasKiwi && form.city.trim()) {
-      fromCode = await searchLocation(form.city, kiwiKey).catch(() => null);
+    // --- Step 2: Enrich with real data ---
+    // Resolve departure city IATA code
+    let originCode: string | null = null;
+    if (tpToken && form.city.trim()) {
+      originCode = await cityToIATA(form.city, tpToken).catch(() => null);
     }
 
     // Enrich each destination in parallel
@@ -61,30 +58,23 @@ export async function POST(request: Request) {
       destinations.map(async (dest) => {
         const enriched = { ...dest };
 
-        // --- Real flights via Kiwi ---
-        if (hasKiwi && fromCode && !dest.isLocal) {
+        // --- Real flights via Travelpayouts ---
+        if (tpToken && originCode && !dest.isLocal) {
           try {
-            const toCode = await searchLocation(dest.name, kiwiKey);
-            if (toCode) {
-              const search = buildFlightSearch(
-                fromCode,
-                toCode,
+            const destCode = await cityToIATA(dest.name, tpToken);
+            if (destCode) {
+              const flight = await searchFlights(
+                originCode,
+                destCode,
                 form.dateFrom || undefined,
                 form.dateTo || undefined,
-                form.durationEnabled ? form.duration : undefined,
-                form.travelers
+                tpToken
               );
-              const flight = await searchFlights(search, kiwiKey);
               if (flight) {
-                enriched.flightPrice = Math.round(flight.price / (form.travelers || 1));
-                enriched.nights = flight.nightsInDest || dest.nights;
+                enriched.flightPrice = flight.price;
                 enriched.totalPerPerson =
-                  enriched.flightPrice +
-                  enriched.hotelPerNight * enriched.nights;
-                // Store booking link in activities as last item
-                if (flight.deep_link) {
-                  enriched.bookingUrl = flight.deep_link;
-                }
+                  flight.price + enriched.hotelPerNight * enriched.nights;
+                enriched.bookingUrl = flight.link;
               }
             }
           } catch {
@@ -92,7 +82,7 @@ export async function POST(request: Request) {
           }
         }
 
-        // --- Real weather via Open-Meteo ---
+        // --- Real weather via Open-Meteo (free, no key) ---
         try {
           const weather = await getWeather(
             dest.name,
@@ -112,7 +102,7 @@ export async function POST(request: Request) {
       })
     );
 
-    // Re-sort by matchScore descending
+    // Sort by matchScore descending
     destinations.sort((a, b) => b.matchScore - a.matchScore);
 
     return NextResponse.json({ destinations });
