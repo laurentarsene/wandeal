@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
   MapPin,
   Users,
@@ -165,6 +166,9 @@ function SectionLabel({
 }
 
 export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
+  const t = useTranslations("form");
+  const tHero = useTranslations("hero");
+  const tPresets = useTranslations("presets");
   const [cityHint, setCityHint] = useState(false);
 
   useEffect(() => {
@@ -216,7 +220,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
       {/* Desktop presets — fixed to right edge */}
       <div className="hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-2 pr-8">
         <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#264044] mb-0.5 px-1">
-          Presets
+          {tPresets("title")}
         </p>
         {presets.map((preset) => (
           <button
@@ -241,10 +245,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         <div className="text-center mb-3 shrink-0">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
             <Sparkles size={11} />
-            Propulsé par l'IA
+            {tHero("badge")}
           </div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#111] leading-[1.15] tracking-tight">
-            Quelque part, il y a des vacances
+            {tHero("title1")}
             <br />
             <span
               style={{
@@ -253,7 +257,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              parfaites pour vous.
+              {tHero("title2")}
             </span>
           </h1>
         </div>
@@ -280,21 +284,21 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               className={`col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
               active={!!form.city}
             >
-              <SectionLabel icon={MapPin}>Départ depuis</SectionLabel>
+              <SectionLabel icon={MapPin}>{t("from")}</SectionLabel>
               <CityAutocomplete
                 value={form.city}
                 onChange={(city) => update({ city })}
               />
               {cityHint && (
                 <p className="text-[10px] text-[#264044] font-medium mt-1 animate-pulse">
-                  Indiquez votre ville pour ce preset
+                  {t("cityHint")}
                 </p>
               )}
             </BentoCard>
 
             {/* When */}
             <BentoCard className="col-span-2" active={!!form.dateFrom}>
-              <SectionLabel icon={CalendarDays}>Dates</SectionLabel>
+              <SectionLabel icon={CalendarDays}>{t("dates")}</SectionLabel>
               <DateRangePicker
                 dateFrom={form.dateFrom}
                 dateTo={form.dateTo}
@@ -304,7 +308,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Travelers */}
             <BentoCard className="col-span-1 flex flex-col" active={true}>
-              <SectionLabel icon={Users}>Voyageurs</SectionLabel>
+              <SectionLabel icon={Users}>{t("travelers")}</SectionLabel>
               <div className="flex-1 flex items-center justify-between gap-2">
                 <button
                   type="button"
@@ -320,7 +324,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     {form.travelers}
                   </span>
                   <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                    personne{form.travelers > 1 ? "s" : ""}
+                    {form.travelers > 1 ? t("persons") : t("person")}
                   </span>
                 </div>
                 <button
@@ -338,7 +342,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             {/* Budget */}
             <BentoCard className="col-span-1 flex flex-col" active={form.budgetEnabled}>
               <div className="flex items-center justify-between mb-2">
-                <SectionLabel icon={Wallet}>Budget max</SectionLabel>
+                <SectionLabel icon={Wallet}>{t("budget")}</SectionLabel>
                 <button
                   type="button"
                   onClick={() => update({ budgetEnabled: !form.budgetEnabled })}
@@ -363,12 +367,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                         {form.budget}€
                       </span>
                       <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                        max par personne
+                        {t("budgetPerPerson")}
                       </span>
                     </>
                   ) : (
                     <span className="text-sm font-medium text-[#9CA3AF] leading-snug">
-                      On cherche à tous les prix
+                      {t("budgetAll")}
                     </span>
                   )}
                 </div>
@@ -408,7 +412,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               return (
                 <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates}>
                   <div className="flex items-center justify-between mb-2">
-                    <SectionLabel icon={Clock}>Durée</SectionLabel>
+                    <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
                     {!lockedByDates && (
                       <button
                         type="button"
@@ -434,9 +438,9 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                           <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
                             {daysFromDates}
                           </span>
-                          <span className="text-lg font-bold text-[#264044] ml-1">jours</span>
+                          <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
                           <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                            défini par vos dates
+                            {t("durationLocked")}
                           </span>
                         </>
                       ) : form.durationEnabled ? (
@@ -444,14 +448,14 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                           <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
                             {form.duration}
                           </span>
-                          <span className="text-lg font-bold text-[#264044] ml-1">jours</span>
+                          <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
                           <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                            environ, +/- 3 jours
+                            {t("durationApprox")}
                           </span>
                         </>
                       ) : (
                         <span className="text-sm font-medium text-[#9CA3AF] leading-snug">
-                          Toutes les durées
+                          {t("durationAll")}
                         </span>
                       )}
                     </div>
@@ -493,17 +497,17 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Transport */}
             <BentoCard className="col-span-1 flex flex-col" active={form.transport !== null}>
-              <SectionLabel icon={Plane}>Transport</SectionLabel>
+              <SectionLabel icon={Plane}>{t("transport")}</SectionLabel>
               {form.transport === null && (
-                <p className="text-sm font-medium text-[#9CA3AF] mb-2">Tous les moyens</p>
+                <p className="text-sm font-medium text-[#9CA3AF] mb-2">{t("transportAll")}</p>
               )}
               <div className="flex-1 grid grid-cols-2 gap-1.5 content-center">
                 {(
                   [
-                    { mode: "plane" as TransportMode, icon: Plane, label: "Avion" },
-                    { mode: "train" as TransportMode, icon: TrainFront, label: "Train" },
-                    { mode: "car" as TransportMode, icon: Car, label: "Voiture" },
-                    { mode: "bike" as TransportMode, icon: Bike, label: "Vélo" },
+                    { mode: "plane" as TransportMode, icon: Plane, label: t("transportPlane") },
+                    { mode: "train" as TransportMode, icon: TrainFront, label: t("transportTrain") },
+                    { mode: "car" as TransportMode, icon: Car, label: t("transportCar") },
+                    { mode: "bike" as TransportMode, icon: Bike, label: t("transportBike") },
                   ] as const
                 ).map((opt) => (
                   <button
@@ -540,7 +544,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             className="col-span-2 lg:col-span-4 overflow-hidden"
             active={form.interests.length > 0}
           >
-            <SectionLabel icon={Sparkles}>Envies</SectionLabel>
+            <SectionLabel icon={Sparkles}>{t("interests")}</SectionLabel>
             <div className="overflow-y-auto max-h-full -mb-4 pb-4">
               <InterestChips
                 selected={form.interests}
@@ -560,7 +564,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           >
             <span className="inline-flex items-center gap-2">
               <Search size={16} />
-              Rechercher
+              {t("search")}
             </span>
           </ShimmerButton>
         </div>

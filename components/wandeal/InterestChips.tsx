@@ -13,8 +13,8 @@ import {
   TreePine,
   Building2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { InterestIcon } from "@/lib/types";
-import { interestOptions } from "@/lib/types";
 
 const iconMap: Record<InterestIcon, React.ComponentType<{ size?: number }>> = {
   sun: Sun,
@@ -30,12 +30,28 @@ const iconMap: Record<InterestIcon, React.ComponentType<{ size?: number }>> = {
   building: Building2,
 };
 
+const interests: { value: string; icon: InterestIcon; tKey: string }[] = [
+  { value: "soleil", icon: "sun", tKey: "interestSun" },
+  { value: "plage", icon: "waves", tKey: "interestBeach" },
+  { value: "ski", icon: "mountain", tKey: "interestSki" },
+  { value: "trek", icon: "footprints", tKey: "interestTrek" },
+  { value: "gastronomie", icon: "wine", tKey: "interestFood" },
+  { value: "teuf", icon: "music", tKey: "interestParty" },
+  { value: "famille", icon: "users", tKey: "interestFamily" },
+  { value: "culture", icon: "landmark", tKey: "interestCulture" },
+  { value: "detente", icon: "sparkles", tKey: "interestRelax" },
+  { value: "nature", icon: "tree-pine", tKey: "interestNature" },
+  { value: "citybreak", icon: "building", tKey: "interestCity" },
+];
+
 interface InterestChipsProps {
   selected: string[];
   onChange: (interests: string[]) => void;
 }
 
 export function InterestChips({ selected, onChange }: InterestChipsProps) {
+  const t = useTranslations("form");
+
   const toggle = (value: string) => {
     if (selected.includes(value)) {
       onChange(selected.filter((v) => v !== value));
@@ -46,7 +62,7 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
 
   return (
     <div className="flex flex-wrap gap-1.5">
-      {interestOptions.map((opt) => {
+      {interests.map((opt) => {
         const active = selected.includes(opt.value);
         const Icon = iconMap[opt.icon];
         return (
@@ -65,7 +81,7 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
             `}
           >
             <Icon size={12} />
-            <span>{opt.label}</span>
+            <span>{t(opt.tKey)}</span>
           </button>
         );
       })}

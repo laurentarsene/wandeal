@@ -9,16 +9,9 @@ import {
   Check,
   Loader2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Globe } from "@/components/ui/globe";
 import { AnimatedList } from "@/components/ui/animated-list";
-import { loadingMessages } from "@/lib/types";
-
-const steps = [
-  { label: "Analyse de vos envies", icon: Heart },
-  { label: "Vérification météo", icon: CloudSun },
-  { label: "Calcul des prix", icon: Calculator },
-  { label: "Sélection des meilleures offres", icon: Trophy },
-];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globeConfig: any = {
@@ -92,13 +85,22 @@ function StepItem({
 }
 
 export function LoadingScreen() {
+  const t = useTranslations("loading");
   const [msgIndex, setMsgIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState(0);
+
+  const messages = [t("msg1"), t("msg2"), t("msg3"), t("msg4"), t("msg5")];
+  const steps = [
+    { label: t("step1"), icon: Heart },
+    { label: t("step2"), icon: CloudSun },
+    { label: t("step3"), icon: Calculator },
+    { label: t("step4"), icon: Trophy },
+  ];
 
   // Rotate messages
   useEffect(() => {
     const interval = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % loadingMessages.length);
+      setMsgIndex((prev) => (prev + 1) % 5);
     }, 2300);
     return () => clearInterval(interval);
   }, []);
@@ -121,14 +123,14 @@ export function LoadingScreen() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm">
         <h2 className="text-2xl font-extrabold text-[#111] mb-2 text-center">
-          On cherche pour vous...
+          {t("title")}
         </h2>
 
         <p
           key={msgIndex}
           className="text-[#264044] text-sm font-medium mb-6 animate-pulse text-center"
         >
-          {loadingMessages[msgIndex]}
+          {messages[msgIndex]}
         </p>
 
         {/* Steps with AnimatedList */}

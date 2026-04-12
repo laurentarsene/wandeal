@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import {
   Plane,
   Hotel,
@@ -37,6 +38,7 @@ interface DestCardProps {
 }
 
 export function DestCard({ dest }: DestCardProps) {
+  const t = useTranslations("results");
   const [expanded, setExpanded] = useState(false);
   const theme = colorThemes[dest.colorTheme] || colorThemes.teal;
   const WeatherIc = weatherIconMap[dest.weatherIcon] || Sun;
@@ -70,11 +72,11 @@ export function DestCard({ dest }: DestCardProps) {
             >
               {dest.isLocal ? (
                 <>
-                  <Home size={12} /> Séjour local
+                  <Home size={12} /> {t("badgeLocal")}
                 </>
               ) : (
                 <>
-                  <Sparkles size={12} /> Coup de cœur
+                  <Sparkles size={12} /> {t("badgeSurprise")}
                 </>
               )}
             </span>
@@ -121,11 +123,11 @@ export function DestCard({ dest }: DestCardProps) {
         <div className="flex flex-wrap gap-2 mt-4">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
             <Plane size={13} />
-            Vol {dest.flightPrice}€
+            {t("flight", { price: dest.flightPrice })}
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
             <Hotel size={13} />
-            {dest.hotelPerNight}€/nuit
+            {t("hotel", { price: dest.hotelPerNight })}
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
             <WeatherIc size={13} />
@@ -151,7 +153,7 @@ export function DestCard({ dest }: DestCardProps) {
             className="mt-4"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-2">
-              À faire là-bas
+              {t("activities")}
             </p>
             <div className="flex flex-wrap gap-2">
               {dest.activities.map((act) => (
@@ -167,7 +169,7 @@ export function DestCard({ dest }: DestCardProps) {
             {dest.matchedInterests.length > 0 && (
               <div className="mt-3">
                 <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-2">
-                  Correspond à vos envies
+                  {t("matchedInterests")}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {dest.matchedInterests.map((interest) => (
@@ -192,11 +194,11 @@ export function DestCard({ dest }: DestCardProps) {
           >
             {expanded ? (
               <>
-                Voir moins <ChevronUp size={14} />
+                {t("seeLess")} <ChevronUp size={14} />
               </>
             ) : (
               <>
-                Voir plus <ChevronDown size={14} />
+                {t("seeMore")} <ChevronDown size={14} />
               </>
             )}
           </button>
@@ -214,7 +216,7 @@ export function DestCard({ dest }: DestCardProps) {
                 className="w-full py-2.5 text-sm font-medium"
               >
                 <span className="inline-flex items-center gap-1.5">
-                  Réserver <ExternalLink size={13} />
+                  {t("book")} <ExternalLink size={13} />
                 </span>
               </ShimmerButton>
             </a>
@@ -226,7 +228,7 @@ export function DestCard({ dest }: DestCardProps) {
               className="flex-1 py-2.5 text-sm font-medium"
             >
               <span className="inline-flex items-center gap-1.5">
-                Voir les vols <ExternalLink size={13} />
+                {t("seeFlights")} <ExternalLink size={13} />
               </span>
             </ShimmerButton>
           )}

@@ -3,10 +3,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import { DayPicker } from "react-day-picker";
-import { fr } from "date-fns/locale";
+import { fr, enUS, it, pt, es, de, nl } from "date-fns/locale";
 import { format } from "date-fns";
 import "react-day-picker/style.css";
+
+const dateFnsLocales: Record<string, typeof fr> = { fr, en: enUS, it, pt, es, de, nl, hi: enUS };
 
 interface DateRangePickerProps {
   dateFrom: string;
@@ -32,6 +35,9 @@ export function DateRangePicker({
   dateTo,
   onChange,
 }: DateRangePickerProps) {
+  const t = useTranslations("form");
+  const locale = useLocale();
+  const dfLocale = dateFnsLocales[locale] || fr;
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -150,13 +156,13 @@ export function DateRangePicker({
   let label: string;
   let sublabel: string | null = null;
   if (from && to) {
-    label = `${format(from, "d MMM", { locale: fr })} → ${format(to, "d MMM yyyy", { locale: fr })}`;
+    label = t("datesRange", { from: format(from, "d MMM", { locale: dfLocale }), to: format(to, "d MMM yyyy", { locale: dfLocale }) });
   } else if (from) {
-    label = `Départ le ${format(from, "d MMM yyyy", { locale: fr })}`;
-    sublabel = "Retour flexible";
+    label = t("datesDeparture", { date: format(from, "d MMM yyyy", { locale: dfLocale }) });
+    sublabel = t("datesFlexible");
   } else {
-    label = "Je ne sais pas encore";
-    sublabel = "Pas de souci, on s'adapte";
+    label = t("datesEmpty");
+    sublabel = t("datesEmptySub");
   }
 
   // Build modifiers for the calendar
@@ -213,7 +219,7 @@ export function DateRangePicker({
           >
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-semibold text-[#111]">
-                Choisissez vos dates
+                {t("datesCalendarTitle")}
               </p>
               <div className="flex items-center gap-3">
                 {(internalRange.from || hasAnyDate) && (
@@ -222,7 +228,7 @@ export function DateRangePicker({
                     onClick={clear}
                     className="text-xs text-[#264044] font-medium hover:underline cursor-pointer"
                   >
-                    Effacer
+                    {t("datesCalendarClear")}
                   </button>
                 )}
                 <button
@@ -230,21 +236,21 @@ export function DateRangePicker({
                   onClick={closePanel}
                   className="text-xs text-[#6B7280] font-medium hover:underline cursor-pointer"
                 >
-                  Fermer
+                  {t("datesCalendarClose")}
                 </button>
               </div>
             </div>
             <p className="text-[11px] text-[#9CA3AF] mb-3">
               {internalRange.from && !internalRange.to
-                ? "Cliquez sur une date de retour, ou fermez pour un retour flexible"
-                : "Cliquez sur un départ, puis un retour — ou juste un départ"}
+                ? t("datesCalendarHintReturn")
+                : t("datesCalendarHint")}
             </p>
             <DayPicker
               mode="single"
               selected={selected as Date | undefined}
               onDayClick={handleDayClick}
               numberOfMonths={2}
-              locale={fr}
+              locale={dfLocale}
               disabled={{ before: new Date() }}
               modifiers={{
                 range_start: internalRange.from ? [internalRange.from] : [],
