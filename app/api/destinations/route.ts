@@ -11,48 +11,39 @@ const openai = new OpenAI({
 
 const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
-// Generate a unique photo URL per destination using Wikimedia Commons
+// Get the main Wikipedia photo for a city — free, no API key, relevant results
 async function getPhotoUrl(cityName: string, country: string): Promise<string> {
-  // Try Wikimedia Commons API — free, no key, has photos for almost every city
-  try {
-    const query = `${cityName} ${country} city`;
-    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=images&titles=${encodeURIComponent(query)}&gimlimit=1&prop=imageinfo&iiprop=url&iiurlwidth=800&format=json&origin=*`;
-    const res = await fetch(url);
-    if (res.ok) {
+  const queries = [cityName, `${cityName} ${country}`];
+
+  for (const q of queries) {
+    try {
+      const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(q)}&prop=pageimages&pithumbsize=800&format=json`;
+      const res = await fetch(url);
+      if (!res.ok) continue;
       const data = await res.json();
       const pages = data?.query?.pages;
-      if (pages) {
-        const first = Object.values(pages)[0] as { imageinfo?: { thumburl?: string }[] };
-        const thumb = first?.imageinfo?.[0]?.thumburl;
-        if (thumb) return thumb;
-      }
+      if (!pages) continue;
+      const page = Object.values(pages)[0] as { thumbnail?: { source?: string } };
+      if (page?.thumbnail?.source) return page.thumbnail.source;
+    } catch {
+      // try next query
     }
-  } catch {
-    // fallback
   }
 
-  // Fallback: Unsplash with a hash-based photo ID for variety
-  const travelPhotos = [
+  // Fallback: generic travel photo based on city name hash
+  const fallbacks = [
     "1500835556837-99ac94a94552",
     "1488085061387-422e29b40080",
     "1507525428034-b723cf961d3e",
-    "1476514525535-07fb3b4a6e8a",
     "1502602898657-3e91760cbb34",
     "1523906834658-6e24ef2386f9",
-    "1530789253388-582c481c54b0",
     "1469854523086-cc02fe5d8800",
-    "1504150558240-0b4fd8946624",
-    "1528164344705-47542687000d",
-    "1519046904884-53103b34b206",
-    "1501785888108-ce5a2d6ecf62",
   ];
-  // Hash city name to pick a consistent but unique photo
   let hash = 0;
   for (let i = 0; i < cityName.length; i++) {
     hash = ((hash << 5) - hash + cityName.charCodeAt(i)) | 0;
   }
-  const idx = Math.abs(hash) % travelPhotos.length;
-  return `https://images.unsplash.com/photo-${travelPhotos[idx]}?w=800&h=500&fit=crop&q=80`;
+  return `https://images.unsplash.com/photo-${fallbacks[Math.abs(hash) % fallbacks.length]}?w=800&h=500&fit=crop&q=80`;
 }
 
 export async function POST(request: Request) {
@@ -92,35 +83,80 @@ export async function POST(request: Request) {
 
     // --- Step 2: Enrich with real data + photos ---
     let originCode: string | null = null;
-    if (tpToken && form.city.trim()) {
-      originCode = await cityToIATA(form.city, tpToken).catch(() => null);
+    if (form.city.trim()) {
+      originCode = await cityToIATA(form.city).catch(() => null);
     }
 
     destinations = await Promise.all(
       destinations.map(async (dest) => {
         const enriched = { ...dest };
 
+        // --- Dates ---
+        if (form.dateFrom && form.dateTo) {
+          // User picked both dates → use them
+          enriched.dateFrom = form.dateFrom;
+          enriched.dateTo = form.dateTo;
+          // Recalculate nights from the chosen dates
+          const msPerDay = 86400000;
+          const diff = Math.round((new Date(form.dateTo).getTime() - new Date(form.dateFrom).getTime()) / msPerDay);
+          if (diff > 0) enriched.nights = diff;
+        } else if (form.dateFrom && !form.dateTo) {
+          // Only departure → compute dateTo from nights
+          enriched.dateFrom = form.dateFrom;
+          const d = new Date(form.dateFrom);
+          d.setDate(d.getDate() + (enriched.nights || 5));
+          enriched.dateTo = d.toISOString().slice(0, 10);
+        }
+        // else: AI-suggested dates (dateFrom/dateTo already in LLM response)
+
+        // Fix missing or past dates (AI often suggests dates in the past)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const needsFix = !enriched.dateFrom || !enriched.dateTo
+          || new Date(enriched.dateFrom) < today;
+
+        if (needsFix) {
+          // Keep the same month/day but shift to the next occurrence in the future
+          let start: Date;
+          if (enriched.dateFrom) {
+            start = new Date(enriched.dateFrom);
+            while (start < today) start.setFullYear(start.getFullYear() + 1);
+          } else {
+            start = new Date();
+            start.setDate(start.getDate() + 30);
+          }
+          enriched.dateFrom = start.toISOString().slice(0, 10);
+          const end = new Date(start);
+          end.setDate(end.getDate() + (enriched.nights || 5));
+          enriched.dateTo = end.toISOString().slice(0, 10);
+        }
+
         // --- Photo ---
         enriched.photoUrl = await getPhotoUrl(dest.name, dest.country);
 
-        // --- Real flights via Travelpayouts ---
-        if (tpToken && originCode && !dest.isLocal) {
+        // --- IATA codes (always resolve for Skyscanner links) ---
+        if (originCode) enriched.originIata = originCode;
+        try {
+          const destCode = await cityToIATA(dest.name);
+          if (destCode) enriched.destIata = destCode;
+        } catch {
+          // Keep without IATA
+        }
+
+        // --- Real flights via Travelpayouts (optional, needs token) ---
+        if (tpToken && originCode && enriched.destIata && !dest.isLocal) {
           try {
-            const destCode = await cityToIATA(dest.name, tpToken);
-            if (destCode) {
-              const flight = await searchFlights(
-                originCode,
-                destCode,
-                form.dateFrom || undefined,
-                form.dateTo || undefined,
-                tpToken
-              );
-              if (flight) {
-                enriched.flightPrice = flight.price;
-                enriched.totalPerPerson =
-                  flight.price + enriched.hotelPerNight * enriched.nights;
-                enriched.bookingUrl = flight.link;
-              }
+            const flight = await searchFlights(
+              originCode,
+              enriched.destIata,
+              enriched.dateFrom || undefined,
+              enriched.dateTo || undefined,
+              tpToken
+            );
+            if (flight) {
+              enriched.flightPrice = flight.price;
+              enriched.totalPerPerson =
+                flight.price + enriched.hotelPerNight * enriched.nights;
             }
           } catch {
             // Keep LLM estimate
@@ -133,12 +169,12 @@ export async function POST(request: Request) {
           enriched.totalPerPerson = enriched.hotelPerNight * enriched.nights;
         }
 
-        // --- Real weather via Open-Meteo ---
+        // --- Real weather via Open-Meteo (use per-destination dates) ---
         try {
           const weather = await getWeather(
             dest.name,
-            form.dateFrom || undefined,
-            form.dateTo || undefined
+            enriched.dateFrom || undefined,
+            enriched.dateTo || undefined
           );
           if (weather) {
             enriched.tempMin = weather.tempMin;

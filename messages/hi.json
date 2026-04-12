@@ -5,7 +5,8 @@
   "hero": {
     "badge": "AI द्वारा संचालित",
     "title1": "कहीं न कहीं, आपके लिए एक",
-    "title2": "बेहतरीन छुट्टी इंतज़ार कर रही है।"
+    "title2": "बेहतरीन छुट्टी इंतज़ार कर रही है।",
+    "madeIn": "Made in Belgium, between two rain showers."
   },
   "form": {
     "from": "प्रस्थान",
@@ -38,6 +39,15 @@
     "transportTrain": "ट्रेन",
     "transportCar": "कार",
     "transportBike": "साइकिल",
+    "accommodation": "आवास",
+    "accommodationAll": "सभी प्रकार",
+    "accHotel": "होटल",
+    "accHostel": "हॉस्टल",
+    "accAirbnb": "Airbnb",
+    "accCamping": "कैंपिंग",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "रुचियां",
     "interestSun": "धूप",
     "interestBeach": "समुद्र तट",
@@ -63,6 +73,11 @@
     "interestFestival": "त्योहार",
     "interestBackpacker": "बैकपैकर",
     "search": "खोजें",
+    "dateWeekend": "सप्ताहांत",
+    "dateHolidaysWB": "छुट्टियां WB/BXL",
+    "dateHolidaysFL": "छुट्टियां फ़्लैंडर्स",
+    "dateOffHolidays": "छुट्टियों के बाहर",
+    "dateBridge": "सार्वजनिक अवकाश",
     "cityHint": "इस चयन के लिए अपना शहर दर्ज करें"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "सबसे सस्ता",
     "filterLocal": "पास में",
     "filterFav": "छुपा रत्न",
+    "estimate": "/ व्यक्ति अनुमानित",
+    "perNight": "रात",
     "perPerson": "/ व्यक्ति अनु.",
     "flight": "उड़ान {price}€",
     "hotel": "{price}€/रात",
@@ -106,6 +123,8 @@
     "book": "बुक करें",
     "seeFlights": "उड़ानें देखें",
     "badgeLocal": "पास में",
-    "badgeSurprise": "छुपा रत्न"
+    "badgeSurprise": "छुपा रत्न",
+    "favoritesTitle": "मेरे पसंदीदा ({count})",
+    "noFavorites": "अभी कोई पसंदीदा नहीं — किसी गंतव्य पर दिल पर टैप करें"
   }
 }

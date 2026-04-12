@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Propulsé par l'IA",
     "title1": "Quelque part, il y a des vacances",
-    "title2": "parfaites pour vous."
+    "title2": "parfaites pour vous.",
+    "madeIn": "Fait en Belgique, entre deux averses."
   },
   "form": {
     "from": "Départ depuis",
@@ -38,6 +39,15 @@
     "transportTrain": "Train",
     "transportCar": "Voiture",
     "transportBike": "Vélo",
+    "accommodation": "Logement",
+    "accommodationAll": "Tous types",
+    "accHotel": "Hotel",
+    "accHostel": "Auberge",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Envies",
     "interestSun": "Soleil",
     "interestBeach": "Plage",
@@ -63,6 +73,11 @@
     "interestFestival": "Festivals",
     "interestBackpacker": "Backpacker",
     "search": "Rechercher",
+    "dateWeekend": "Weekend",
+    "dateHolidaysWB": "Vacances WB/BXL",
+    "dateHolidaysFL": "Vacances Flandre",
+    "dateOffHolidays": "Hors vacances",
+    "dateBridge": "Jour férié / pont",
     "cityHint": "Indiquez votre ville pour ce preset"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Moins cher",
     "filterLocal": "Séjour local",
     "filterFav": "Coup de cœur",
+    "estimate": "/ pers. estimation",
+    "perNight": "nuit",
     "perPerson": "/ pers. est.",
     "flight": "Vol {price}€",
     "hotel": "{price}€/nuit",
@@ -106,6 +123,8 @@
     "book": "Réserver",
     "seeFlights": "Voir les vols",
     "badgeLocal": "Séjour local",
-    "badgeSurprise": "Coup de cœur"
+    "badgeSurprise": "Coup de cœur",
+    "favoritesTitle": "Mes favoris ({count})",
+    "noFavorites": "Aucun favori pour l'instant — likez une destination avec le cœur"
   }
 }

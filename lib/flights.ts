@@ -48,12 +48,10 @@ export async function searchFlights(
   };
 }
 
-// Resolve city name to IATA code using Travelpayouts
+// Resolve city name to IATA code — free API, no token needed
 export async function cityToIATA(
   cityName: string,
-  token: string
 ): Promise<string | null> {
-  // Use autocomplete API
   const res = await fetch(
     `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(cityName)}&locale=fr&types[]=city`
   );

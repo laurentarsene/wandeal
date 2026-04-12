@@ -1,19 +1,26 @@
 "use client";
 
+import { useState } from "react";
 import { Star, Coins, Home, Heart } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { DestCard } from "./DestCard";
 import type { Destination, SearchFormData } from "@/lib/types";
 
+type Filter = "match" | "cheap" | "local" | "fav";
+
 interface ResultsGridProps {
   results: Destination[];
   form: SearchFormData;
+  favorites: Destination[];
+  isFavorite: (dest: Destination) => boolean;
+  onToggleFavorite: (dest: Destination) => void;
 }
 
-export function ResultsGrid({ results, form }: ResultsGridProps) {
+export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavorite }: ResultsGridProps) {
   const t = useTranslations("results");
   const locale = useLocale();
+  const [filter, setFilter] = useState<Filter>("match");
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return "";
@@ -21,17 +28,33 @@ export function ResultsGrid({ results, form }: ResultsGridProps) {
     return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
   };
 
-  const filterPills = [
-    { label: t("filterMatch"), icon: Star },
-    { label: t("filterCheap"), icon: Coins },
-    { label: t("filterLocal"), icon: Home },
-    { label: t("filterFav"), icon: Heart },
+  const filterPills: { key: Filter; label: string; icon: typeof Star }[] = [
+    { key: "match", label: t("filterMatch"), icon: Star },
+    { key: "cheap", label: t("filterCheap"), icon: Coins },
+    { key: "local", label: t("filterLocal"), icon: Home },
+    { key: "fav", label: t("filterFav"), icon: Heart },
   ];
+
+  const filtered = (() => {
+    switch (filter) {
+      case "cheap":
+        return [...results].sort((a, b) => a.totalPerPerson - b.totalPerPerson);
+      case "local":
+        return results.filter((d) => d.isLocal);
+      case "fav":
+        return favorites;
+      case "match":
+      default:
+        return [...results].sort((a, b) => b.matchScore - a.matchScore);
+    }
+  })();
 
   const dateRange =
     form.dateFrom && form.dateTo
       ? `${formatDate(form.dateFrom)} → ${formatDate(form.dateTo)}`
       : t("flexible");
+
+  const favCount = favorites.length;
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6">
@@ -44,7 +67,7 @@ export function ResultsGrid({ results, form }: ResultsGridProps) {
             {form.durationEnabled ? ` · ~${form.duration}j` : ""}
           </p>
           <p className="text-sm font-bold text-[#264044]">
-            {t("destinations", { count: results.length })}
+            {t("destinations", { count: filtered.length })}
           </p>
         </div>
       </BlurFade>
@@ -52,29 +75,50 @@ export function ResultsGrid({ results, form }: ResultsGridProps) {
       {/* Filter pills */}
       <BlurFade delay={0.06}>
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
-          {filterPills.map((pill, i) => (
-            <button
-              key={pill.label}
-              className={`
-                shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer
-                ${i === 0 ? "bg-[#264044] text-white" : "bg-white text-[#4B5563] border border-[#E5E7EB] hover:border-[#D1D5DB]"}
-              `}
-            >
-              <pill.icon size={14} />
-              {pill.label}
-            </button>
-          ))}
+          {filterPills.map((pill) => {
+            const active = filter === pill.key;
+            const showCount = pill.key === "fav" && favCount > 0;
+            return (
+              <button
+                key={pill.key}
+                onClick={() => setFilter(pill.key)}
+                className={`
+                  shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer
+                  ${active ? "bg-[#264044] text-white" : "bg-white text-[#4B5563] border border-[#E5E7EB] hover:border-[#D1D5DB]"}
+                `}
+              >
+                <pill.icon size={14} className={pill.key === "fav" && active ? "fill-red-400 text-red-400" : ""} />
+                {pill.label}
+                {showCount && (
+                  <span className={`text-xs ${active ? "text-white/70" : "text-[#9CA3AF]"}`}>
+                    {favCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </BlurFade>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {results.map((dest, idx) => (
-          <BlurFade key={`${dest.name}-${dest.country}`} delay={idx * 0.06}>
-            <DestCard dest={dest} />
-          </BlurFade>
-        ))}
-      </div>
+      {filtered.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filtered.map((dest, idx) => (
+            <BlurFade key={`${dest.name}-${dest.country}`} delay={idx * 0.06}>
+              <DestCard
+                dest={dest}
+                isFavorite={isFavorite(dest)}
+                onToggleFavorite={onToggleFavorite}
+              />
+            </BlurFade>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-16">
+          <Heart size={32} className="mx-auto mb-3 text-[#D1D5DB]" />
+          <p className="text-sm text-[#9CA3AF]">{t("noFavorites")}</p>
+        </div>
+      )}
     </div>
   );
 }

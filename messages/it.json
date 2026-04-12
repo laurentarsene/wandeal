@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Powered by AI",
     "title1": "Da qualche parte c'e' la",
-    "title2": "vacanza perfetta per te."
+    "title2": "vacanza perfetta per te.",
+    "madeIn": "Fatto in Belgio, tra due acquazzoni."
   },
   "form": {
     "from": "Partenza da",
@@ -38,6 +39,15 @@
     "transportTrain": "Treno",
     "transportCar": "Auto",
     "transportBike": "Bici",
+    "accommodation": "Alloggio",
+    "accommodationAll": "Tutti i tipi",
+    "accHotel": "Hotel",
+    "accHostel": "Ostello",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Interessi",
     "interestSun": "Sole",
     "interestBeach": "Spiaggia",
@@ -63,6 +73,11 @@
     "interestFestival": "Festival",
     "interestBackpacker": "Zaino in spalla",
     "search": "Cerca",
+    "dateWeekend": "Weekend",
+    "dateHolidaysWB": "Vacanze WB/BXL",
+    "dateHolidaysFL": "Vacanze Fiandre",
+    "dateOffHolidays": "Fuori vacanze",
+    "dateBridge": "Ponte festivo",
     "cityHint": "Inserisci la tua citta' per questa selezione"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Piu' economici",
     "filterLocal": "Vicino a te",
     "filterFav": "Perla nascosta",
+    "estimate": "/ pers. stimato",
+    "perNight": "notte",
     "perPerson": "/ pers. stima",
     "flight": "Volo {price}€",
     "hotel": "{price}€/notte",
@@ -106,6 +123,8 @@
     "book": "Prenota",
     "seeFlights": "Vedi i voli",
     "badgeLocal": "Vicino a te",
-    "badgeSurprise": "Perla nascosta"
+    "badgeSurprise": "Perla nascosta",
+    "favoritesTitle": "I miei preferiti ({count})",
+    "noFavorites": "Nessun preferito — tocca il cuore su una destinazione"
   }
 }

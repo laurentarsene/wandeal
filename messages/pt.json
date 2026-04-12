@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Powered by AI",
     "title1": "Em algum lugar, existe umas",
-    "title2": "ferias perfeitas para si."
+    "title2": "ferias perfeitas para si.",
+    "madeIn": "Feito na Belgica, entre dois aguaceiros."
   },
   "form": {
     "from": "Partida de",
@@ -38,6 +39,15 @@
     "transportTrain": "Comboio",
     "transportCar": "Carro",
     "transportBike": "Bicicleta",
+    "accommodation": "Alojamento",
+    "accommodationAll": "Todos os tipos",
+    "accHotel": "Hotel",
+    "accHostel": "Hostel",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Interesses",
     "interestSun": "Sol",
     "interestBeach": "Praia",
@@ -63,6 +73,11 @@
     "interestFestival": "Festivais",
     "interestBackpacker": "Mochileiro",
     "search": "Pesquisar",
+    "dateWeekend": "Fim de semana",
+    "dateHolidaysWB": "Ferias WB/BXL",
+    "dateHolidaysFL": "Ferias Flandres",
+    "dateOffHolidays": "Fora de ferias",
+    "dateBridge": "Feriado / ponte",
     "cityHint": "Introduza a sua cidade para esta selecao"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Mais baratos",
     "filterLocal": "Perto de si",
     "filterFav": "Tesouro escondido",
+    "estimate": "/ pers. estimativa",
+    "perNight": "noite",
     "perPerson": "/ pers. est.",
     "flight": "Voo {price}€",
     "hotel": "{price}€/noite",
@@ -106,6 +123,8 @@
     "book": "Reservar",
     "seeFlights": "Ver voos",
     "badgeLocal": "Perto de si",
-    "badgeSurprise": "Tesouro escondido"
+    "badgeSurprise": "Tesouro escondido",
+    "favoritesTitle": "Meus favoritos ({count})",
+    "noFavorites": "Sem favoritos — toque no coracao de um destino"
   }
 }

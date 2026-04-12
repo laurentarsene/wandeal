@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Powered by AI",
     "title1": "Irgendwo wartet der perfekte",
-    "title2": "Urlaub auf dich."
+    "title2": "Urlaub auf dich.",
+    "madeIn": "Made in Belgium, zwischen zwei Regenschauern."
   },
   "form": {
     "from": "Abflug von",
@@ -38,6 +39,15 @@
     "transportTrain": "Zug",
     "transportCar": "Auto",
     "transportBike": "Fahrrad",
+    "accommodation": "Unterkunft",
+    "accommodationAll": "Alle Arten",
+    "accHotel": "Hotel",
+    "accHostel": "Hostel",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Interessen",
     "interestSun": "Sonne",
     "interestBeach": "Strand",
@@ -63,6 +73,11 @@
     "interestFestival": "Festivals",
     "interestBackpacker": "Backpacker",
     "search": "Suchen",
+    "dateWeekend": "Wochenende",
+    "dateHolidaysWB": "Ferien WB/BXL",
+    "dateHolidaysFL": "Ferien Flandern",
+    "dateOffHolidays": "Nebensaison",
+    "dateBridge": "Brueckentag",
     "cityHint": "Gib deine Stadt fuer diese Auswahl ein"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Guenstigste",
     "filterLocal": "In der Naehe",
     "filterFav": "Geheimtipp",
+    "estimate": "/ Pers. geschaetzt",
+    "perNight": "Nacht",
     "perPerson": "/ Pers. ca.",
     "flight": "Flug {price}€",
     "hotel": "{price}€/Nacht",
@@ -106,6 +123,8 @@
     "book": "Buchen",
     "seeFlights": "Fluege ansehen",
     "badgeLocal": "In der Naehe",
-    "badgeSurprise": "Geheimtipp"
+    "badgeSurprise": "Geheimtipp",
+    "favoritesTitle": "Meine Favoriten ({count})",
+    "noFavorites": "Noch keine Favoriten — tippe auf das Herz bei einem Reiseziel"
   }
 }

@@ -22,12 +22,16 @@ import {
   TrainFront,
   Car,
   Bike,
+  Hotel,
+  BedDouble,
+  Home,
+  Tent,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { InterestChips } from "./InterestChips";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { DateRangePicker } from "./DateRangePicker";
-import type { SearchFormData, TransportMode } from "@/lib/types";
+import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraint } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 
 interface Preset {
@@ -136,7 +140,7 @@ function BentoCard({
   return (
     <div
       className={`
-        relative rounded-xl p-4 transition-all duration-300 transform-gpu h-full
+        relative rounded-xl p-4 transition-all duration-300 transform-gpu h-full min-h-[120px]
         ${
           active
             ? "bg-[#f6fafa] [box-shadow:0_0_0_1px_rgba(38,64,68,0.15),0_2px_8px_rgba(38,64,68,0.08)]"
@@ -182,10 +186,24 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
   const daysFromDates = daysBetween(form.dateFrom, form.dateTo);
 
   const handleDatesChange = (dateFrom: string, dateTo: string) => {
-    const newForm = { ...form, dateFrom, dateTo };
+    const newForm = { ...form, dateFrom, dateTo, dateConstraint: "any" as DateConstraint };
     const days = daysBetween(dateFrom, dateTo);
     if (days) {
       newForm.duration = days;
+      newForm.durationEnabled = true;
+    }
+    onChange(newForm);
+  };
+
+  const handleConstraintChange = (key: DateConstraint) => {
+    const active = form.dateConstraint === key;
+    const next = active ? "any" : key;
+    const newForm = { ...form, dateConstraint: next, dateFrom: "", dateTo: "" };
+    if (next === "weekend") {
+      newForm.duration = 2;
+      newForm.durationEnabled = true;
+    } else if (next === "bridge") {
+      newForm.duration = 4;
       newForm.durationEnabled = true;
     }
     onChange(newForm);
@@ -262,6 +280,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               {tHero("title2")}
             </span>
           </h1>
+          <p className="text-[11px] text-[#9CA3AF] mt-2">{tHero("madeIn")}</p>
         </div>
 
         {/* Mobile presets — horizontal scroll with fade edges */}
@@ -306,13 +325,42 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </BentoCard>
 
             {/* When */}
-            <BentoCard className="col-span-2" active={!!form.dateFrom}>
+            <BentoCard className="col-span-2" active={!!form.dateFrom || form.dateConstraint !== "any"}>
               <SectionLabel icon={CalendarDays}>{t("dates")}</SectionLabel>
               <DateRangePicker
                 dateFrom={form.dateFrom}
                 dateTo={form.dateTo}
                 onChange={handleDatesChange}
               />
+              {!form.dateFrom && (
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
+                  {([
+                    { key: "weekend" as DateConstraint, label: t("dateWeekend") },
+                    { key: "holidays-wb" as DateConstraint, label: t("dateHolidaysWB") },
+                    { key: "holidays-fl" as DateConstraint, label: t("dateHolidaysFL") },
+                    { key: "off-holidays" as DateConstraint, label: t("dateOffHolidays") },
+                  { key: "bridge" as DateConstraint, label: t("dateBridge") },
+                  ]).map((chip) => {
+                    const active = form.dateConstraint === chip.key;
+                    return (
+                      <button
+                        key={chip.key}
+                        type="button"
+                        onClick={() => handleConstraintChange(chip.key)}
+                        className={`
+                          px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer
+                          ${active
+                            ? "bg-[#264044] text-white"
+                            : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
+                          }
+                        `}
+                      >
+                        {chip.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </BentoCard>
 
             {/* Travelers */}
@@ -417,9 +465,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Duration */}
             {(() => {
-              const lockedByDates = !!daysFromDates;
+              const lockedByConstraint = form.dateConstraint === "weekend" || form.dateConstraint === "bridge";
+              const lockedByDates = !!daysFromDates || lockedByConstraint;
               return (
-                <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates}>
+                <BentoCard className="col-span-1 lg:col-span-2 flex flex-col" active={form.durationEnabled || lockedByDates}>
                   <div className="flex items-center justify-between mb-2">
                     <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
                     {!lockedByDates && (
@@ -445,11 +494,11 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       {lockedByDates ? (
                         <>
                           <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
-                            {daysFromDates}
+                            {form.dateConstraint === "weekend" ? "2-3" : form.dateConstraint === "bridge" ? "3-4" : daysFromDates}
                           </span>
                           <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
                           <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                            {t("durationLocked")}
+                            {lockedByConstraint ? t(form.dateConstraint === "weekend" ? "dateWeekend" : "dateBridge") : t("durationLocked")}
                           </span>
                         </>
                       ) : form.durationEnabled ? (
@@ -505,12 +554,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             })()}
 
             {/* Transport */}
-            <BentoCard className="col-span-1 flex flex-col" active={form.transport.length > 0}>
+            <BentoCard className="col-span-1 lg:col-span-2 flex flex-col" active={form.transport.length > 0}>
               <SectionLabel icon={Plane}>{t("transport")}</SectionLabel>
               {form.transport.length === 0 && (
                 <p className="text-sm font-medium text-[#9CA3AF] mb-2">{t("transportAll")}</p>
               )}
-              <div className="flex-1 grid grid-cols-2 gap-1.5 content-center">
+              <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-1.5 content-center">
                 {(
                   [
                     { mode: "plane" as TransportMode, icon: Plane, label: t("transportPlane") },
@@ -548,6 +597,75 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     <opt.icon size={14} />
                     {opt.label}
                   </button>
+                  );
+                })}
+              </div>
+            </BentoCard>
+
+            {/* Accommodation */}
+            <BentoCard className="col-span-2 lg:col-span-2 flex flex-col" active={form.accommodation.length > 0 || form.comfort !== "standard"}>
+              <SectionLabel icon={BedDouble}>{t("accommodation")}</SectionLabel>
+              {form.accommodation.length === 0 && (
+                <p className="text-sm font-medium text-[#9CA3AF] mb-1.5">{t("accommodationAll")}</p>
+              )}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 mb-2.5">
+                {(
+                  [
+                    { mode: "hotel" as AccommodationType, icon: Hotel, label: t("accHotel") },
+                    { mode: "hostel" as AccommodationType, icon: BedDouble, label: t("accHostel") },
+                    { mode: "airbnb" as AccommodationType, icon: Home, label: t("accAirbnb") },
+                    { mode: "camping" as AccommodationType, icon: Tent, label: t("accCamping") },
+                  ] as const
+                ).map((opt) => {
+                  const isSelected = form.accommodation.includes(opt.mode);
+                  return (
+                    <button
+                      key={opt.mode}
+                      type="button"
+                      onClick={() => {
+                        const next = isSelected
+                          ? form.accommodation.filter((m) => m !== opt.mode)
+                          : [...form.accommodation, opt.mode];
+                        update({ accommodation: next });
+                      }}
+                      className={`
+                        flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold transition-all cursor-pointer
+                        ${isSelected
+                          ? "bg-[#264044] text-white"
+                          : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
+                        }
+                      `}
+                    >
+                      <opt.icon size={13} />
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="flex gap-1.5">
+                {(
+                  [
+                    { level: "budget" as ComfortLevel, label: t("comfortBudget") },
+                    { level: "standard" as ComfortLevel, label: t("comfortStandard") },
+                    { level: "premium" as ComfortLevel, label: t("comfortPremium") },
+                  ] as const
+                ).map((opt) => {
+                  const isActive = form.comfort === opt.level;
+                  return (
+                    <button
+                      key={opt.level}
+                      type="button"
+                      onClick={() => update({ comfort: opt.level })}
+                      className={`
+                        flex-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer text-center
+                        ${isActive
+                          ? "bg-[#264044] text-white"
+                          : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
+                        }
+                      `}
+                    >
+                      {opt.label}
+                    </button>
                   );
                 })}
               </div>

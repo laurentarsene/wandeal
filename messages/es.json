@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Powered by AI",
     "title1": "En algun lugar, hay unas",
-    "title2": "vacaciones perfectas para ti."
+    "title2": "vacaciones perfectas para ti.",
+    "madeIn": "Hecho en Belgica, entre dos chaparrones."
   },
   "form": {
     "from": "Salida desde",
@@ -38,6 +39,15 @@
     "transportTrain": "Tren",
     "transportCar": "Coche",
     "transportBike": "Bicicleta",
+    "accommodation": "Alojamiento",
+    "accommodationAll": "Todos los tipos",
+    "accHotel": "Hotel",
+    "accHostel": "Hostal",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Intereses",
     "interestSun": "Sol",
     "interestBeach": "Playa",
@@ -63,6 +73,11 @@
     "interestFestival": "Festivales",
     "interestBackpacker": "Mochilero",
     "search": "Buscar",
+    "dateWeekend": "Fin de semana",
+    "dateHolidaysWB": "Vacaciones WB/BXL",
+    "dateHolidaysFL": "Vacaciones Flandes",
+    "dateOffHolidays": "Fuera de vacaciones",
+    "dateBridge": "Puente festivo",
     "cityHint": "Introduce tu ciudad para esta seleccion"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Mas baratos",
     "filterLocal": "Cerca de ti",
     "filterFav": "Joya oculta",
+    "estimate": "/ pers. estimado",
+    "perNight": "noche",
     "perPerson": "/ pers. est.",
     "flight": "Vuelo {price}€",
     "hotel": "{price}€/noche",
@@ -106,6 +123,8 @@
     "book": "Reservar",
     "seeFlights": "Ver vuelos",
     "badgeLocal": "Cerca de ti",
-    "badgeSurprise": "Joya oculta"
+    "badgeSurprise": "Joya oculta",
+    "favoritesTitle": "Mis favoritos ({count})",
+    "noFavorites": "Sin favoritos por ahora — toca el corazon en un destino"
   }
 }

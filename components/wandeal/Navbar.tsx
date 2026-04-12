@@ -1,21 +1,24 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface NavbarProps {
   showBack: boolean;
   onBack: () => void;
+  favCount?: number;
+  onFavorites?: () => void;
 }
 
-export function Navbar({ showBack, onBack }: NavbarProps) {
+export function Navbar({ showBack, onBack, favCount = 0, onFavorites }: NavbarProps) {
   const t = useTranslations("nav");
 
   return (
     <nav className="sticky top-0 z-50 h-16 flex items-center justify-between px-6 backdrop-blur-md bg-white/80 border-b border-[#E5E7EB]/50">
       <span
-        className="font-extrabold text-2xl tracking-tight"
+        className="font-extrabold text-2xl tracking-tight cursor-pointer"
+        onClick={showBack ? onBack : undefined}
         style={{
           background: "linear-gradient(135deg, #264044, #3a6068)",
           WebkitBackgroundClip: "text",
@@ -28,6 +31,17 @@ export function Navbar({ showBack, onBack }: NavbarProps) {
 
       <div className="flex items-center gap-2">
         <LanguageSwitcher />
+        {onFavorites && favCount > 0 && (
+          <button
+            onClick={onFavorites}
+            className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
+          >
+            <Heart size={16} className="fill-red-500 text-red-500" />
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center px-1 rounded-full bg-[#264044] text-white text-[10px] font-bold">
+              {favCount}
+            </span>
+          </button>
+        )}
         {showBack && (
           <button
             onClick={onBack}

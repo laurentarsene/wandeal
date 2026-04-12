@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Powered by AI",
     "title1": "Somewhere, there's a perfect",
-    "title2": "vacation for you."
+    "title2": "vacation for you.",
+    "madeIn": "Made in Belgium, between two rain showers."
   },
   "form": {
     "from": "Departing from",
@@ -38,6 +39,15 @@
     "transportTrain": "Train",
     "transportCar": "Car",
     "transportBike": "Bike",
+    "accommodation": "Stay",
+    "accommodationAll": "Any type",
+    "accHotel": "Hotel",
+    "accHostel": "Hostel",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Budget",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Interests",
     "interestSun": "Sun",
     "interestBeach": "Beach",
@@ -63,6 +73,11 @@
     "interestFestival": "Festivals",
     "interestBackpacker": "Backpacker",
     "search": "Search",
+    "dateWeekend": "Weekend",
+    "dateHolidaysWB": "Holidays WB/BXL",
+    "dateHolidaysFL": "Holidays Flanders",
+    "dateOffHolidays": "Off-peak",
+    "dateBridge": "Bank holiday",
     "cityHint": "Enter your city for this preset"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Cheapest",
     "filterLocal": "Local stay",
     "filterFav": "Hidden gem",
+    "estimate": "/ pers. estimate",
+    "perNight": "night",
     "perPerson": "/ pers. est.",
     "flight": "Flight {price}€",
     "hotel": "{price}€/night",
@@ -106,6 +123,8 @@
     "book": "Book",
     "seeFlights": "See flights",
     "badgeLocal": "Local stay",
-    "badgeSurprise": "Hidden gem"
+    "badgeSurprise": "Hidden gem",
+    "favoritesTitle": "My favorites ({count})",
+    "noFavorites": "No favorites yet — tap the heart on a destination"
   }
 }

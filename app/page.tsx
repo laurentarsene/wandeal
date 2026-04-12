@@ -6,16 +6,33 @@ import { Navbar } from "@/components/wandeal/Navbar";
 import { SearchForm } from "@/components/wandeal/SearchForm";
 import { LoadingScreen } from "@/components/wandeal/LoadingScreen";
 import { ResultsGrid } from "@/components/wandeal/ResultsGrid";
+import { FavoritesView } from "@/components/wandeal/FavoritesView";
 import type { SearchFormData, Destination } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
+import { useFavorites } from "@/lib/useFavorites";
 
-type Step = "form" | "loading" | "results";
+type Step = "form" | "loading" | "results" | "favorites";
 
 export default function Home() {
   const [step, setStep] = useState<Step>("form");
+  const [prevStep, setPrevStep] = useState<Step>("form");
   const [form, setForm] = useState<SearchFormData>(defaultForm);
   const [results, setResults] = useState<Destination[]>([]);
   const abortRef = useRef<AbortController | null>(null);
+  const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
+
+  const goToFavorites = () => {
+    setPrevStep(step);
+    setStep("favorites");
+  };
+
+  const goBack = () => {
+    if (step === "favorites") {
+      setStep(prevStep);
+    } else {
+      setStep("form");
+    }
+  };
 
   const handleSearch = async () => {
     setStep("loading");
@@ -56,7 +73,12 @@ export default function Home() {
 
   return (
     <>
-      <Navbar showBack={step === "results"} onBack={() => setStep("form")} />
+      <Navbar
+        showBack={step === "results" || step === "favorites"}
+        onBack={goBack}
+        favCount={favorites.length}
+        onFavorites={step !== "favorites" ? goToFavorites : undefined}
+      />
 
       <main className="flex-1">
         <AnimatePresence mode="wait">
@@ -96,7 +118,29 @@ export default function Home() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <ResultsGrid results={results} form={form} />
+              <ResultsGrid
+                results={results}
+                form={form}
+                favorites={favorites}
+                isFavorite={isFavorite}
+                onToggleFavorite={toggleFavorite}
+              />
+            </motion.div>
+          )}
+
+          {step === "favorites" && (
+            <motion.div
+              key="favorites"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FavoritesView
+                favorites={favorites}
+                isFavorite={isFavorite}
+                onToggleFavorite={toggleFavorite}
+              />
             </motion.div>
           )}
         </AnimatePresence>

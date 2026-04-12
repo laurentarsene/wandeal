@@ -5,7 +5,8 @@
   "hero": {
     "badge": "Powered by AI",
     "title1": "Ergens is er een perfecte",
-    "title2": "vakantie voor jou."
+    "title2": "vakantie voor jou.",
+    "madeIn": "Gemaakt in Belgie, tussen twee regenbuien."
   },
   "form": {
     "from": "Vertrek vanuit",
@@ -38,6 +39,15 @@
     "transportTrain": "Trein",
     "transportCar": "Auto",
     "transportBike": "Fiets",
+    "accommodation": "Verblijf",
+    "accommodationAll": "Alle types",
+    "accHotel": "Hotel",
+    "accHostel": "Hostel",
+    "accAirbnb": "Airbnb",
+    "accCamping": "Camping",
+    "comfortBudget": "Eco",
+    "comfortStandard": "Standard",
+    "comfortPremium": "Premium",
     "interests": "Interesses",
     "interestSun": "Zon",
     "interestBeach": "Strand",
@@ -63,6 +73,11 @@
     "interestFestival": "Festivals",
     "interestBackpacker": "Backpacker",
     "search": "Zoeken",
+    "dateWeekend": "Weekend",
+    "dateHolidaysWB": "Vakantie WB/BXL",
+    "dateHolidaysFL": "Vakantie Vlaanderen",
+    "dateOffHolidays": "Buiten vakantie",
+    "dateBridge": "Brugdag",
     "cityHint": "Voer je stad in voor deze selectie"
   },
   "presets": {
@@ -96,6 +111,8 @@
     "filterCheap": "Goedkoopste",
     "filterLocal": "Dichtbij",
     "filterFav": "Verborgen pareltje",
+    "estimate": "/ pers. schatting",
+    "perNight": "nacht",
     "perPerson": "/ pers. gesch.",
     "flight": "Vlucht {price}€",
     "hotel": "{price}€/nacht",
@@ -106,6 +123,8 @@
     "book": "Boeken",
     "seeFlights": "Vluchten bekijken",
     "badgeLocal": "Dichtbij",
-    "badgeSurprise": "Verborgen pareltje"
+    "badgeSurprise": "Verborgen pareltje",
+    "favoritesTitle": "Mijn favorieten ({count})",
+    "noFavorites": "Nog geen favorieten — tik op het hartje bij een bestemming"
   }
 }

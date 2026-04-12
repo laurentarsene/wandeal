@@ -1,4 +1,7 @@
+export type DateConstraint = "any" | "weekend" | "holidays-wb" | "holidays-fl" | "off-holidays" | "bridge";
 export type TransportMode = "plane" | "train" | "car" | "bike";
+export type AccommodationType = "hotel" | "hostel" | "airbnb" | "camping";
+export type ComfortLevel = "budget" | "standard" | "premium";
 export type WeatherIcon = "sun" | "cloud" | "snow" | "rain";
 export type ColorTheme =
   | "teal"
@@ -13,12 +16,15 @@ export interface SearchFormData {
   city: string;
   dateFrom: string;
   dateTo: string;
+  dateConstraint: DateConstraint;
   travelers: number;
   budgetEnabled: boolean;
   budget: number;
   durationEnabled: boolean;
   duration: number;
   transport: TransportMode[];
+  accommodation: AccommodationType[];
+  comfort: ComfortLevel;
   interests: string[];
 }
 
@@ -40,8 +46,13 @@ export interface Destination {
   activities: string[];
   mealPrice: number;      // prix moyen d'un repas sur place en €
   fritesPrice: number;    // prix d'un cornet de frites 🍟
+  dateFrom: string;       // YYYY-MM-DD — dates choisies ou suggérées par l'IA
+  dateTo: string;         // YYYY-MM-DD
+  datePeriodLabel?: string; // ex: "Pont de l'Ascension", "Weekend (ven→dim)", "Toussaint 2026"
   isLocal: boolean;
   isSurprise: boolean;
+  originIata?: string;    // code IATA de la ville de départ (ex: BRU)
+  destIata?: string;      // code IATA de la destination (ex: LIS)
   bookingUrl?: string;
   photoUrl?: string;
 }
@@ -50,12 +61,15 @@ export const defaultForm: SearchFormData = {
   city: "",
   dateFrom: "",
   dateTo: "",
+  dateConstraint: "any",
   travelers: 1,
   budgetEnabled: false,
   budget: 500,
   durationEnabled: false,
   duration: 7,
   transport: [],
+  accommodation: [],
+  comfort: "standard",
   interests: [],
 };
 
