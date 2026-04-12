@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import {
   MapPin,
@@ -26,6 +26,12 @@ import {
   BedDouble,
   Home,
   Tent,
+  Globe,
+  Compass,
+  Map,
+  Palmtree,
+  Umbrella,
+  Camera,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { InterestChips } from "./InterestChips";
@@ -143,8 +149,8 @@ function BentoCard({
         relative rounded-xl p-4 transition-all duration-300 transform-gpu h-full min-h-[120px]
         ${
           active
-            ? "bg-[#f6fafa] [box-shadow:0_0_0_1px_rgba(38,64,68,0.15),0_2px_8px_rgba(38,64,68,0.08)]"
-            : "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.04)] hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.06),0_4px_12px_rgba(0,0,0,0.06)]"
+            ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
+            : "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,0.06),0_1px_4px_rgba(0,0,0,0.04)] hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.06)]"
         }
         ${className}
       `}
@@ -166,6 +172,22 @@ function SectionLabel({
       <Icon size={11} />
       {children}
     </label>
+  );
+}
+
+const searchIcons = [Plane, Globe, Compass, Map, Palmtree, Umbrella, Camera, TrainFront];
+
+function RotatingIcon() {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setIdx((i) => (i + 1) % searchIcons.length), 2000);
+    return () => clearInterval(interval);
+  }, []);
+  const Icon = searchIcons[idx];
+  return (
+    <span className="inline-flex items-center justify-center w-5 h-5 relative">
+      <Icon size={16} className="animate-[fadeScale_0.3s_ease-out]" key={idx} />
+    </span>
   );
 }
 
@@ -260,7 +282,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         ))}
       </div>
 
-      <div className="h-[calc(100dvh-64px)] flex flex-col justify-center px-3 sm:px-6 lg:px-10 py-3 sm:py-4 max-w-[900px] mx-auto">
+      <div className="min-h-[calc(100dvh-64px)] flex flex-col justify-center px-3 sm:px-6 lg:px-10 pt-6 sm:pt-4 pb-24 sm:pb-4 max-w-[900px] mx-auto">
         {/* Hero */}
         <div className="text-center mb-3 shrink-0">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
@@ -686,19 +708,21 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           </BentoCard>
         </div>
 
-        {/* CTA */}
-        <div className="shrink-0 mt-4">
-          <ShimmerButton
-            onClick={onSubmit}
-            background="#264044"
-            shimmerColor="rgba(255,255,255,0.3)"
-            className="w-full py-3.5 text-sm font-bold"
-          >
-            <span className="inline-flex items-center gap-2">
-              <Search size={16} />
-              {t("search")}
-            </span>
-          </ShimmerButton>
+        {/* CTA — floating on mobile, inline on desktop */}
+        <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
+          <div className="max-w-[900px] mx-auto">
+            <ShimmerButton
+              onClick={onSubmit}
+              background="#264044"
+              shimmerColor="rgba(255,255,255,0.3)"
+              className="w-full py-3.5 text-sm font-bold"
+            >
+              <span className="inline-flex items-center gap-2">
+                <RotatingIcon />
+                {t("search")}
+              </span>
+            </ShimmerButton>
+          </div>
         </div>
       </div>
     </>
