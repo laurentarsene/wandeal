@@ -78,7 +78,8 @@
     "dateHolidaysFL": "Vacaciones Flandes",
     "dateOffHolidays": "Fuera de vacaciones",
     "dateBridge": "Puente festivo",
-    "cityHint": "Introduce tu ciudad para esta seleccion"
+    "cityHint": "Introduce tu ciudad para esta seleccion",
+    "interestsHint": "— que te hace sonar?"
   },
   "presets": {
     "title": "Selecciones rapidas",

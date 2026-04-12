@@ -37,7 +37,7 @@ import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { InterestChips } from "./InterestChips";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { DateRangePicker } from "./DateRangePicker";
-import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraint } from "@/lib/types";
+import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraintTag } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 
 interface Preset {
@@ -208,7 +208,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
   const daysFromDates = daysBetween(form.dateFrom, form.dateTo);
 
   const handleDatesChange = (dateFrom: string, dateTo: string) => {
-    const newForm = { ...form, dateFrom, dateTo, dateConstraint: "any" as DateConstraint };
+    const newForm = { ...form, dateFrom, dateTo, dateConstraints: [] as DateConstraintTag[] };
     const days = daysBetween(dateFrom, dateTo);
     if (days) {
       newForm.duration = days;
@@ -217,14 +217,32 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
     onChange(newForm);
   };
 
-  const handleConstraintChange = (key: DateConstraint) => {
-    const active = form.dateConstraint === key;
-    const next = active ? "any" : key;
-    const newForm = { ...form, dateConstraint: next, dateFrom: "", dateTo: "" };
-    if (next === "weekend") {
-      newForm.duration = 2;
+  const handleConstraintChange = (key: DateConstraintTag) => {
+    const current = form.dateConstraints || [];
+    const has = current.includes(key);
+
+    // Incompatible groups: holidays vs off-holidays
+    const holidayTags: DateConstraintTag[] = ["holidays-wb", "holidays-fl"];
+    const incompatible: Record<string, DateConstraintTag[]> = {
+      "holidays-wb": ["off-holidays"],
+      "holidays-fl": ["off-holidays"],
+      "off-holidays": ["holidays-wb", "holidays-fl"],
+    };
+
+    let next: DateConstraintTag[];
+    if (has) {
+      next = current.filter((c) => c !== key);
+    } else {
+      // Remove incompatible tags
+      const toRemove = incompatible[key] || [];
+      next = [...current.filter((c) => !toRemove.includes(c)), key];
+    }
+
+    const newForm = { ...form, dateConstraints: next, dateFrom: "", dateTo: "" };
+    if (next.includes("weekend")) {
+      newForm.duration = next.includes("bridge") ? 3 : 2;
       newForm.durationEnabled = true;
-    } else if (next === "bridge") {
+    } else if (next.includes("bridge")) {
       newForm.duration = 4;
       newForm.durationEnabled = true;
     }
@@ -347,7 +365,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </BentoCard>
 
             {/* When */}
-            <BentoCard className="col-span-2" active={!!form.dateFrom || form.dateConstraint !== "any"}>
+            <BentoCard className="col-span-2" active={!!form.dateFrom || (form.dateConstraints?.length > 0)}>
               <SectionLabel icon={CalendarDays}>{t("dates")}</SectionLabel>
               <DateRangePicker
                 dateFrom={form.dateFrom}
@@ -357,13 +375,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               {!form.dateFrom && (
                 <div className="flex flex-wrap gap-1.5 mt-2.5">
                   {([
-                    { key: "weekend" as DateConstraint, label: t("dateWeekend") },
-                    { key: "holidays-wb" as DateConstraint, label: t("dateHolidaysWB") },
-                    { key: "holidays-fl" as DateConstraint, label: t("dateHolidaysFL") },
-                    { key: "off-holidays" as DateConstraint, label: t("dateOffHolidays") },
-                  { key: "bridge" as DateConstraint, label: t("dateBridge") },
+                    { key: "weekend" as DateConstraintTag, label: t("dateWeekend") },
+                    { key: "bridge" as DateConstraintTag, label: t("dateBridge") },
+                    { key: "holidays-wb" as DateConstraintTag, label: t("dateHolidaysWB") },
+                    { key: "holidays-fl" as DateConstraintTag, label: t("dateHolidaysFL") },
+                    { key: "off-holidays" as DateConstraintTag, label: t("dateOffHolidays") },
                   ]).map((chip) => {
-                    const active = form.dateConstraint === chip.key;
+                    const active = (form.dateConstraints || []).includes(chip.key);
                     return (
                       <button
                         key={chip.key}
@@ -487,7 +505,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Duration */}
             {(() => {
-              const lockedByConstraint = form.dateConstraint === "weekend" || form.dateConstraint === "bridge";
+              const dc = form.dateConstraints || [];
+              const lockedByConstraint = dc.includes("weekend") || dc.includes("bridge");
               const lockedByDates = !!daysFromDates || lockedByConstraint;
               return (
                 <BentoCard className="col-span-1 lg:col-span-2 flex flex-col" active={form.durationEnabled || lockedByDates}>
@@ -516,11 +535,11 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       {lockedByDates ? (
                         <>
                           <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
-                            {form.dateConstraint === "weekend" ? "2-3" : form.dateConstraint === "bridge" ? "3-4" : daysFromDates}
+                            {dc.includes("weekend") && dc.includes("bridge") ? "2-4" : dc.includes("weekend") ? "2-3" : dc.includes("bridge") ? "3-4" : daysFromDates}
                           </span>
                           <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
                           <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                            {lockedByConstraint ? t(form.dateConstraint === "weekend" ? "dateWeekend" : "dateBridge") : t("durationLocked")}
+                            {lockedByConstraint ? dc.filter(c => c === "weekend" || c === "bridge").map(c => t(c === "weekend" ? "dateWeekend" : "dateBridge")).join(" + ") : t("durationLocked")}
                           </span>
                         </>
                       ) : form.durationEnabled ? (
@@ -698,7 +717,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             className="col-span-2 lg:col-span-4 overflow-hidden"
             active={form.interests.length > 0}
           >
-            <SectionLabel icon={Sparkles}>{t("interests")}</SectionLabel>
+            <div className="flex items-baseline gap-2 mb-2">
+              <SectionLabel icon={Sparkles}>{t("interests")}</SectionLabel>
+              <span className="text-[10px] text-[#9CA3AF] font-normal normal-case tracking-normal">{t("interestsHint")}</span>
+            </div>
             <div className="overflow-y-auto max-h-full -mb-4 pb-4">
               <InterestChips
                 selected={form.interests}

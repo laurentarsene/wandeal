@@ -78,7 +78,8 @@
     "dateHolidaysFL": "Ferien Flandern",
     "dateOffHolidays": "Nebensaison",
     "dateBridge": "Brueckentag",
-    "cityHint": "Gib deine Stadt fuer diese Auswahl ein"
+    "cityHint": "Gib deine Stadt fuer diese Auswahl ein",
+    "interestsHint": "— was laesst dich traeumen?"
   },
   "presets": {
     "title": "Schnellauswahl",

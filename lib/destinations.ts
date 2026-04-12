@@ -103,30 +103,41 @@ export function buildPrompt(form: SearchFormData): string {
       ? `- Date de départ : ${form.dateFrom}, retour flexible`
       : "- Dates : flexibles (propose des périodes optimales)";
 
-  // Date constraint (weekend, school holidays, etc.)
-  const dc = form.dateConstraint || "any";
-  let dateConstraintLine = "";
-  if (dc === "weekend") {
-    datesLine = "- Dates : uniquement les weekends (vendredi → dimanche, 2-3 nuits)";
-    dateConstraintLine = "CONTRAINTE WEEKEND : Les dates proposées DOIVENT être un weekend (départ vendredi, retour dimanche ou lundi). nights = 2 ou 3 maximum.";
-  } else if (dc === "holidays-wb") {
+  // Date constraints (multi-select: weekend, bridge, holidays, off-holidays)
+  const dcs = form.dateConstraints || [];
+  const constraintParts: string[] = [];
+  const dateLabelParts: string[] = [];
+
+  if (dcs.includes("weekend")) {
+    dateLabelParts.push("weekends (ven→dim)");
+    constraintParts.push("CONTRAINTE WEEKEND : Les dates proposées DOIVENT être un weekend (départ vendredi, retour dimanche ou lundi). nights = 2 ou 3 maximum.");
+  }
+  if (dcs.includes("bridge")) {
+    const holidays = formatPublicHolidaysForPrompt();
+    dateLabelParts.push("ponts / jours fériés");
+    constraintParts.push(`CONTRAINTE PONT / JOUR FÉRIÉ : Propose des voyages de 3-4 jours autour d'un jour férié belge. Jours fériés à venir : ${holidays}. Si le férié tombe un jeudi → pont jeudi-dimanche. Si mardi → pont samedi-mardi. Si lundi → samedi-lundi. Si mercredi → mercredi-dimanche ou samedi-mercredi. Chaque destination peut utiliser un férié différent.`);
+  }
+  if (dcs.includes("holidays-wb")) {
     const periods = formatHolidaysForPrompt("wb");
-    datesLine = "- Dates : pendant les vacances scolaires belges (Wallonie/Bruxelles)";
-    dateConstraintLine = `CONTRAINTE VACANCES SCOLAIRES Wallonie/Bruxelles : Les dates DOIVENT tomber dans une de ces périodes : ${periods}. Chaque destination peut utiliser une période différente.`;
-  } else if (dc === "holidays-fl") {
+    dateLabelParts.push("vacances scolaires Wallonie/BXL");
+    constraintParts.push(`CONTRAINTE VACANCES SCOLAIRES Wallonie/Bruxelles : Les dates DOIVENT tomber dans une de ces périodes : ${periods}.`);
+  }
+  if (dcs.includes("holidays-fl")) {
     const periods = formatHolidaysForPrompt("fl");
-    datesLine = "- Dates : pendant les vacances scolaires belges (Flandre)";
-    dateConstraintLine = `CONTRAINTE VACANCES SCOLAIRES Flandre : Les dates DOIVENT tomber dans une de ces périodes : ${periods}. Chaque destination peut utiliser une période différente.`;
-  } else if (dc === "off-holidays") {
+    dateLabelParts.push("vacances scolaires Flandre");
+    constraintParts.push(`CONTRAINTE VACANCES SCOLAIRES Flandre : Les dates DOIVENT tomber dans une de ces périodes : ${periods}.`);
+  }
+  if (dcs.includes("off-holidays")) {
     const periodsWB = formatHolidaysForPrompt("wb");
     const periodsFL = formatHolidaysForPrompt("fl");
-    datesLine = "- Dates : HORS vacances scolaires belges (ni Wallonie ni Flandre)";
-    dateConstraintLine = `CONTRAINTE HORS VACANCES : Les dates NE DOIVENT PAS tomber dans ces périodes de vacances scolaires belges — Wallonie/BXL: ${periodsWB} — Flandre: ${periodsFL}. Propose des dates en dehors de toutes ces périodes (moins cher, moins de monde).`;
-  } else if (dc === "bridge") {
-    const holidays = formatPublicHolidaysForPrompt();
-    datesLine = "- Dates : profiter d'un jour férié belge pour faire un pont (3-4 jours)";
-    dateConstraintLine = `CONTRAINTE PONT / JOUR FÉRIÉ : Propose des voyages de 3-4 jours autour d'un jour férié belge pour maximiser les jours off. Jours fériés à venir : ${holidays}. Si le férié tombe un jeudi → pont jeudi-dimanche. Si mardi → pont samedi-mardi. Si lundi → samedi-lundi. Si mercredi → mercredi-dimanche ou samedi-mercredi. Chaque destination peut utiliser un férié différent. nights = 3 ou 4.`;
+    dateLabelParts.push("hors vacances scolaires");
+    constraintParts.push(`CONTRAINTE HORS VACANCES : Les dates NE DOIVENT PAS tomber dans ces périodes — Wallonie/BXL: ${periodsWB} — Flandre: ${periodsFL}. Propose des dates en dehors (moins cher, moins de monde).`);
   }
+
+  if (dateLabelParts.length > 0) {
+    datesLine = `- Dates : ${dateLabelParts.join(" + ")}`;
+  }
+  const dateConstraintLine = constraintParts.join("\n");
 
   const weatherRule = hasDates
     ? "7. Météo cohérente avec la saison réelle aux dates données"
@@ -144,7 +155,7 @@ export function buildPrompt(form: SearchFormData): string {
   if (dateConstraintLine) {
     datesRule += `\n${dateConstraintLine}`;
   }
-  const periodLabelRule = dc !== "any"
+  const periodLabelRule = dcs.length > 0
     ? `\n13. datePeriodLabel : OBLIGATOIRE — indique le nom de la période choisie pour chaque destination. Exemples : "Weekend (ven→dim)", "Pont de l'Ascension", "Toussaint 2026", "Été 2026", "Hors vacances". Court et clair.`
     : `\n13. datePeriodLabel : optionnel — si tu suggères des dates pendant une période notable (vacances, pont, été…), indique-le. Sinon omets ce champ.`;
 

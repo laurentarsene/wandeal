@@ -1,4 +1,4 @@
-export type DateConstraint = "any" | "weekend" | "holidays-wb" | "holidays-fl" | "off-holidays" | "bridge";
+export type DateConstraintTag = "weekend" | "holidays-wb" | "holidays-fl" | "off-holidays" | "bridge";
 export type TransportMode = "plane" | "train" | "car" | "bike";
 export type AccommodationType = "hotel" | "hostel" | "airbnb" | "camping";
 export type ComfortLevel = "budget" | "standard" | "premium";
@@ -16,7 +16,7 @@ export interface SearchFormData {
   city: string;
   dateFrom: string;
   dateTo: string;
-  dateConstraint: DateConstraint;
+  dateConstraints: DateConstraintTag[];
   travelers: number;
   budgetEnabled: boolean;
   budget: number;
@@ -61,7 +61,7 @@ export const defaultForm: SearchFormData = {
   city: "",
   dateFrom: "",
   dateTo: "",
-  dateConstraint: "any",
+  dateConstraints: [],
   travelers: 1,
   budgetEnabled: false,
   budget: 500,

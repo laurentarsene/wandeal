@@ -96,7 +96,7 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap gap-2">
       {interests.map((opt) => {
         const active = selected.includes(opt.value);
         const Icon = iconMap[opt.icon];
@@ -106,16 +106,16 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
             type="button"
             onClick={() => toggle(opt.value)}
             className={`
-              inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs
+              inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px]
               transition-all duration-150 cursor-pointer select-none
               ${
                 active
-                  ? "bg-[#264044] text-white font-semibold"
+                  ? "bg-[#264044] text-white font-semibold [box-shadow:0_0_0_1px_#264044,0_2px_6px_rgba(38,64,68,0.25)]"
                   : "bg-[#F3F4F6] text-[#4B5563] hover:bg-[#E5E7EB] font-medium"
               }
             `}
           >
-            <Icon size={12} />
+            <Icon size={14} />
             <span>{t(opt.tKey)}</span>
           </button>
         );

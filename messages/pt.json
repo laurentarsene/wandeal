@@ -78,7 +78,8 @@
     "dateHolidaysFL": "Ferias Flandres",
     "dateOffHolidays": "Fora de ferias",
     "dateBridge": "Feriado / ponte",
-    "cityHint": "Introduza a sua cidade para esta selecao"
+    "cityHint": "Introduza a sua cidade para esta selecao",
+    "interestsHint": "— o que te faz sonhar?"
   },
   "presets": {
     "title": "Selecoes rapidas",

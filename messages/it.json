@@ -78,7 +78,8 @@
     "dateHolidaysFL": "Vacanze Fiandre",
     "dateOffHolidays": "Fuori vacanze",
     "dateBridge": "Ponte festivo",
-    "cityHint": "Inserisci la tua citta' per questa selezione"
+    "cityHint": "Inserisci la tua citta' per questa selezione",
+    "interestsHint": "— cosa ti fa sognare?"
   },
   "presets": {
     "title": "Selezioni rapide",

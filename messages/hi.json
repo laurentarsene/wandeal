@@ -78,7 +78,8 @@
     "dateHolidaysFL": "छुट्टियां फ़्लैंडर्स",
     "dateOffHolidays": "छुट्टियों के बाहर",
     "dateBridge": "सार्वजनिक अवकाश",
-    "cityHint": "इस चयन के लिए अपना शहर दर्ज करें"
+    "cityHint": "इस चयन के लिए अपना शहर दर्ज करें",
+    "interestsHint": "— what makes you dream?"
   },
   "presets": {
     "title": "तैयार चयन",
