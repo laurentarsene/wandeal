@@ -11,10 +11,22 @@ const openai = new OpenAI({
 
 const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
-// Generate Unsplash photo URL for a destination
-function getPhotoUrl(cityName: string, country: string): string {
-  const query = encodeURIComponent(`${cityName} ${country} travel landscape`);
-  return `https://source.unsplash.com/800x500/?${query}`;
+// Generate photo URL via Teleport API (free, no key) or Unsplash search
+async function getPhotoUrl(cityName: string): Promise<string> {
+  // Try Teleport city photos API (free, no auth)
+  try {
+    const slug = cityName.toLowerCase().replace(/[^a-z]/g, "-");
+    const res = await fetch(`https://api.teleport.org/api/urban_areas/slug:${slug}/images/`);
+    if (res.ok) {
+      const data = await res.json();
+      const photo = data?.photos?.[0]?.image?.web;
+      if (photo) return photo;
+    }
+  } catch {
+    // fallback below
+  }
+  // Fallback: Unsplash static URL (still works for many queries)
+  return `https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=800&h=500&fit=crop&q=80`;
 }
 
 export async function POST(request: Request) {
@@ -63,7 +75,7 @@ export async function POST(request: Request) {
         const enriched = { ...dest };
 
         // --- Photo ---
-        enriched.photoUrl = getPhotoUrl(dest.name, dest.country);
+        enriched.photoUrl = await getPhotoUrl(dest.name);
 
         // --- Real flights via Travelpayouts ---
         if (tpToken && originCode && !dest.isLocal) {
@@ -126,13 +138,14 @@ export async function POST(request: Request) {
       destinations = destinations.filter((d) => d.totalPerPerson <= maxBudget * 1.1); // 10% tolerance
       // If too few results after filtering, keep the cheapest ones from original
       if (destinations.length < 4) {
-        const allSorted = parsed.destinations
-          .map((d) => ({
+        const allWithPhotos = await Promise.all(
+          parsed.destinations.map(async (d) => ({
             ...d,
-            photoUrl: getPhotoUrl(d.name, d.country),
+            photoUrl: await getPhotoUrl(d.name),
             totalPerPerson: d.flightPrice + d.hotelPerNight * d.nights,
           }))
-          .sort((a, b) => a.totalPerPerson - b.totalPerPerson);
+        );
+        const allSorted = allWithPhotos.sort((a, b) => a.totalPerPerson - b.totalPerPerson);
         destinations = allSorted.slice(0, 8);
       }
     }

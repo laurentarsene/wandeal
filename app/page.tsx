@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Navbar } from "@/components/wandeal/Navbar";
 import { SearchForm } from "@/components/wandeal/SearchForm";
@@ -15,17 +15,20 @@ export default function Home() {
   const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState<SearchFormData>(defaultForm);
   const [results, setResults] = useState<Destination[]>([]);
-  const [error, setError] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
 
   const handleSearch = async () => {
     setStep("loading");
-    setError("");
+
+    // Create abort controller for this search
+    abortRef.current = new AbortController();
 
     try {
       const res = await fetch("/api/destinations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
+        signal: abortRef.current.signal,
       });
 
       if (!res.ok) {
@@ -37,11 +40,18 @@ export default function Home() {
       setResults(data.destinations);
       setStep("results");
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Une erreur est survenue."
-      );
+      if (err instanceof DOMException && err.name === "AbortError") {
+        // User cancelled — go back to form silently
+        setStep("form");
+        return;
+      }
       setStep("form");
     }
+  };
+
+  const handleCancel = () => {
+    abortRef.current?.abort();
+    setStep("form");
   };
 
   return (
@@ -74,7 +84,7 @@ export default function Home() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <LoadingScreen />
+              <LoadingScreen onCancel={handleCancel} />
             </motion.div>
           )}
 
