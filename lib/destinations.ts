@@ -90,7 +90,7 @@ Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactem
     "weatherIcon": "sun",
     "matchScore": 92,
     "matchedInterests": ["soleil", "gastronomie", "culture"],
-    "why": "Soleil garanti en juin, gastronomie exceptionnelle et budget imbattable depuis Paris.",
+    "why": "Les souks de Marrakech sont un paradis du shopping : cuir artisanal, épices, tapis berbères à prix négociables. La médina est un labyrinthe de bonnes affaires.",
     "mealPrice": 12,
     "fritesPrice": 3.5,
     "activities": ["Pastéis de Belém", "Tramway 28", "Plage de Cascais", "Quartier de l'Alfama"],
@@ -109,5 +109,6 @@ ${localRule}
 ${weatherRule}
 8. Varier les types de voyage
 9. Si budget serré (< 400€), proposer des destinations vraiment accessibles (proches, low-cost, auberges)
-10. JSON UNIQUEMENT — aucun texte avant ou après${budgetFilter}`;
+10. JSON UNIQUEMENT — aucun texte avant ou après
+11. IMPORTANT "why" : Le champ "why" doit être SPÉCIFIQUE et CONCRET — explique POURQUOI cette destination est parfaite pour les envies sélectionnées. Cite des lieux précis, des spécialités, des expériences uniques. PAS de phrases génériques. Ex: pour "shopping" à Marrakech → parle des souks, du cuir, des épices. Pour "surf" à Biarritz → parle de la Côte des Basques, des vagues.${budgetFilter}`;
 }

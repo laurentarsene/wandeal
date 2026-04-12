@@ -12,11 +12,23 @@ import {
   Sparkles,
   TreePine,
   Building2,
+  Heart,
+  Flame,
+  Ship,
+  ShoppingBag,
+  Droplets,
+  Car,
+  Camera,
+  Binoculars,
+  ScrollText,
+  Ticket,
+  Backpack,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { InterestIcon } from "@/lib/types";
 
-const iconMap: Record<InterestIcon, React.ComponentType<{ size?: number }>> = {
+type IconKey = string;
+
+const iconMap: Record<IconKey, React.ComponentType<{ size?: number }>> = {
   sun: Sun,
   waves: Waves,
   mountain: Mountain,
@@ -28,9 +40,20 @@ const iconMap: Record<InterestIcon, React.ComponentType<{ size?: number }>> = {
   sparkles: Sparkles,
   "tree-pine": TreePine,
   building: Building2,
+  heart: Heart,
+  flame: Flame,
+  ship: Ship,
+  "shopping-bag": ShoppingBag,
+  droplets: Droplets,
+  car: Car,
+  camera: Camera,
+  binoculars: Binoculars,
+  "scroll-text": ScrollText,
+  ticket: Ticket,
+  backpack: Backpack,
 };
 
-const interests: { value: string; icon: InterestIcon; tKey: string }[] = [
+const interests: { value: string; icon: IconKey; tKey: string }[] = [
   { value: "soleil", icon: "sun", tKey: "interestSun" },
   { value: "plage", icon: "waves", tKey: "interestBeach" },
   { value: "ski", icon: "mountain", tKey: "interestSki" },
@@ -42,6 +65,18 @@ const interests: { value: string; icon: InterestIcon; tKey: string }[] = [
   { value: "detente", icon: "sparkles", tKey: "interestRelax" },
   { value: "nature", icon: "tree-pine", tKey: "interestNature" },
   { value: "citybreak", icon: "building", tKey: "interestCity" },
+  { value: "romantique", icon: "heart", tKey: "interestRomantic" },
+  { value: "aventure", icon: "flame", tKey: "interestAdventure" },
+  { value: "surf", icon: "ship", tKey: "interestSurf" },
+  { value: "plongee", icon: "droplets", tKey: "interestDiving" },
+  { value: "shopping", icon: "shopping-bag", tKey: "interestShopping" },
+  { value: "spa", icon: "sparkles", tKey: "interestSpa" },
+  { value: "roadtrip", icon: "car", tKey: "interestRoadtrip" },
+  { value: "photo", icon: "camera", tKey: "interestPhoto" },
+  { value: "safari", icon: "binoculars", tKey: "interestSafari" },
+  { value: "histoire", icon: "scroll-text", tKey: "interestHistory" },
+  { value: "festival", icon: "ticket", tKey: "interestFestival" },
+  { value: "backpacker", icon: "backpack", tKey: "interestBackpacker" },
 ];
 
 interface InterestChipsProps {
