@@ -90,7 +90,7 @@ export async function POST(request: Request) {
         }
 
         // --- Force bike transport pricing ---
-        if (form.transport === "bike") {
+        if (form.transport.length === 1 && form.transport[0] === "bike") {
           enriched.flightPrice = 0;
           enriched.totalPerPerson = enriched.hotelPerNight * enriched.nights;
         }

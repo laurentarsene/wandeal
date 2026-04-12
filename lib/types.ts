@@ -18,7 +18,7 @@ export interface SearchFormData {
   budget: number;
   durationEnabled: boolean;
   duration: number;
-  transport: TransportMode | null;
+  transport: TransportMode[];
   interests: string[];
 }
 
@@ -53,7 +53,7 @@ export const defaultForm: SearchFormData = {
   budget: 500,
   durationEnabled: false,
   duration: 7,
-  transport: null,
+  transport: [],
   interests: [],
 };
 

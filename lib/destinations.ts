@@ -12,23 +12,26 @@ export function buildPrompt(form: SearchFormData): string {
     form.interests.length > 0 ? form.interests.join(", ") : "voyage général";
 
   const transportLabels: Record<string, string> = { plane: "avion", train: "train", car: "voiture", bike: "vélo" };
+  const transports = form.transport.length > 0
+    ? form.transport.map((t) => transportLabels[t]).join(", ")
+    : "peu importe";
 
-  let transportLine: string;
+  const transportLine = `- Transport : ${transports}`;
+
+  const hasBike = form.transport.includes("bike");
+  const onlyBike = form.transport.length === 1 && hasBike;
+
   let transportConstraint: string;
-  if (form.transport === "bike") {
-    transportLine = "- Transport : vélo uniquement";
+  if (onlyBike) {
     transportConstraint = `CONTRAINTE TRANSPORT VÉLO : TOUTES les destinations doivent être accessibles à vélo depuis ${form.city || "le point de départ"} (max 300km). flightPrice = 0 pour toutes. Ne propose PAS de destinations nécessitant un avion ou un long trajet.`;
-  } else if (form.transport === "car") {
-    transportLine = "- Transport : voiture";
-    transportConstraint = "flightPrice = coût estimé carburant + péages aller-retour. Privilégier les destinations accessibles en voiture (même continent).";
-  } else if (form.transport === "train") {
-    transportLine = "- Transport : train";
-    transportConstraint = "flightPrice = prix billet de train aller-retour. Ne proposer que des destinations bien desservies par le train.";
-  } else if (form.transport === "plane") {
-    transportLine = "- Transport : avion";
-    transportConstraint = "flightPrice = prix d'un vol aller-retour.";
+  } else if (form.transport.length > 0) {
+    const parts: string[] = [];
+    if (form.transport.includes("plane")) parts.push("avion (flightPrice = vol AR)");
+    if (form.transport.includes("train")) parts.push("train (flightPrice = billet AR, destinations bien desservies)");
+    if (form.transport.includes("car")) parts.push("voiture (flightPrice = carburant + péages AR)");
+    if (hasBike) parts.push("vélo (flightPrice = 0, max 300km)");
+    transportConstraint = `Modes de transport acceptés : ${parts.join(" / ")}. Choisir le meilleur mode pour chaque destination parmi ceux sélectionnés. flightPrice correspond au coût du transport choisi.`;
   } else {
-    transportLine = "- Transport : peu importe";
     transportConstraint = "flightPrice = prix du transport aller-retour (avion, train ou autre selon la destination).";
   }
 

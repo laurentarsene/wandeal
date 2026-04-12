@@ -69,7 +69,7 @@ const presets: Preset[] = [
 
       budgetEnabled: true,
       budget: 100,
-      transport: "bike",
+      transport: ["bike"],
       interests: ["nature", "trek"],
     },
   },
@@ -212,6 +212,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
       setTimeout(() => {
         document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
       }, 100);
+    } else {
+      setCityHint(false);
     }
   };
 
@@ -496,9 +498,9 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             })()}
 
             {/* Transport */}
-            <BentoCard className="col-span-1 flex flex-col" active={form.transport !== null}>
+            <BentoCard className="col-span-1 flex flex-col" active={form.transport.length > 0}>
               <SectionLabel icon={Plane}>{t("transport")}</SectionLabel>
-              {form.transport === null && (
+              {form.transport.length === 0 && (
                 <p className="text-sm font-medium text-[#9CA3AF] mb-2">{t("transportAll")}</p>
               )}
               <div className="flex-1 grid grid-cols-2 gap-1.5 content-center">
@@ -509,14 +511,18 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     { mode: "car" as TransportMode, icon: Car, label: t("transportCar") },
                     { mode: "bike" as TransportMode, icon: Bike, label: t("transportBike") },
                   ] as const
-                ).map((opt) => (
+                ).map((opt) => {
+                  const isSelected = form.transport.includes(opt.mode);
+                  return (
                   <button
                     key={opt.mode}
                     type="button"
                     onClick={() => {
-                      const newTransport = form.transport === opt.mode ? null : opt.mode;
+                      const newTransport = isSelected
+                        ? form.transport.filter((m) => m !== opt.mode)
+                        : [...form.transport, opt.mode];
                       update({ transport: newTransport });
-                      if (newTransport === "bike" && !form.city.trim()) {
+                      if (newTransport.includes("bike") && !form.city.trim()) {
                         setCityHint(true);
                         setTimeout(() => {
                           document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
@@ -526,7 +532,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     className={`
                       flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer
                       ${
-                        form.transport === opt.mode
+                        isSelected
                           ? "bg-[#264044] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
                       }
@@ -535,7 +541,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     <opt.icon size={14} />
                     {opt.label}
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </BentoCard>
 
