@@ -83,6 +83,7 @@
   },
   "presets": {
     "title": "Presets",
+    "hint": "quick fill",
     "sun": "Sun with friends on a budget",
     "family": "Family culture & pool",
     "nature": "Solo nature for free",

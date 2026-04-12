@@ -83,6 +83,7 @@
   },
   "presets": {
     "title": "Presets",
+    "hint": "remplissage rapide",
     "sun": "Soleil entre potes pas cher",
     "family": "Famille culture & piscine",
     "nature": "Nature solo pour 0€",

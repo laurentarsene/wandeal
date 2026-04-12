@@ -325,9 +325,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
         {/* Mobile presets — horizontal scroll with fade edges */}
         <div className="lg:hidden shrink-0 relative mb-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1.5 px-1">{tPresets("title")} — {tPresets("hint")}</p>
           {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 bottom-0 h-[calc(100%-20px)] w-6 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 bottom-0 h-[calc(100%-20px)] w-6 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
           <div className="flex gap-2.5 overflow-x-auto scrollbar-hide -mx-3 px-6 py-1 snap-x">
             {presets.map((preset) => (
               <button

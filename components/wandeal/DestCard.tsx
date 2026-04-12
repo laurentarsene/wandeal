@@ -129,28 +129,9 @@ export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) 
           borderBottom: `3px solid ${theme.stripe}`,
         }}
       >
-        {/* Badge + Fav */}
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          {(dest.isLocal || dest.isSurprise) && (
-            <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white border"
-              style={{
-                borderColor: dest.isSurprise ? "#264044" : theme.stripe,
-                color: dest.isSurprise ? "#264044" : theme.text,
-              }}
-            >
-              {dest.isLocal ? (
-                <>
-                  <Home size={12} /> {t("badgeLocal")}
-                </>
-              ) : (
-                <>
-                  <Sparkles size={12} /> {t("badgeSurprise")}
-                </>
-              )}
-            </span>
-          )}
-          {!dest.photoUrl && onToggleFavorite && (
+        {/* Fav button (no photo fallback) */}
+        {!dest.photoUrl && onToggleFavorite && (
+          <div className="absolute top-4 right-4">
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFavorite(dest); }}
               className="p-1.5 rounded-full hover:bg-white/50 transition-colors cursor-pointer"
@@ -160,8 +141,8 @@ export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) 
                 className={isFavorite ? "fill-red-500 text-red-500" : "text-[#9CA3AF] hover:text-[#6B7280]"}
               />
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Destination name + price */}
         <div className="flex items-start justify-between">
@@ -175,9 +156,26 @@ export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) 
                 {dest.name}
               </h3>
             </div>
-            <p className="text-sm" style={{ color: theme.text, opacity: 0.7 }}>
-              {dest.country}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm" style={{ color: theme.text, opacity: 0.7 }}>
+                {dest.country}
+              </p>
+              {(dest.isLocal || dest.isSurprise) && (
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                  style={{
+                    borderColor: dest.isSurprise ? "#264044" : theme.stripe,
+                    color: dest.isSurprise ? "#264044" : theme.text,
+                  }}
+                >
+                  {dest.isLocal ? (
+                    <><Home size={10} /> {t("badgeLocal")}</>
+                  ) : (
+                    <><Sparkles size={10} /> {t("badgeSurprise")}</>
+                  )}
+                </span>
+              )}
+            </div>
           </div>
           <div className="text-right shrink-0">
             <div
