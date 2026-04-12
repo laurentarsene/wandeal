@@ -11,6 +11,12 @@ const openai = new OpenAI({
 
 const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
+// Generate Unsplash photo URL for a destination
+function getPhotoUrl(cityName: string, country: string): string {
+  const query = encodeURIComponent(`${cityName} ${country} travel landscape`);
+  return `https://source.unsplash.com/800x500/?${query}`;
+}
+
 export async function POST(request: Request) {
   try {
     const form: SearchFormData = await request.json();
@@ -46,17 +52,18 @@ export async function POST(request: Request) {
 
     let destinations = parsed.destinations;
 
-    // --- Step 2: Enrich with real data ---
-    // Resolve departure city IATA code
+    // --- Step 2: Enrich with real data + photos ---
     let originCode: string | null = null;
     if (tpToken && form.city.trim()) {
       originCode = await cityToIATA(form.city, tpToken).catch(() => null);
     }
 
-    // Enrich each destination in parallel
     destinations = await Promise.all(
       destinations.map(async (dest) => {
         const enriched = { ...dest };
+
+        // --- Photo ---
+        enriched.photoUrl = getPhotoUrl(dest.name, dest.country);
 
         // --- Real flights via Travelpayouts ---
         if (tpToken && originCode && !dest.isLocal) {
@@ -78,11 +85,17 @@ export async function POST(request: Request) {
               }
             }
           } catch {
-            // Keep LLM estimate on failure
+            // Keep LLM estimate
           }
         }
 
-        // --- Real weather via Open-Meteo (free, no key) ---
+        // --- Force bike transport pricing ---
+        if (form.transport === "bike") {
+          enriched.flightPrice = 0;
+          enriched.totalPerPerson = enriched.hotelPerNight * enriched.nights;
+        }
+
+        // --- Real weather via Open-Meteo ---
         try {
           const weather = await getWeather(
             dest.name,
@@ -95,12 +108,34 @@ export async function POST(request: Request) {
             enriched.weatherIcon = weather.icon;
           }
         } catch {
-          // Keep LLM estimate on failure
+          // Keep LLM estimate
         }
+
+        // Recalculate total
+        enriched.totalPerPerson =
+          enriched.flightPrice + enriched.hotelPerNight * enriched.nights;
 
         return enriched;
       })
     );
+
+    // --- Step 3: Post-filter ---
+    // Remove destinations over budget
+    if (form.budgetEnabled) {
+      const maxBudget = form.budget;
+      destinations = destinations.filter((d) => d.totalPerPerson <= maxBudget * 1.1); // 10% tolerance
+      // If too few results after filtering, keep the cheapest ones from original
+      if (destinations.length < 4) {
+        const allSorted = parsed.destinations
+          .map((d) => ({
+            ...d,
+            photoUrl: getPhotoUrl(d.name, d.country),
+            totalPerPerson: d.flightPrice + d.hotelPerNight * d.nights,
+          }))
+          .sort((a, b) => a.totalPerPerson - b.totalPerPerson);
+        destinations = allSorted.slice(0, 8);
+      }
+    }
 
     // Sort by matchScore descending
     destinations.sort((a, b) => b.matchScore - a.matchScore);

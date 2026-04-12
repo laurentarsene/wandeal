@@ -41,6 +41,7 @@ export interface Destination {
   isLocal: boolean;
   isSurprise: boolean;
   bookingUrl?: string;
+  photoUrl?: string;
 }
 
 export const defaultForm: SearchFormData = {

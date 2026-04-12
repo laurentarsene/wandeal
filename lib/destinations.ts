@@ -2,20 +2,35 @@ import type { SearchFormData } from "./types";
 
 export function buildPrompt(form: SearchFormData): string {
   const budgetPart = form.budgetEnabled
-    ? `Budget max ${form.budget}€/personne tout compris (transport + hébergement)`
+    ? `Budget STRICT max ${form.budget}€/personne tout compris (transport + hébergement). AUCUNE destination au-dessus de ce budget.`
     : "Pas de contrainte de budget";
   const durationPart = form.durationEnabled
     ? `Durée souhaitée : environ ${form.duration} jours (+/- 3 jours)`
     : "Pas de contrainte de durée";
-  const constraint = `${budgetPart}. ${durationPart}`;
 
   const interests =
     form.interests.length > 0 ? form.interests.join(", ") : "voyage général";
 
   const transportLabels: Record<string, string> = { plane: "avion", train: "train", car: "voiture", bike: "vélo" };
-  const transportLine = form.transport
-    ? `- Transport : ${transportLabels[form.transport]}`
-    : "- Transport : peu importe (proposer le meilleur rapport qualité/prix)";
+
+  let transportLine: string;
+  let transportConstraint: string;
+  if (form.transport === "bike") {
+    transportLine = "- Transport : vélo uniquement";
+    transportConstraint = `CONTRAINTE TRANSPORT VÉLO : TOUTES les destinations doivent être accessibles à vélo depuis ${form.city || "le point de départ"} (max 300km). flightPrice = 0 pour toutes. Ne propose PAS de destinations nécessitant un avion ou un long trajet.`;
+  } else if (form.transport === "car") {
+    transportLine = "- Transport : voiture";
+    transportConstraint = "flightPrice = coût estimé carburant + péages aller-retour. Privilégier les destinations accessibles en voiture (même continent).";
+  } else if (form.transport === "train") {
+    transportLine = "- Transport : train";
+    transportConstraint = "flightPrice = prix billet de train aller-retour. Ne proposer que des destinations bien desservies par le train.";
+  } else if (form.transport === "plane") {
+    transportLine = "- Transport : avion";
+    transportConstraint = "flightPrice = prix d'un vol aller-retour.";
+  } else {
+    transportLine = "- Transport : peu importe";
+    transportConstraint = "flightPrice = prix du transport aller-retour (avion, train ou autre selon la destination).";
+  }
 
   const hasCity = form.city.trim().length > 0;
   const hasDates = form.dateFrom && form.dateTo;
@@ -35,26 +50,13 @@ export function buildPrompt(form: SearchFormData): string {
     ? "7. Météo cohérente avec la saison réelle aux dates données"
     : "7. Météo cohérente avec la meilleure période pour chaque destination";
 
-  const transportPriceNote =
-    form.transport === "car"
-      ? "flightPrice représente le coût estimé en carburant/péage pour un trajet en voiture"
-      : form.transport === "train"
-        ? "flightPrice représente le prix d'un billet de train aller-retour, proposer des destinations bien desservies en train"
-        : form.transport === "bike"
-          ? "flightPrice = 0 (vélo), proposer uniquement des destinations accessibles à vélo depuis le point de départ (max ~300-500km)"
-          : form.transport === "plane"
-            ? "flightPrice = prix d'un vol aller-retour"
-            : "flightPrice = prix du transport aller-retour (avion, train ou autre selon la destination)";
-
-  const priceRule = hasCity
-    ? hasDates
-      ? `6. Prix réalistes depuis ${form.city} aux dates données. ${transportPriceNote}`
-      : `6. Prix réalistes depuis ${form.city} en moyenne saison. ${transportPriceNote}`
-    : `6. Prix réalistes depuis une grande ville européenne. ${transportPriceNote}`;
-
   const localRule = hasCity
-    ? `4. TOUJOURS exactement 1 destination avec isLocal: true → rester dans ou près de ${form.city}, proposer un hôtel 4-5★ + expériences premium locales que les habitants eux-mêmes font rarement`
-    : "4. TOUJOURS exactement 1 destination avec isLocal: true → proposer un séjour local dans une grande ville européenne (Paris, Bruxelles, Amsterdam…) avec un hôtel 4-5★ + expériences premium";
+    ? `4. TOUJOURS exactement 1 destination avec isLocal: true → rester dans ou près de ${form.city}, proposer un hôtel ou hébergement pas cher + expériences locales`
+    : "4. TOUJOURS exactement 1 destination avec isLocal: true → proposer un séjour local dans une grande ville européenne avec hébergement pas cher";
+
+  const budgetFilter = form.budgetEnabled
+    ? `\n11. VÉRIFICATION BUDGET : totalPerPerson DOIT être ≤ ${form.budget}€ pour CHAQUE destination. Si le budget est très serré (< 200€), propose camping, auberges de jeunesse, couchsurfing. Si budget = 100€, propose uniquement des destinations très proches et gratuites ou quasi-gratuites.`
+    : "";
 
   return `Tu es un expert en voyages et en bons plans. Génère des recommandations de vacances personnalisées et réalistes.
 
@@ -63,8 +65,10 @@ ${cityLine}
 ${datesLine}
 - Nombre de voyageurs : ${form.travelers}
 ${transportLine}
-- Contrainte : ${constraint}
+- Contrainte : ${budgetPart}. ${durationPart}
 - Envies : ${interests}
+
+${transportConstraint}
 
 Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactement 8 destinations dans ce format :
 
@@ -95,10 +99,10 @@ Règles STRICTES :
 2. weatherIcon = sun | cloud | snow | rain
 3. matchScore entre 65 et 99
 ${localRule}
-5. TOUJOURS exactement 1 destination avec isSurprise: true → destination vraiment inattendue et originale (ex: Tbilissi, Açores, Oman, Plovdiv, Cap-Vert…)
-${priceRule}
+5. TOUJOURS exactement 1 destination avec isSurprise: true → destination vraiment inattendue et originale
+6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights)
 ${weatherRule}
-8. Varier les continents et les types de voyage
-9. Si budget serré (< 400€), proposer des destinations vraiment accessibles (Portugal, Maroc, Balkans, vols low-cost…)
-10. JSON UNIQUEMENT — aucun texte avant ou après`;
+8. Varier les types de voyage
+9. Si budget serré (< 400€), proposer des destinations vraiment accessibles (proches, low-cost, auberges)
+10. JSON UNIQUEMENT — aucun texte avant ou après${budgetFilter}`;
 }

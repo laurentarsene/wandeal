@@ -52,6 +52,19 @@ export function DestCard({ dest }: DestCardProps) {
         boxShadow: "0 8px 32px rgba(38,64,68,0.15)",
       }}
     >
+      {/* Photo */}
+      {dest.photoUrl && (
+        <div className="relative h-36 overflow-hidden">
+          <img
+            src={dest.photoUrl}
+            alt={dest.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+      )}
+
       {/* Header */}
       <div
         className="p-5 relative"
