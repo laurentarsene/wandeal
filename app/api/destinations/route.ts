@@ -11,22 +11,48 @@ const openai = new OpenAI({
 
 const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
-// Generate photo URL via Teleport API (free, no key) or Unsplash search
-async function getPhotoUrl(cityName: string): Promise<string> {
-  // Try Teleport city photos API (free, no auth)
+// Generate a unique photo URL per destination using Wikimedia Commons
+async function getPhotoUrl(cityName: string, country: string): Promise<string> {
+  // Try Wikimedia Commons API — free, no key, has photos for almost every city
   try {
-    const slug = cityName.toLowerCase().replace(/[^a-z]/g, "-");
-    const res = await fetch(`https://api.teleport.org/api/urban_areas/slug:${slug}/images/`);
+    const query = `${cityName} ${country} city`;
+    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=images&titles=${encodeURIComponent(query)}&gimlimit=1&prop=imageinfo&iiprop=url&iiurlwidth=800&format=json&origin=*`;
+    const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
-      const photo = data?.photos?.[0]?.image?.web;
-      if (photo) return photo;
+      const pages = data?.query?.pages;
+      if (pages) {
+        const first = Object.values(pages)[0] as { imageinfo?: { thumburl?: string }[] };
+        const thumb = first?.imageinfo?.[0]?.thumburl;
+        if (thumb) return thumb;
+      }
     }
   } catch {
-    // fallback below
+    // fallback
   }
-  // Fallback: Unsplash static URL (still works for many queries)
-  return `https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=800&h=500&fit=crop&q=80`;
+
+  // Fallback: Unsplash with a hash-based photo ID for variety
+  const travelPhotos = [
+    "1500835556837-99ac94a94552",
+    "1488085061387-422e29b40080",
+    "1507525428034-b723cf961d3e",
+    "1476514525535-07fb3b4a6e8a",
+    "1502602898657-3e91760cbb34",
+    "1523906834658-6e24ef2386f9",
+    "1530789253388-582c481c54b0",
+    "1469854523086-cc02fe5d8800",
+    "1504150558240-0b4fd8946624",
+    "1528164344705-47542687000d",
+    "1519046904884-53103b34b206",
+    "1501785888108-ce5a2d6ecf62",
+  ];
+  // Hash city name to pick a consistent but unique photo
+  let hash = 0;
+  for (let i = 0; i < cityName.length; i++) {
+    hash = ((hash << 5) - hash + cityName.charCodeAt(i)) | 0;
+  }
+  const idx = Math.abs(hash) % travelPhotos.length;
+  return `https://images.unsplash.com/photo-${travelPhotos[idx]}?w=800&h=500&fit=crop&q=80`;
 }
 
 export async function POST(request: Request) {
@@ -75,7 +101,7 @@ export async function POST(request: Request) {
         const enriched = { ...dest };
 
         // --- Photo ---
-        enriched.photoUrl = await getPhotoUrl(dest.name);
+        enriched.photoUrl = await getPhotoUrl(dest.name, dest.country);
 
         // --- Real flights via Travelpayouts ---
         if (tpToken && originCode && !dest.isLocal) {
@@ -141,7 +167,7 @@ export async function POST(request: Request) {
         const allWithPhotos = await Promise.all(
           parsed.destinations.map(async (d) => ({
             ...d,
-            photoUrl: await getPhotoUrl(d.name),
+            photoUrl: await getPhotoUrl(d.name, d.country),
             totalPerPerson: d.flightPrice + d.hotelPerNight * d.nights,
           }))
         );

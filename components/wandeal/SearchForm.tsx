@@ -264,19 +264,26 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           </h1>
         </div>
 
-        {/* Mobile presets — horizontal scroll */}
-        <div className="lg:hidden shrink-0 flex gap-2 overflow-x-auto scrollbar-hide mb-2.5 -mx-3 px-3">
-          {presets.map((preset) => (
-            <button
-              key={preset.label}
-              type="button"
-              onClick={() => applyPreset(preset)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E7EB] bg-white text-[11px] font-medium text-[#4B5563] hover:border-[#264044] hover:bg-[#e8f0f1] hover:text-[#1a2e31] transition-all cursor-pointer"
-            >
-              <preset.icon size={12} className="shrink-0" />
-              {preset.label}
-            </button>
-          ))}
+        {/* Mobile presets — horizontal scroll with fade edges */}
+        <div className="lg:hidden shrink-0 relative mb-2.5">
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
+          <div className="flex gap-2.5 overflow-x-auto scrollbar-hide -mx-3 px-6 py-1 snap-x">
+            {presets.map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => applyPreset(preset)}
+                className="shrink-0 snap-start inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white text-[12px] font-medium text-[#4B5563] [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.06)] active:scale-95 transition-all cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-lg bg-[#F3F4F6] flex items-center justify-center shrink-0">
+                  <preset.icon size={14} className="text-[#9CA3AF]" />
+                </div>
+                <span className="whitespace-nowrap">{preset.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Bento Grid */}
