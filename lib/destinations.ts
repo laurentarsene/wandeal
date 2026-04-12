@@ -91,6 +91,8 @@ Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactem
     "matchScore": 92,
     "matchedInterests": ["soleil", "gastronomie", "culture"],
     "why": "Soleil garanti en juin, gastronomie exceptionnelle et budget imbattable depuis Paris.",
+    "mealPrice": 12,
+    "fritesPrice": 3.5,
     "activities": ["Pastéis de Belém", "Tramway 28", "Plage de Cascais", "Quartier de l'Alfama"],
     "isLocal": false,
     "isSurprise": false

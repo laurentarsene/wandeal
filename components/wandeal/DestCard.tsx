@@ -16,6 +16,7 @@ import {
   Snowflake,
   CloudRain,
   Thermometer,
+  UtensilsCrossed,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -147,6 +148,17 @@ export function DestCard({ dest }: DestCardProps) {
             <Thermometer size={11} />
             {dest.tempMin}-{dest.tempMax}°
           </span>
+          {dest.mealPrice > 0 && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+              <UtensilsCrossed size={13} />
+              {dest.mealPrice}€/repas
+            </span>
+          )}
+          {dest.fritesPrice > 0 && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+              🍟 {dest.fritesPrice}€
+            </span>
+          )}
         </div>
       </div>
 

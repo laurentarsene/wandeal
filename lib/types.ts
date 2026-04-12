@@ -38,6 +38,8 @@ export interface Destination {
   matchedInterests: string[];
   why: string;
   activities: string[];
+  mealPrice: number;      // prix moyen d'un repas sur place en €
+  fritesPrice: number;    // prix d'un cornet de frites 🍟
   isLocal: boolean;
   isSurprise: boolean;
   bookingUrl?: string;
