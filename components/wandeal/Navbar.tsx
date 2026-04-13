@@ -18,7 +18,7 @@ export function Navbar({ showBack, onBack, favCount = 0, onFavorites }: NavbarPr
     <nav className="sticky top-0 z-50 h-16 flex items-center justify-between px-6 backdrop-blur-md bg-white/80 border-b-0 lg:border-b lg:border-[#E5E7EB]/50">
       <div className="flex items-center gap-2 cursor-pointer" onClick={showBack ? onBack : undefined}>
         <img src="/wandeal-logo.svg" alt="wandeal" className="h-6" />
-        <span className="font-[var(--font-vina)] text-2xl text-[#1C48CD] tracking-tight">
+        <span className="font-display text-2xl text-[#1C48CD] tracking-tight">
           wandeal
         </span>
       </div>

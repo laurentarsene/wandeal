@@ -13,7 +13,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <img src="/wandeal-logo.svg" alt="wandeal" className="h-5" />
-              <span className="font-[var(--font-vina)] text-xl text-[#1C48CD]">
+              <span className="font-display text-xl text-[#1C48CD]">
                 wandeal
               </span>
             </div>

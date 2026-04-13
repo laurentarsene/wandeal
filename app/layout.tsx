@@ -47,7 +47,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={`${inter.variable} ${vinaSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#FAFAFA] font-[var(--font-inter)]">
+      <body className="min-h-full flex flex-col bg-[#FAFAFA] font-sans">
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
