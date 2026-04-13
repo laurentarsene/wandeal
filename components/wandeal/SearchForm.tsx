@@ -324,7 +324,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               </div>
               {/* Hero text — bottom */}
               <div>
-                <h1 className="text-xl font-extrabold text-white leading-[1.15] tracking-tight">
+                <h1 className="text-2xl font-extrabold text-white leading-[1.15] tracking-tight">
                   {tHero("title1")}
                   <br />
                   <span className="text-[#8dd8e0]">
@@ -370,7 +370,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Bottom — hero text + scroll indicator */}
             <div className="text-center">
-              <h1 className="text-2xl font-extrabold text-white leading-[1.15] tracking-tight">
+              <h1 className="text-3xl font-extrabold text-white leading-[1.15] tracking-tight">
                 {tHero("title1")}
                 <br />
                 <span className="text-[#8dd8e0]">{tHero("title2")}</span>
