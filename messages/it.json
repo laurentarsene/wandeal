@@ -132,5 +132,17 @@
     "noFavorites": "Nessun preferito — tocca il cuore su una destinazione",
     "getDirections": "Indicazioni",
     "reachable": "Vicino"
+  },
+  "footer": {
+    "tagline": "Vacanze su misura, trovate dall IA.",
+    "product": "Prodotto",
+    "howItWorks": "Come funziona",
+    "destinations": "Destinazioni",
+    "pricing": "Prezzi",
+    "legal": "Legale",
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "rights": "Tutti i diritti riservati.",
+    "madeIn": "Fatto con cura in Belgio."
   }
 }

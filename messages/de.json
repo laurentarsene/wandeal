@@ -132,5 +132,17 @@
     "noFavorites": "Noch keine Favoriten — tippe auf das Herz bei einem Reiseziel",
     "getDirections": "Route planen",
     "reachable": "In der Naehe"
+  },
+  "footer": {
+    "tagline": "Massgeschneiderter Urlaub, von KI gefunden.",
+    "product": "Produkt",
+    "howItWorks": "Wie es funktioniert",
+    "destinations": "Reiseziele",
+    "pricing": "Preise",
+    "legal": "Rechtliches",
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "rights": "Alle Rechte vorbehalten.",
+    "madeIn": "Mit Sorgfalt in Belgien gemacht."
   }
 }

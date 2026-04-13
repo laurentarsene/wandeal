@@ -7,6 +7,7 @@ import { SearchForm } from "@/components/wandeal/SearchForm";
 import { LoadingScreen } from "@/components/wandeal/LoadingScreen";
 import { ResultsGrid } from "@/components/wandeal/ResultsGrid";
 import { FavoritesView } from "@/components/wandeal/FavoritesView";
+import { Footer } from "@/components/wandeal/Footer";
 import type { SearchFormData, Destination } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 import { useFavorites } from "@/lib/useFavorites";
@@ -145,6 +146,8 @@ export default function Home() {
           )}
         </AnimatePresence>
       </main>
+
+      {(step === "results" || step === "favorites") && <Footer />}
     </>
   );
 }

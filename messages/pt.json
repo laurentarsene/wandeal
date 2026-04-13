@@ -132,5 +132,17 @@
     "noFavorites": "Sem favoritos — toque no coracao de um destino",
     "getDirections": "Como chegar",
     "reachable": "Proximo"
+  },
+  "footer": {
+    "tagline": "Ferias a medida, encontradas por IA.",
+    "product": "Produto",
+    "howItWorks": "Como funciona",
+    "destinations": "Destinos",
+    "pricing": "Precos",
+    "legal": "Legal",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "rights": "Todos os direitos reservados.",
+    "madeIn": "Feito com cuidado na Belgica."
   }
 }

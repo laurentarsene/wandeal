@@ -132,5 +132,17 @@
     "noFavorites": "Sin favoritos por ahora — toca el corazon en un destino",
     "getDirections": "Como llegar",
     "reachable": "Cerca"
+  },
+  "footer": {
+    "tagline": "Vacaciones a medida, encontradas por IA.",
+    "product": "Producto",
+    "howItWorks": "Como funciona",
+    "destinations": "Destinos",
+    "pricing": "Precios",
+    "legal": "Legal",
+    "privacy": "Privacidad",
+    "terms": "Condiciones",
+    "rights": "Todos los derechos reservados.",
+    "madeIn": "Hecho con cuidado en Belgica."
   }
 }

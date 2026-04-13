@@ -132,5 +132,17 @@
     "noFavorites": "Nog geen favorieten — tik op het hartje bij een bestemming",
     "getDirections": "Routebeschrijving",
     "reachable": "Dichtbij"
+  },
+  "footer": {
+    "tagline": "Vakantie op maat, gevonden door AI.",
+    "product": "Product",
+    "howItWorks": "Hoe het werkt",
+    "destinations": "Bestemmingen",
+    "pricing": "Prijzen",
+    "legal": "Juridisch",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "rights": "Alle rechten voorbehouden.",
+    "madeIn": "Met zorg gemaakt in Belgie."
   }
 }

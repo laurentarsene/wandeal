@@ -132,5 +132,17 @@
     "badgeSurprise": "Coup de cœur",
     "favoritesTitle": "Mes favoris ({count})",
     "noFavorites": "Aucun favori pour l'instant — likez une destination avec le cœur"
+  },
+  "footer": {
+    "tagline": "Des vacances sur mesure, trouvees par l'IA. Dites-nous d'ou vous partez, on s'occupe du reste.",
+    "product": "Produit",
+    "howItWorks": "Comment ca marche",
+    "destinations": "Destinations",
+    "pricing": "Tarifs",
+    "legal": "Legal",
+    "privacy": "Confidentialite",
+    "terms": "Conditions",
+    "rights": "Tous droits reserves.",
+    "madeIn": "Fait avec soin en Belgique."
   }
 }

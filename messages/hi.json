@@ -132,5 +132,17 @@
     "noFavorites": "अभी कोई पसंदीदा नहीं — किसी गंतव्य पर दिल पर टैप करें",
     "getDirections": "Get directions",
     "reachable": "Nearby"
+  },
+  "footer": {
+    "tagline": "AI-powered tailor-made vacations.",
+    "product": "Product",
+    "howItWorks": "How it works",
+    "destinations": "Destinations",
+    "pricing": "Pricing",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "rights": "All rights reserved.",
+    "madeIn": "Crafted with care in Belgium."
   }
 }

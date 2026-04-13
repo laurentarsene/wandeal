@@ -132,5 +132,17 @@
     "badgeSurprise": "Hidden gem",
     "favoritesTitle": "My favorites ({count})",
     "noFavorites": "No favorites yet — tap the heart on a destination"
+  },
+  "footer": {
+    "tagline": "Tailor-made vacations, found by AI. Tell us where you're leaving from, we'll handle the rest.",
+    "product": "Product",
+    "howItWorks": "How it works",
+    "destinations": "Destinations",
+    "pricing": "Pricing",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "rights": "All rights reserved.",
+    "madeIn": "Crafted with care in Belgium."
   }
 }
