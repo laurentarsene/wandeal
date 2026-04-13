@@ -9,8 +9,8 @@
     "madeIn": "Feito na Belgica, entre dois aguaceiros."
   },
   "form": {
-    "from": "Partida de",
-    "fromPlaceholder": "Cidade ou pais...",
+    "from": "Parto de...",
+    "fromPlaceholder": "De onde parte?",
     "dates": "Datas",
     "datesEmpty": "Ainda nao sei",
     "datesEmptySub": "Sem problema, nos adaptamos",
@@ -80,7 +80,8 @@
     "dateBridge": "Feriado / ponte",
     "cityHint": "Introduza a sua cidade para esta selecao",
     "interestsHint": "— o que te faz sonhar?",
-    "searchNeedsCity": "Indique a sua cidade de partida"
+    "searchNeedsCity": "Indique a sua cidade de partida",
+    "fromHint": "Encontramos o destino por si"
   },
   "presets": {
     "title": "Com vontade de...",

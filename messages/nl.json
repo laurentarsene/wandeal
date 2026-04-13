@@ -9,8 +9,8 @@
     "madeIn": "Gemaakt in Belgie, tussen twee regenbuien."
   },
   "form": {
-    "from": "Vertrek vanuit",
-    "fromPlaceholder": "Stad of land...",
+    "from": "Ik vertrek vanuit...",
+    "fromPlaceholder": "Vanwaar vertrek je?",
     "dates": "Data",
     "datesEmpty": "Dat weet ik nog niet",
     "datesEmptySub": "Geen probleem, wij passen ons aan",
@@ -80,7 +80,8 @@
     "dateBridge": "Brugdag",
     "cityHint": "Voer je stad in voor deze selectie",
     "interestsHint": "— waar droom je van?",
-    "searchNeedsCity": "Vul je vertrekstad in"
+    "searchNeedsCity": "Vul je vertrekstad in",
+    "fromHint": "Wij vinden de bestemming voor jou"
   },
   "presets": {
     "title": "Zin in...",

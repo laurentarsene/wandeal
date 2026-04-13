@@ -9,8 +9,8 @@
     "madeIn": "Hecho en Belgica, entre dos chaparrones."
   },
   "form": {
-    "from": "Salida desde",
-    "fromPlaceholder": "Ciudad o pais...",
+    "from": "Salgo de...",
+    "fromPlaceholder": "De donde sales?",
     "dates": "Fechas",
     "datesEmpty": "Aun no lo se",
     "datesEmptySub": "No te preocupes, nos adaptamos",
@@ -80,7 +80,8 @@
     "dateBridge": "Puente festivo",
     "cityHint": "Introduce tu ciudad para esta seleccion",
     "interestsHint": "— que te hace sonar?",
-    "searchNeedsCity": "Indica tu ciudad de salida"
+    "searchNeedsCity": "Indica tu ciudad de salida",
+    "fromHint": "Encontramos el destino por ti"
   },
   "presets": {
     "title": "Ganas de...",

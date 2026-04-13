@@ -388,9 +388,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 value={form.city}
                 onChange={(city) => update({ city })}
               />
-              {cityHint && (
+              {cityHint ? (
                 <p className="text-[10px] text-[#264044] font-medium mt-1 animate-pulse">
                   {t("cityHint")}
+                </p>
+              ) : !form.city && (
+                <p className="text-[10px] text-[#9CA3AF] mt-1">
+                  {t("fromHint")}
                 </p>
               )}
             </BentoCard>

@@ -9,8 +9,9 @@
     "madeIn": "Made in Belgium, between two rain showers."
   },
   "form": {
-    "from": "Departing from",
-    "fromPlaceholder": "City or country...",
+    "from": "I'm leaving from...",
+    "fromPlaceholder": "Where are you leaving from?",
+    "fromHint": "We'll find the destination for you",
     "dates": "Dates",
     "datesEmpty": "I don't know yet",
     "datesEmptySub": "No worries, we'll adapt",

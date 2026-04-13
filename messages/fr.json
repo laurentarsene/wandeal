@@ -9,8 +9,9 @@
     "madeIn": "Fait en Belgique, entre deux averses."
   },
   "form": {
-    "from": "Départ depuis",
-    "fromPlaceholder": "Ville ou pays...",
+    "from": "Je pars de...",
+    "fromPlaceholder": "D'ou partez-vous ?",
+    "fromHint": "On trouve la destination pour vous",
     "dates": "Dates",
     "datesEmpty": "Je ne sais pas encore",
     "datesEmptySub": "Pas de souci, on s'adapte",

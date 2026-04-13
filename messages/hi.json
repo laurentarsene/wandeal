@@ -9,8 +9,8 @@
     "madeIn": "Made in Belgium, between two rain showers."
   },
   "form": {
-    "from": "प्रस्थान",
-    "fromPlaceholder": "शहर या देश...",
+    "from": "I am leaving from...",
+    "fromPlaceholder": "Where are you leaving from?",
     "dates": "तारीखें",
     "datesEmpty": "मुझे अभी नहीं पता",
     "datesEmptySub": "कोई बात नहीं, हम ढल जाएंगे",
@@ -80,7 +80,8 @@
     "dateBridge": "सार्वजनिक अवकाश",
     "cityHint": "इस चयन के लिए अपना शहर दर्ज करें",
     "interestsHint": "— what makes you dream?",
-    "searchNeedsCity": "Enter your departure city"
+    "searchNeedsCity": "Enter your departure city",
+    "fromHint": "We will find the destination for you"
   },
   "presets": {
     "title": "Feeling like...",

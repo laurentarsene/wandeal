@@ -9,8 +9,8 @@
     "madeIn": "Made in Belgium, zwischen zwei Regenschauern."
   },
   "form": {
-    "from": "Abflug von",
-    "fromPlaceholder": "Stadt oder Land...",
+    "from": "Ich reise ab...",
+    "fromPlaceholder": "Von wo reist du ab?",
     "dates": "Reisedaten",
     "datesEmpty": "Weiss ich noch nicht",
     "datesEmptySub": "Kein Problem, wir passen uns an",
@@ -80,7 +80,8 @@
     "dateBridge": "Brueckentag",
     "cityHint": "Gib deine Stadt fuer diese Auswahl ein",
     "interestsHint": "— was laesst dich traeumen?",
-    "searchNeedsCity": "Gib deine Abfahrtsstadt ein"
+    "searchNeedsCity": "Gib deine Abfahrtsstadt ein",
+    "fromHint": "Wir finden das Ziel fuer dich"
   },
   "presets": {
     "title": "Lust auf...",

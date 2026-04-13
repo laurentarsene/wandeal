@@ -9,8 +9,8 @@
     "madeIn": "Fatto in Belgio, tra due acquazzoni."
   },
   "form": {
-    "from": "Partenza da",
-    "fromPlaceholder": "Citta' o paese...",
+    "from": "Parto da...",
+    "fromPlaceholder": "Da dove parti?",
     "dates": "Date",
     "datesEmpty": "Non lo so ancora",
     "datesEmptySub": "Nessun problema, ci adatteremo",
@@ -80,7 +80,8 @@
     "dateBridge": "Ponte festivo",
     "cityHint": "Inserisci la tua citta' per questa selezione",
     "interestsHint": "— cosa ti fa sognare?",
-    "searchNeedsCity": "Indica la tua citta di partenza"
+    "searchNeedsCity": "Indica la tua citta di partenza",
+    "fromHint": "Troviamo la destinazione per te"
   },
   "presets": {
     "title": "Voglia di...",
