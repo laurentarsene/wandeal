@@ -39,6 +39,7 @@ import { InterestChips } from "./InterestChips";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { DateRangePicker } from "./DateRangePicker";
 import { HublotVideo } from "./HublotVideo";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraintTag } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 
@@ -140,13 +141,16 @@ function BentoCard({
   children,
   className = "",
   active = false,
+  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
   active?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <div
+      onClick={onClick}
       className={`
         relative rounded-[20px] p-4 lg:p-5 transition-all duration-300 transform-gpu h-full min-h-[100px]
         ${
@@ -154,6 +158,7 @@ function BentoCard({
             ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
             : "bg-white/70 [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.03)] hover:bg-white hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.06)]"
         }
+        ${onClick && !active ? "cursor-pointer" : ""}
         ${className}
       `}
     >
@@ -499,7 +504,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </BentoCard>
 
             {/* Budget */}
-            <BentoCard className="col-span-1 flex flex-col" active={form.budgetEnabled}>
+            <BentoCard className="col-span-1 flex flex-col" active={form.budgetEnabled} onClick={!form.budgetEnabled ? () => update({ budgetEnabled: true }) : undefined}>
               <div className="flex items-center justify-between">
                 <SectionLabel icon={Wallet}>{t("budget")}</SectionLabel>
                 {form.budgetEnabled && (
@@ -514,13 +519,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 {!form.budgetEnabled ? (
-                  <button
-                    type="button"
-                    onClick={() => update({ budgetEnabled: true })}
-                    className="text-sm font-medium text-[#9CA3AF] cursor-pointer hover:text-[#6B7280] transition-colors text-left"
+                  <TypingAnimation
+                    className="text-sm font-medium text-[#9CA3AF] leading-snug"
+                    duration={60}
+                    showCursor={false}
                   >
                     {t("budgetAll")}
-                  </button>
+                  </TypingAnimation>
                 ) : (
                   <div>
                     <div className="mb-2">
@@ -569,7 +574,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               const lockedByConstraint = dc.includes("weekend") || dc.includes("bridge");
               const lockedByDates = !!daysFromDates || lockedByConstraint;
               return (
-                <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates}>
+                <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates} onClick={!form.durationEnabled && !lockedByDates ? () => update({ durationEnabled: true }) : undefined}>
                   <div className="flex items-center justify-between">
                     <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
                     {form.durationEnabled && !lockedByDates && (
@@ -594,13 +599,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                         </span>
                       </div>
                     ) : !form.durationEnabled ? (
-                      <button
-                        type="button"
-                        onClick={() => update({ durationEnabled: true })}
-                        className="text-sm font-medium text-[#9CA3AF] cursor-pointer hover:text-[#6B7280] transition-colors text-left"
+                      <TypingAnimation
+                        className="text-sm font-medium text-[#9CA3AF] leading-snug"
+                        duration={60}
+                        showCursor={false}
                       >
                         {t("durationAll")}
-                      </button>
+                      </TypingAnimation>
                     ) : (
                       <div>
                         <div className="mb-2">
