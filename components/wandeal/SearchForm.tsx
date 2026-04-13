@@ -343,11 +343,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
         {/* Right panel (desktop) / Full width (mobile) */}
         {/* MOBILE: Fullscreen hero with video background */}
-        <div className="lg:hidden relative h-[calc(100dvh-64px)] overflow-hidden">
+        <div className="lg:hidden relative h-[calc(100dvh-64px)] overflow-hidden" style={{ borderRadius: "0 0 40px 40px" }}>
           {/* Video background */}
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
           </div>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/40" />
           {/* Content */}
           <div className="relative h-full flex flex-col justify-between p-6 pt-8">
             {/* Top — presets */}
