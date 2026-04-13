@@ -288,8 +288,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             {/* Content overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30 rounded-3xl flex flex-col justify-between p-5">
               {/* Presets — top */}
-              <div className="flex flex-col gap-1.5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-white/50 mb-0.5">
+              <div className="flex flex-col gap-2.5">
+                <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-white/50">
                   {tPresets("title")}
                 </p>
                 {presets.map((preset) => (
@@ -297,12 +297,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     key={preset.label}
                     type="button"
                     onClick={() => applyPreset(preset)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-left text-[11px] font-medium text-white/80 hover:bg-white/20 hover:text-white transition-all cursor-pointer group"
+                    className="w-fit flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-left text-[11px] font-medium text-white/80 hover:bg-white/20 hover:text-white transition-all cursor-pointer group"
                   >
                     <div className="w-6 h-6 rounded-lg bg-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/25 transition-colors">
                       <preset.icon size={12} className="text-white/70" />
                     </div>
-                    <span className="leading-snug truncate">{preset.label}</span>
+                    <span className="leading-snug">{preset.label}</span>
                   </button>
                 ))}
               </div>
@@ -326,7 +326,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         </div>
 
         {/* Right panel (desktop) / Full width (mobile) */}
-        <div className="lg:w-[58%] lg:overflow-y-auto flex flex-col px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:pt-4 pb-24 sm:pb-4">
+        <div className="lg:w-[58%] lg:overflow-y-auto flex flex-col lg:justify-center px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:pt-4 pb-24 sm:pb-4">
           <div className="w-full">
             {/* Hero — mobile only (on desktop it's overlaid on the video) */}
             <div className="text-center mb-2 shrink-0 lg:hidden">
