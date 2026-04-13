@@ -419,6 +419,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               )}
             </BentoCard>
 
+            {/* Optional filters divider */}
+            <div className="col-span-2 lg:col-span-4 flex items-center gap-3 py-1">
+              <div className="flex-1 h-px bg-[#E5E7EB]" />
+              <span className="text-[10px] font-medium text-[#9CA3AF] shrink-0">{t("optionalFilters")}</span>
+              <div className="flex-1 h-px bg-[#E5E7EB]" />
+            </div>
+
             {/* When */}
             <BentoCard className="col-span-2" active={!!form.dateFrom || (form.dateConstraints?.length > 0)}>
               <SectionLabel icon={CalendarDays}>{t("dates")}</SectionLabel>
@@ -457,13 +464,6 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 </div>
               )}
             </BentoCard>
-
-            {/* Optional filters divider */}
-            <div className="col-span-2 lg:col-span-4 flex items-center gap-3 py-1">
-              <div className="flex-1 h-px bg-[#E5E7EB]" />
-              <span className="text-[10px] font-medium text-[#9CA3AF] shrink-0">{t("optionalFilters")}</span>
-              <div className="flex-1 h-px bg-[#E5E7EB]" />
-            </div>
 
             {/* Travelers */}
             <BentoCard className="col-span-1 flex flex-col" active={true}>
