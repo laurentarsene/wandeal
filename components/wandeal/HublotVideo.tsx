@@ -9,26 +9,20 @@ export function HublotVideo() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Safari needs these attributes set programmatically
-    video.setAttribute("webkit-playsinline", "true");
-    video.setAttribute("x-webkit-airplay", "deny");
     video.muted = true;
-    video.playsInline = true;
 
     const tryPlay = () => {
-      const p = video.play();
-      if (p) p.catch(() => {});
+      video.play().catch(() => {});
     };
 
-    // Try immediately
     tryPlay();
-
-    // Retry on loadeddata
     video.addEventListener("loadeddata", tryPlay);
 
-    // Fallback: play on first user interaction (scroll, touch, click)
     const onInteraction = () => {
       tryPlay();
+      cleanup();
+    };
+    const cleanup = () => {
       window.removeEventListener("scroll", onInteraction);
       window.removeEventListener("touchstart", onInteraction);
       window.removeEventListener("click", onInteraction);
@@ -39,17 +33,15 @@ export function HublotVideo() {
 
     return () => {
       video.removeEventListener("loadeddata", tryPlay);
-      window.removeEventListener("scroll", onInteraction);
-      window.removeEventListener("touchstart", onInteraction);
-      window.removeEventListener("click", onInteraction);
+      cleanup();
     };
   }, []);
 
   return (
     <div className="mx-auto w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] rounded-full overflow-hidden shadow-[0_0_0_6px_#e5e7eb,0_0_0_8px_#d1d5db] relative">
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video
         ref={videoRef}
+        src="/hero-travel.mp4"
         poster="/hero-travel-poster.jpg"
         autoPlay
         loop
@@ -57,10 +49,7 @@ export function HublotVideo() {
         playsInline
         preload="auto"
         style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-      >
-        <source src="/hero-travel.mp4" type="video/mp4" />
-      </video>
-      {/* Glass glare */}
+      />
       <div
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{
