@@ -15,7 +15,7 @@ export function Navbar({ showBack, onBack, favCount = 0, onFavorites }: NavbarPr
   const t = useTranslations("nav");
 
   return (
-    <nav className="sticky top-0 z-50 h-16 flex items-center justify-between px-6 backdrop-blur-md bg-white/80 border-b border-[#E5E7EB]/50">
+    <nav className="sticky top-0 z-50 h-16 flex items-center justify-between px-6 backdrop-blur-md bg-white/80 border-b-0 lg:border-b lg:border-[#E5E7EB]/50">
       <span
         className="font-extrabold text-2xl tracking-tight cursor-pointer"
         onClick={showBack ? onBack : undefined}

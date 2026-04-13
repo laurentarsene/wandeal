@@ -343,7 +343,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
         {/* Right panel (desktop) / Full width (mobile) */}
         {/* MOBILE: Fullscreen hero with video background */}
-        <div className="lg:hidden relative h-[100dvh] -mt-16 overflow-hidden" style={{ borderRadius: "0 0 40px 40px" }}>
+        <div className="lg:hidden relative h-[calc(100dvh-64px)] overflow-hidden" style={{ borderRadius: "0 0 40px 40px" }}>
           {/* Video background */}
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
