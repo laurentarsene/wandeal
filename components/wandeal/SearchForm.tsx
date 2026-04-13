@@ -324,10 +324,6 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               </div>
               {/* Hero text — bottom */}
               <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] font-semibold mb-2 tracking-wide w-fit">
-                  <Sparkles size={11} />
-                  {tHero("badge")}
-                </div>
                 <h1 className="text-xl font-extrabold text-white leading-[1.15] tracking-tight">
                   {tHero("title1")}
                   <br />
@@ -374,10 +370,6 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Bottom — hero text + scroll indicator */}
             <div className="text-center">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm text-white text-[10px] font-semibold mb-2 tracking-wide">
-                <Sparkles size={11} />
-                {tHero("badge")}
-              </div>
               <h1 className="text-2xl font-extrabold text-white leading-[1.15] tracking-tight">
                 {tHero("title1")}
                 <br />
