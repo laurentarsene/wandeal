@@ -166,12 +166,12 @@ function SectionLabel({
   icon: Icon,
   children,
 }: {
-  icon: React.ComponentType<{ size?: number }>;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   children: React.ReactNode;
 }) {
   return (
-    <label className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] mb-2">
-      <Icon size={11} />
+    <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] mb-2">
+      <Icon size={16} className="text-[#6B7280]" />
       {children}
     </label>
   );
@@ -493,41 +493,35 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Budget */}
             <BentoCard className="col-span-1 flex flex-col" active={form.budgetEnabled}>
-              <div className="flex items-center justify-between mb-2">
-                <SectionLabel icon={Wallet}>{t("budget")}</SectionLabel>
-                <button
-                  type="button"
-                  onClick={() => update({ budgetEnabled: !form.budgetEnabled })}
-                  className={`
-                    relative w-9 h-5 rounded-full transition-colors cursor-pointer shrink-0
-                    ${form.budgetEnabled ? "bg-[#264044]" : "bg-[#E5E7EB]"}
-                  `}
-                >
-                  <div
-                    className={`
-                      absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all
-                      ${form.budgetEnabled ? "left-[18px]" : "left-0.5"}
-                    `}
-                  />
-                </button>
-              </div>
+              <SectionLabel icon={Wallet}>{t("budget")}</SectionLabel>
               <div className="flex-1 flex flex-col justify-center">
-                <div className="text-center mb-2">
-                  {form.budgetEnabled ? (
-                    <>
-                      <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
-                        {form.budget}€
-                      </span>
-                      <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                        {t("budgetPerPerson")}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-sm font-medium text-[#9CA3AF] leading-snug">
-                      {t("budgetAll")}
-                    </span>
-                  )}
-                </div>
+                {!form.budgetEnabled ? (
+                  <button
+                    type="button"
+                    onClick={() => update({ budgetEnabled: true })}
+                    className="text-sm font-medium text-[#9CA3AF] cursor-pointer hover:text-[#6B7280] transition-colors text-left"
+                  >
+                    {t("budgetAll")}
+                  </button>
+                ) : (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                          {form.budget}€
+                        </span>
+                        <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+                          {t("budgetPerPerson")}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => update({ budgetEnabled: false })}
+                        className="text-[10px] text-[#9CA3AF] hover:text-[#264044] cursor-pointer transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </div>
                 <div className="relative w-full h-6 flex items-center">
                   <div className="absolute inset-x-0 h-1.5 rounded-full bg-[#E5E7EB]" />
                   <div
@@ -555,6 +549,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                   <span>100€</span>
                   <span>3 000€</span>
                 </div>
+                  </div>
+                )}
               </div>
             </BentoCard>
 
@@ -565,56 +561,46 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               const lockedByDates = !!daysFromDates || lockedByConstraint;
               return (
                 <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates}>
-                  <div className="flex items-center justify-between mb-2">
-                    <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
-                    {!lockedByDates && (
+                  <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
+                  <div className="flex-1 flex flex-col justify-center">
+                    {lockedByDates ? (
+                      <div className="text-center mb-2">
+                        <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                          {dc.includes("weekend") && dc.includes("bridge") ? "2-4" : dc.includes("weekend") ? "2-3" : dc.includes("bridge") ? "3-4" : daysFromDates}
+                        </span>
+                        <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
+                        <span className="block text-[10px] text-[#9CA3AF] mt-1">
+                          {lockedByConstraint ? dc.filter(c => c === "weekend" || c === "bridge").map(c => t(c === "weekend" ? "dateWeekend" : "dateBridge")).join(" + ") : t("durationLocked")}
+                        </span>
+                      </div>
+                    ) : !form.durationEnabled ? (
                       <button
                         type="button"
-                        onClick={() => update({ durationEnabled: !form.durationEnabled })}
-                        className={`
-                          relative w-9 h-5 rounded-full transition-colors cursor-pointer shrink-0
-                          ${form.durationEnabled ? "bg-[#264044]" : "bg-[#E5E7EB]"}
-                        `}
+                        onClick={() => update({ durationEnabled: true })}
+                        className="text-sm font-medium text-[#9CA3AF] cursor-pointer hover:text-[#6B7280] transition-colors text-left"
                       >
-                        <div
-                          className={`
-                            absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all
-                            ${form.durationEnabled ? "left-[18px]" : "left-0.5"}
-                          `}
-                        />
+                        {t("durationAll")}
                       </button>
-                    )}
-                  </div>
-                  <div className="flex-1 flex flex-col justify-center">
-                    <div className="text-center mb-2">
-                      {lockedByDates ? (
-                        <>
-                          <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
-                            {dc.includes("weekend") && dc.includes("bridge") ? "2-4" : dc.includes("weekend") ? "2-3" : dc.includes("bridge") ? "3-4" : daysFromDates}
-                          </span>
-                          <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
-                          <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                            {lockedByConstraint ? dc.filter(c => c === "weekend" || c === "bridge").map(c => t(c === "weekend" ? "dateWeekend" : "dateBridge")).join(" + ") : t("durationLocked")}
-                          </span>
-                        </>
-                      ) : form.durationEnabled ? (
-                        <>
-                          <span className="text-4xl font-extrabold text-[#264044] tabular-nums leading-none">
-                            {form.duration}
-                          </span>
-                          <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
-                          <span className="block text-[10px] text-[#9CA3AF] mt-1">
-                            {t("durationApprox")}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-sm font-medium text-[#9CA3AF] leading-snug">
-                          {t("durationAll")}
-                        </span>
-                      )}
-                    </div>
-                    {!lockedByDates && (
-                      <>
+                    ) : (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                              {form.duration}
+                            </span>
+                            <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
+                            <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+                              {t("durationApprox")}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => update({ durationEnabled: false })}
+                            className="text-[10px] text-[#9CA3AF] hover:text-[#264044] cursor-pointer transition-colors"
+                          >
+                            ✕
+                          </button>
+                        </div>
                         <div className="relative w-full h-6 flex items-center">
                           <div className="absolute inset-x-0 h-1.5 rounded-full bg-[#E5E7EB]" />
                           <div
@@ -642,7 +628,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                           <span>2j</span>
                           <span>4 sem.</span>
                         </div>
-                      </>
+                      </div>
                     )}
                   </div>
                 </BentoCard>
