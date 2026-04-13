@@ -331,7 +331,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     {tHero("title2")}
                   </span>
                 </h1>
-                <p className="text-[11px] text-white/60 mt-1.5">{tHero("madeIn")}</p>
+                <p className="text-[13px] text-white/70 mt-2 font-medium">{tHero("madeIn")}</p>
               </div>
             </div>
           </div>
@@ -375,7 +375,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 <br />
                 <span className="text-[#8dd8e0]">{tHero("title2")}</span>
               </h1>
-              <p className="text-[11px] text-white/50 mt-1.5 mb-6">{tHero("madeIn")}</p>
+              <p className="text-[13px] text-white/70 mt-2 mb-6 font-medium">{tHero("madeIn")}</p>
 
               {/* Scroll indicator */}
               <button
