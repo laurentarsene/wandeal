@@ -278,48 +278,49 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
   return (
     <>
-      {/* Desktop presets — fixed to right edge */}
-      <div className="hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-1.5 pr-4">
-        <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#264044] mb-0.5 px-1">
-          {tPresets("title")}
-        </p>
-        {presets.map((preset) => (
-          <button
-            key={preset.label}
-            type="button"
-            onClick={() => applyPreset(preset)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-[#E5E7EB] text-left text-[11px] font-medium text-[#4B5563] hover:border-[#264044] hover:bg-[#e8f0f1] hover:text-[#1a2e31] transition-all cursor-pointer group shadow-sm w-[180px]"
-          >
-            <div className="w-6 h-6 rounded-lg bg-[#F3F4F6] flex items-center justify-center shrink-0 group-hover:bg-[#264044] transition-colors">
-              <preset.icon
-                size={12}
-                className="text-[#9CA3AF] group-hover:text-white transition-colors"
-              />
-            </div>
-            <span className="leading-snug truncate">{preset.label}</span>
-          </button>
-        ))}
-      </div>
+      {/* Desktop presets — overlaid on video panel, top area */}
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
           <div className="w-full h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
             <HublotVideo variant="tall" />
-            {/* Text overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-3xl flex flex-col justify-end p-6">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] font-semibold mb-2 tracking-wide w-fit">
-                <Sparkles size={11} />
-                {tHero("badge")}
+            {/* Content overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30 rounded-3xl flex flex-col justify-between p-5">
+              {/* Presets — top */}
+              <div className="flex flex-col gap-1.5">
+                <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-white/50 mb-0.5">
+                  {tPresets("title")}
+                </p>
+                {presets.map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => applyPreset(preset)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-left text-[11px] font-medium text-white/80 hover:bg-white/20 hover:text-white transition-all cursor-pointer group"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/25 transition-colors">
+                      <preset.icon size={12} className="text-white/70" />
+                    </div>
+                    <span className="leading-snug truncate">{preset.label}</span>
+                  </button>
+                ))}
               </div>
-              <h1 className="text-2xl font-extrabold text-white leading-[1.15] tracking-tight">
-                {tHero("title1")}
-                <br />
-                <span className="text-[#8dd8e0]">
-                  {tHero("title2")}
-                </span>
-              </h1>
-              <p className="text-[11px] text-white/60 mt-2">{tHero("madeIn")}</p>
+              {/* Hero text — bottom */}
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] font-semibold mb-2 tracking-wide w-fit">
+                  <Sparkles size={11} />
+                  {tHero("badge")}
+                </div>
+                <h1 className="text-xl font-extrabold text-white leading-[1.15] tracking-tight">
+                  {tHero("title1")}
+                  <br />
+                  <span className="text-[#8dd8e0]">
+                    {tHero("title2")}
+                  </span>
+                </h1>
+                <p className="text-[11px] text-white/60 mt-1.5">{tHero("madeIn")}</p>
+              </div>
             </div>
           </div>
         </div>
