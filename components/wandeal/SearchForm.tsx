@@ -348,8 +348,6 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
           </div>
-          {/* Dark overlay — subtle, no gradient */}
-          <div className="absolute inset-0 bg-black/30" />
           {/* Content */}
           <div className="relative h-full flex flex-col justify-between p-6 pt-8">
             {/* Top — presets */}
