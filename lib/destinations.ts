@@ -216,6 +216,8 @@ Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactem
     "dateFrom": "2026-06-15",
     "dateTo": "2026-06-20",
     "datePeriodLabel": "Weekend (ven→dim)",
+    "distanceKm": 1100,
+    "travelHours": 10.5,
     "tempMin": 22,
     "tempMax": 28,
     "weatherIcon": "sun",
