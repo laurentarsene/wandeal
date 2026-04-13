@@ -301,64 +301,67 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         ))}
       </div>
 
-      <div className="min-h-[calc(100dvh-64px)] flex flex-col justify-center px-3 sm:px-6 lg:px-10 pt-6 sm:pt-4 pb-24 sm:pb-4 max-w-[900px] mx-auto">
-        {/* Hero */}
-        <div className="text-center mb-2 shrink-0">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
-            <Sparkles size={11} />
-            {tHero("badge")}
-          </div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#111] leading-[1.15] tracking-tight">
-            {tHero("title1")}
-            <br />
-            <span
-              style={{
-                background: "linear-gradient(135deg, #264044, #3a6068, #4a9aa8)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              {tHero("title2")}
-            </span>
-          </h1>
-          <p className="text-[11px] text-[#9CA3AF] mt-2">{tHero("madeIn")}</p>
-        </div>
-
-        {/* Hublot video — mobile only (round, small, centered) */}
-        <div className="lg:hidden shrink-0 mb-2">
-          <HublotVideo />
-        </div>
-
-        {/* Mobile presets — horizontal scroll */}
-        <div className="lg:hidden shrink-0 relative mb-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1.5 px-1">{tPresets("title")}</p>
-          <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
-            {presets.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                onClick={() => applyPreset(preset)}
-                className="shrink-0 snap-start inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white text-[12px] font-medium text-[#4B5563] [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.06)] active:scale-95 transition-all cursor-pointer"
-              >
-                <div className="w-7 h-7 rounded-lg bg-[#F3F4F6] flex items-center justify-center shrink-0">
-                  <preset.icon size={14} className="text-[#9CA3AF]" />
-                </div>
-                <span className="whitespace-nowrap">{preset.label}</span>
-              </button>
-            ))}
+      <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
+        {/* Left panel — desktop video */}
+        <div className="hidden lg:flex w-1/2 p-6 items-center justify-center">
+          <div className="w-full max-w-[480px] h-[calc(100dvh-112px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+            <HublotVideo variant="tall" />
           </div>
         </div>
 
-        {/* Bento Grid + Desktop video */}
-        <div className="shrink-0 relative">
-          {/* Desktop video — positioned to the left of the bento */}
-          <div className="hidden lg:block absolute right-[calc(100%+24px)] top-0 bottom-0">
-            <div className="sticky top-24 w-[180px] h-[420px] rounded-3xl overflow-hidden shadow-[0_0_0_4px_#e5e7eb]">
-              <HublotVideo variant="tall" />
+        {/* Right panel (desktop) / Full width (mobile) */}
+        <div className="lg:w-1/2 lg:overflow-y-auto flex flex-col justify-center px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:py-6 pb-24 sm:pb-4">
+          <div className="max-w-[520px] lg:mx-auto w-full">
+            {/* Hero */}
+            <div className="text-center lg:text-left mb-2 shrink-0">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
+                <Sparkles size={11} />
+                {tHero("badge")}
+              </div>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#111] leading-[1.15] tracking-tight">
+                {tHero("title1")}
+                <br />
+                <span
+                  style={{
+                    background: "linear-gradient(135deg, #264044, #3a6068, #4a9aa8)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  {tHero("title2")}
+                </span>
+              </h1>
+              <p className="text-[11px] text-[#9CA3AF] mt-2">{tHero("madeIn")}</p>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
+            {/* Video — mobile only (round) */}
+            <div className="lg:hidden shrink-0 mb-2">
+              <HublotVideo />
+            </div>
+
+            {/* Mobile presets */}
+            <div className="lg:hidden shrink-0 relative mb-2.5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1.5 px-1">{tPresets("title")}</p>
+              <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
+                {presets.map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => applyPreset(preset)}
+                    className="shrink-0 snap-start inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white text-[12px] font-medium text-[#4B5563] [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.06)] active:scale-95 transition-all cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-[#F3F4F6] flex items-center justify-center shrink-0">
+                      <preset.icon size={14} className="text-[#9CA3AF]" />
+                    </div>
+                    <span className="whitespace-nowrap">{preset.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bento Grid */}
+            <div className="shrink-0">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
             {/* Where */}
             <BentoCard
               className={`col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
@@ -740,46 +743,48 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               />
             </div>
           </BentoCard>
-          </div>
-        </div>
-
-        {/* CTA — floating on mobile, inline on desktop */}
-        {(() => {
-          const hasCity = form.city.trim().length > 0;
-          return (
-            <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
-              <div className="max-w-[900px] mx-auto">
-                {hasCity ? (
-                  <ShimmerButton
-                    onClick={onSubmit}
-                    background="#264044"
-                    shimmerColor="rgba(255,255,255,0.3)"
-                    className="w-full py-3.5 text-sm font-bold"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <RotatingIcon />
-                      {t("search")}
-                    </span>
-                  </ShimmerButton>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCityHint(true);
-                      document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
-                    }}
-                    className="w-full py-3.5 text-sm font-bold rounded-xl bg-[#9CA3AF] text-white cursor-pointer transition-colors hover:bg-[#6B7280]"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <MapPin size={16} />
-                      {t("searchNeedsCity")}
-                    </span>
-                  </button>
-                )}
               </div>
             </div>
-          );
-        })()}
+
+            {/* CTA */}
+            {(() => {
+              const hasCity = form.city.trim().length > 0;
+              return (
+                <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
+                  <div className="max-w-[520px] lg:mx-auto">
+                    {hasCity ? (
+                      <ShimmerButton
+                        onClick={onSubmit}
+                        background="#264044"
+                        shimmerColor="rgba(255,255,255,0.3)"
+                        className="w-full py-3.5 text-sm font-bold"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <RotatingIcon />
+                          {t("search")}
+                        </span>
+                      </ShimmerButton>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCityHint(true);
+                          document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
+                        }}
+                        className="w-full py-3.5 text-sm font-bold rounded-xl bg-[#9CA3AF] text-white cursor-pointer transition-colors hover:bg-[#6B7280]"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <MapPin size={16} />
+                          {t("searchNeedsCity")}
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
       </div>
     </>
   );
