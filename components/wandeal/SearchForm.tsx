@@ -198,10 +198,20 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
   const tHero = useTranslations("hero");
   const tPresets = useTranslations("presets");
   const [cityHint, setCityHint] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
     if (form.city.trim()) setCityHint(false);
   }, [form.city]);
+
+  // Track mobile form visibility for floating CTA
+  useEffect(() => {
+    const el = document.getElementById("mobile-form");
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => setFormVisible(entry.isIntersecting), { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const update = (partial: Partial<SearchFormData>) => {
     onChange({ ...form, ...partial });
@@ -269,12 +279,17 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
     onChange({ ...defaultForm, ...preset.form, city });
     if (preset.needsCity && !city) {
       setCityHint(true);
-      setTimeout(() => {
-        document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
-      }, 100);
     } else {
       setCityHint(false);
     }
+    // Scroll to form on mobile
+    setTimeout(() => {
+      const el = document.getElementById("mobile-form");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+      if (preset.needsCity && !city) {
+        setTimeout(() => document.querySelector<HTMLInputElement>("[data-city-input]")?.focus(), 500);
+      }
+    }, 100);
   };
 
   return (
@@ -783,7 +798,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             {(() => {
               const hasCity = form.city.trim().length > 0;
               return (
-                <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
+                <div className={`fixed bottom-0 left-0 right-0 z-40 p-3 lg:static lg:p-0 lg:mt-4 transition-all duration-300 ${formVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 lg:translate-y-0 lg:opacity-100"}`}>
                   <div className="w-full">
                     {hasCity ? (
                       <ShimmerButton
