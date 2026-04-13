@@ -324,12 +324,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           <p className="text-[11px] text-[#9CA3AF] mt-2">{tHero("madeIn")}</p>
         </div>
 
-        {/* Hublot video */}
-        <div className="shrink-0 mb-2">
+        {/* Hublot video — mobile only (round, small, centered) */}
+        <div className="lg:hidden shrink-0 mb-2">
           <HublotVideo />
         </div>
 
-        {/* Mobile presets — horizontal scroll with fade edges */}
+        {/* Mobile presets — horizontal scroll */}
         <div className="lg:hidden shrink-0 relative mb-2.5">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1.5 px-1">{tPresets("title")}</p>
           <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
@@ -349,8 +349,16 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           </div>
         </div>
 
-        {/* Bento Grid */}
-        <div className="shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
+        {/* Bento Grid + Desktop video */}
+        <div className="shrink-0 relative">
+          {/* Desktop video — positioned to the left of the bento */}
+          <div className="hidden lg:block absolute right-[calc(100%+24px)] top-0 bottom-0">
+            <div className="sticky top-24 w-[180px] h-[420px] rounded-3xl overflow-hidden shadow-[0_0_0_4px_#e5e7eb]">
+              <HublotVideo variant="tall" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
             {/* Where */}
             <BentoCard
               className={`col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
@@ -732,6 +740,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               />
             </div>
           </BentoCard>
+          </div>
         </div>
 
         {/* CTA — floating on mobile, inline on desktop */}

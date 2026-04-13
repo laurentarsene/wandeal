@@ -2,7 +2,11 @@
 
 import { useRef, useEffect, useState } from "react";
 
-export function HublotVideo() {
+interface HublotVideoProps {
+  variant?: "round" | "tall";
+}
+
+export function HublotVideo({ variant = "round" }: HublotVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -36,18 +40,18 @@ export function HublotVideo() {
     };
   }, []);
 
+  const isRound = variant === "round";
+
   return (
     <div
-      className="mx-auto rounded-full overflow-hidden relative w-[140px] h-[140px] sm:w-[200px] sm:h-[200px]"
-      style={{ boxShadow: "0 0 0 5px #e5e7eb, 0 0 0 7px #d1d5db" }}
+      className={isRound ? "mx-auto w-[140px] h-[140px] sm:w-[200px] sm:h-[200px] rounded-full overflow-hidden relative" : "w-full h-full rounded-3xl overflow-hidden relative"}
+      style={isRound ? { boxShadow: "0 0 0 5px #e5e7eb, 0 0 0 7px #d1d5db" } : undefined}
     >
-      {/* Poster image as base — always visible */}
       <img
         src="/hero-travel-poster.jpg"
         alt=""
         style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
       />
-      {/* Video overlay — fades in when playing */}
       <video
         ref={videoRef}
         src="/hero-travel.mp4"
@@ -64,14 +68,13 @@ export function HublotVideo() {
           transition: "opacity 0.5s",
         }}
       />
-      {/* Glass glare */}
       <div
         style={{
           position: "absolute",
           top: 0, left: 0, right: 0, bottom: 0,
-          borderRadius: "50%",
+          borderRadius: isRound ? "50%" : "24px",
           pointerEvents: "none",
-          background: "linear-gradient(145deg, rgba(255,255,255,0.25) 0%, transparent 40%, rgba(255,255,255,0.05) 100%)",
+          background: "linear-gradient(145deg, rgba(255,255,255,0.2) 0%, transparent 40%, rgba(255,255,255,0.05) 100%)",
         }}
       />
     </div>
