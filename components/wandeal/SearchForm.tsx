@@ -349,7 +349,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             <HublotVideo variant="tall" />
           </div>
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
           {/* Content */}
           <div className="relative h-full flex flex-col justify-between p-6 pt-8">
             {/* Top — presets */}
