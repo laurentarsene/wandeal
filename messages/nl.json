@@ -79,7 +79,8 @@
     "dateOffHolidays": "Buiten vakantie",
     "dateBridge": "Brugdag",
     "cityHint": "Voer je stad in voor deze selectie",
-    "interestsHint": "— waar droom je van?"
+    "interestsHint": "— waar droom je van?",
+    "searchNeedsCity": "Vul je vertrekstad in"
   },
   "presets": {
     "title": "Snelle keuzes",

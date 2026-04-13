@@ -732,21 +732,42 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         </div>
 
         {/* CTA — floating on mobile, inline on desktop */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
-          <div className="max-w-[900px] mx-auto">
-            <ShimmerButton
-              onClick={onSubmit}
-              background="#264044"
-              shimmerColor="rgba(255,255,255,0.3)"
-              className="w-full py-3.5 text-sm font-bold"
-            >
-              <span className="inline-flex items-center gap-2">
-                <RotatingIcon />
-                {t("search")}
-              </span>
-            </ShimmerButton>
-          </div>
-        </div>
+        {(() => {
+          const hasCity = form.city.trim().length > 0;
+          return (
+            <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
+              <div className="max-w-[900px] mx-auto">
+                {hasCity ? (
+                  <ShimmerButton
+                    onClick={onSubmit}
+                    background="#264044"
+                    shimmerColor="rgba(255,255,255,0.3)"
+                    className="w-full py-3.5 text-sm font-bold"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <RotatingIcon />
+                      {t("search")}
+                    </span>
+                  </ShimmerButton>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCityHint(true);
+                      document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
+                    }}
+                    className="w-full py-3.5 text-sm font-bold rounded-xl bg-[#9CA3AF] text-white cursor-pointer transition-colors hover:bg-[#6B7280]"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <MapPin size={16} />
+                      {t("searchNeedsCity")}
+                    </span>
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </>
   );

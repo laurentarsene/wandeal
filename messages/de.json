@@ -79,7 +79,8 @@
     "dateOffHolidays": "Nebensaison",
     "dateBridge": "Brueckentag",
     "cityHint": "Gib deine Stadt fuer diese Auswahl ein",
-    "interestsHint": "— was laesst dich traeumen?"
+    "interestsHint": "— was laesst dich traeumen?",
+    "searchNeedsCity": "Gib deine Abfahrtsstadt ein"
   },
   "presets": {
     "title": "Schnellauswahl",

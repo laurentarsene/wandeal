@@ -79,7 +79,8 @@
     "dateOffHolidays": "Fora de ferias",
     "dateBridge": "Feriado / ponte",
     "cityHint": "Introduza a sua cidade para esta selecao",
-    "interestsHint": "— o que te faz sonhar?"
+    "interestsHint": "— o que te faz sonhar?",
+    "searchNeedsCity": "Indique a sua cidade de partida"
   },
   "presets": {
     "title": "Selecoes rapidas",

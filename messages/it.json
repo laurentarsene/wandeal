@@ -79,7 +79,8 @@
     "dateOffHolidays": "Fuori vacanze",
     "dateBridge": "Ponte festivo",
     "cityHint": "Inserisci la tua citta' per questa selezione",
-    "interestsHint": "— cosa ti fa sognare?"
+    "interestsHint": "— cosa ti fa sognare?",
+    "searchNeedsCity": "Indica la tua citta di partenza"
   },
   "presets": {
     "title": "Selezioni rapide",

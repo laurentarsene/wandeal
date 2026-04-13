@@ -79,7 +79,8 @@
     "dateOffHolidays": "छुट्टियों के बाहर",
     "dateBridge": "सार्वजनिक अवकाश",
     "cityHint": "इस चयन के लिए अपना शहर दर्ज करें",
-    "interestsHint": "— what makes you dream?"
+    "interestsHint": "— what makes you dream?",
+    "searchNeedsCity": "Enter your departure city"
   },
   "presets": {
     "title": "तैयार चयन",
