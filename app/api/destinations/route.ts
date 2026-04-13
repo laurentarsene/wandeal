@@ -12,9 +12,15 @@ const openai = new OpenAI({
 
 const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
-// Get the main Wikipedia photo for a city — free, no API key, relevant results
+// Get the main Wikipedia photo for a city/region — free, no API key
 async function getPhotoUrl(cityName: string, country: string): Promise<string> {
-  const queries = [cityName, `${cityName} ${country}`];
+  // Try multiple queries: exact name, name + country, English name + city/region
+  const queries = [
+    cityName,
+    `${cityName} (${country})`,
+    `${cityName} ${country}`,
+    `${cityName} city`,
+  ];
 
   for (const q of queries) {
     try {
