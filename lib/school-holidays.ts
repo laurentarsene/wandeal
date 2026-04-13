@@ -77,6 +77,41 @@ export function formatPublicHolidaysForPrompt(): string {
     .join(", ");
 }
 
+// Determine the correct period label for a date range
+export function getDatePeriodLabel(dateFrom: string, dateTo: string): string | null {
+  if (!dateFrom || !dateTo) return null;
+  const from = new Date(dateFrom + "T00:00:00");
+  const to = new Date(dateTo + "T00:00:00");
+
+  // Check if dates overlap with a public holiday (pont)
+  for (const h of publicHolidays) {
+    const hDate = new Date(h.from + "T00:00:00");
+    if (hDate >= from && hDate <= to) {
+      return `Pont ${h.name}`;
+    }
+  }
+
+  // Check if dates fall within school holidays
+  const allHolidays = [...holidaysWB, ...holidaysFL];
+  for (const h of allHolidays) {
+    const hFrom = new Date(h.from + "T00:00:00");
+    const hTo = new Date(h.to + "T00:00:00");
+    // Overlap check
+    if (from <= hTo && to >= hFrom) {
+      return h.name;
+    }
+  }
+
+  // Check if it's a weekend (Fri-Sun or Sat-Sun)
+  const dayFrom = from.getDay();
+  const nights = Math.round((to.getTime() - from.getTime()) / 86400000);
+  if (nights <= 3 && (dayFrom === 5 || dayFrom === 6)) {
+    return "Weekend";
+  }
+
+  return null;
+}
+
 // Format holidays as a string for the AI prompt
 export function formatHolidaysForPrompt(
   region: "wb" | "fl",

@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { buildPrompt } from "@/lib/destinations";
 import { cityToIATA, searchFlights } from "@/lib/flights";
 import { getWeather } from "@/lib/weather";
+import { getDatePeriodLabel } from "@/lib/school-holidays";
 import type { SearchFormData, Destination } from "@/lib/types";
 
 const openai = new OpenAI({
@@ -188,6 +189,12 @@ export async function POST(request: Request) {
         // Recalculate total
         enriched.totalPerPerson =
           enriched.flightPrice + enriched.hotelPerNight * enriched.nights;
+
+        // Validate datePeriodLabel against real calendar data
+        if (enriched.dateFrom && enriched.dateTo) {
+          const realLabel = getDatePeriodLabel(enriched.dateFrom, enriched.dateTo);
+          enriched.datePeriodLabel = realLabel || undefined;
+        }
 
         return enriched;
       })
