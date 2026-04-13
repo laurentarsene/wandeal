@@ -252,7 +252,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
                 <TransportIcon size={13} />
                 {nearby && dest.flightPrice === 0 ? t("reachable") : `~${dest.flightPrice}€`}
-                {hasDistance && <span className="text-[#9CA3AF]">· {dest.distanceKm}km</span>}
+                {hasDistance && mode !== "train" && mode !== "plane" && <span className="text-[#9CA3AF]">· {dest.distanceKm}km</span>}
                 {fmtTime && <span className="text-[#9CA3AF]">· {fmtTime}</span>}
               </span>
             );
