@@ -75,14 +75,36 @@ export function buildPrompt(form: SearchFormData): string {
   const hasBike = form.transport.includes("bike");
   const onlyBike = form.transport.length === 1 && hasBike;
 
+  const hasCar = form.transport.includes("car");
+  const hasTrain = form.transport.includes("train");
+  const hasPlane = form.transport.includes("plane");
+  const origin = form.city || "le point de départ";
+
   let transportConstraint: string;
   if (onlyBike) {
-    transportConstraint = `CONTRAINTE TRANSPORT VÉLO : TOUTES les destinations doivent être accessibles à vélo depuis ${form.city || "le point de départ"} (max 300km). flightPrice = 0 pour toutes. Ne propose PAS de destinations nécessitant un avion ou un long trajet.`;
-  } else if (form.transport.length > 0) {
+    transportConstraint = `CONTRAINTE TRANSPORT VÉLO : TOUTES les destinations doivent être accessibles à vélo depuis ${origin} (max 300km). flightPrice = 0 pour toutes. Ne propose PAS de destinations nécessitant un avion ou un long trajet.`;
+  } else if (form.transport.length > 0 && !hasPlane) {
+    // No plane selected — strict distance limits
     const parts: string[] = [];
-    if (form.transport.includes("plane")) parts.push("avion (flightPrice = vol AR)");
-    if (form.transport.includes("train")) parts.push("train (flightPrice = billet AR, destinations bien desservies)");
-    if (form.transport.includes("car")) parts.push("voiture (flightPrice = carburant + péages AR)");
+    let maxKm = 2000;
+    if (hasCar && !hasTrain) {
+      parts.push("voiture uniquement (flightPrice = carburant + péages AR)");
+      maxKm = 1500;
+    } else if (hasTrain && !hasCar) {
+      parts.push("train uniquement (flightPrice = billet AR, gares bien desservies)");
+      maxKm = 1500;
+    } else {
+      if (hasCar) parts.push("voiture (flightPrice = carburant + péages AR)");
+      if (hasTrain) parts.push("train (flightPrice = billet AR)");
+      if (hasBike) parts.push("vélo (flightPrice = 0, max 300km)");
+    }
+    transportConstraint = `CONTRAINTE TRANSPORT TERRESTRE : ${parts.join(" / ")}. TOUTES les destinations doivent être accessibles par route/rail depuis ${origin} (max ${maxKm}km). PAS de destinations sur d'autres continents, PAS d'îles inaccessibles en voiture/train. Pense Europe accessible : France, Pays-Bas, Allemagne, Suisse, Italie du Nord, Espagne, etc. flightPrice = coût du trajet terrestre AR.`;
+  } else if (form.transport.length > 0) {
+    // Plane is included
+    const parts: string[] = [];
+    if (hasPlane) parts.push("avion (flightPrice = vol AR)");
+    if (hasTrain) parts.push("train (flightPrice = billet AR, destinations bien desservies)");
+    if (hasCar) parts.push("voiture (flightPrice = carburant + péages AR)");
     if (hasBike) parts.push("vélo (flightPrice = 0, max 300km)");
     transportConstraint = `Modes de transport acceptés : ${parts.join(" / ")}. Choisir le meilleur mode pour chaque destination parmi ceux sélectionnés. flightPrice correspond au coût du transport choisi.`;
   } else {
