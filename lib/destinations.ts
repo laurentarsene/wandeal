@@ -16,7 +16,6 @@ export function buildPrompt(form: SearchFormData): string {
     trek: "randonnée en montagne ou en pleine nature, sentiers de trek reconnus (GR, chemins balisés), pas de promenades urbaines",
     gastronomie: "destinations réputées pour leur cuisine locale authentique, marchés, restaurants locaux, spécialités régionales à goûter sur place",
     teuf: "vie nocturne intense, clubs, bars, fêtes, destinations connues pour sortir (Ibiza, Berlin, Bangkok…)",
-    famille: "destinations adaptées aux enfants, activités familiales, parcs, sécurité, facilité logistique",
     culture: "musées majeurs, sites UNESCO, patrimoine architectural, scène artistique vivante",
     detente: "repos total, calme, déconnexion, endroits paisibles loin du tourisme de masse",
     nature: "grands espaces naturels, parcs nationaux, forêts, lacs, fjords, paysages sauvages préservés",
@@ -28,7 +27,6 @@ export function buildPrompt(form: SearchFormData): string {
     shopping: "destinations connues pour le shopping : souks, marchés, outlets, quartiers commerçants emblématiques, bonnes affaires",
     spa: "bien-être, thermes naturels, hammams, spas réputés, sources chaudes (Islande, Budapest, Bali…)",
     roadtrip: "itinéraires en voiture avec paysages variés, routes panoramiques, liberté de s'arrêter, étapes multiples",
-    photo: "paysages spectaculaires et photogéniques, lumières exceptionnelles, spots Instagram, panoramas à couper le souffle",
     safari: "VRAIS safaris animaliers dans des réserves naturelles ou parcs nationaux pour observer la faune sauvage en liberté (Big Five, grands mammifères, oiseaux). Afrique, mais aussi parcs naturels en Europe du Nord (élans en Suède, ours en Finlande…). PAS de zoos, PAS de safaris urbains, PAS de parcs d'attractions",
     histoire: "sites historiques majeurs, ruines antiques, champs de bataille, villes médiévales, patrimoine vivant",
     festival: "festivals de musique live (électro, rock, jazz, techno…) — PAS de festivals de BD, cinéma ou gastronomie",
@@ -177,9 +175,7 @@ export function buildPrompt(form: SearchFormData): string {
   if (dateConstraintLine) {
     datesRule += `\n${dateConstraintLine}`;
   }
-  const periodLabelRule = dcs.length > 0
-    ? `\n13. datePeriodLabel : OBLIGATOIRE — indique le nom de la période choisie pour chaque destination. Exemples : "Weekend (ven→dim)", "Pont de l'Ascension", "Toussaint 2026", "Été 2026", "Hors vacances". Court et clair.`
-    : `\n13. datePeriodLabel : optionnel — si tu suggères des dates pendant une période notable (vacances, pont, été…), indique-le. Sinon omets ce champ.`;
+  const periodLabelRule = ""; // datePeriodLabel is now computed server-side from real calendar data
 
   const localRule = hasCity
     ? `4. TOUJOURS exactement 1 destination avec isLocal: true → rester dans ou près de ${form.city}, proposer un hôtel ou hébergement pas cher + expériences locales`
@@ -194,7 +190,6 @@ export function buildPrompt(form: SearchFormData): string {
 Voyageur :
 ${cityLine}
 ${datesLine}
-- Nombre de voyageurs : ${form.travelers}
 ${transportLine}
 ${accommodationLine ? accommodationLine + "\n" : ""}- Contrainte : ${budgetPart}. ${durationPart}
 - Envies : ${interests}
@@ -213,18 +208,15 @@ Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactem
     "hotelPerNight": 65,
     "totalPerPerson": 414,
     "nights": 5,
-    "dateFrom": "2026-06-15",
-    "dateTo": "2026-06-20",
-    "datePeriodLabel": "Weekend (ven→dim)",
-    "transportMode": "car",
-    "distanceKm": 1100,
-    "travelHours": 10.5,
+    "dateFrom": "2026-09-15",
+    "dateTo": "2026-09-20",
+    "transportMode": "plane",
     "tempMin": 22,
     "tempMax": 28,
     "weatherIcon": "sun",
     "matchScore": 92,
     "matchedInterests": ["soleil", "gastronomie", "culture"],
-    "why": "Les souks de Marrakech sont un paradis du shopping : cuir artisanal, épices, tapis berbères à prix négociables. La médina est un labyrinthe de bonnes affaires.",
+    "why": "Le quartier de l'Alfama offre des ruelles authentiques et des miradouros avec vue sur le Tage. Les Pastéis de Belém sont un incontournable, et le Tramway 28 traverse les plus beaux quartiers.",
     "mealPrice": 12,
     "fritesPrice": 3.5,
     "activities": ["Pastéis de Belém", "Tramway 28", "Plage de Cascais", "Quartier de l'Alfama"],

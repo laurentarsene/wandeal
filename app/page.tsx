@@ -11,6 +11,7 @@ import { Footer } from "@/components/wandeal/Footer";
 import type { SearchFormData, Destination } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 import { useFavorites } from "@/lib/useFavorites";
+import { useSearchHistory } from "@/lib/useSearchHistory";
 
 type Step = "form" | "loading" | "results" | "favorites";
 
@@ -21,6 +22,7 @@ export default function Home() {
   const [results, setResults] = useState<Destination[]>([]);
   const abortRef = useRef<AbortController | null>(null);
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
+  const { history, addSearch } = useSearchHistory();
 
   const goToFavorites = () => {
     setPrevStep(step);
@@ -37,6 +39,7 @@ export default function Home() {
 
   const handleSearch = async () => {
     setStep("loading");
+    addSearch(form);
 
     // Create abort controller for this search
     abortRef.current = new AbortController();
@@ -95,6 +98,7 @@ export default function Home() {
                 form={form}
                 onChange={setForm}
                 onSubmit={handleSearch}
+                searchHistory={history}
               />
             </motion.div>
           )}

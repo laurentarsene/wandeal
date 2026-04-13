@@ -28,6 +28,7 @@ import {
   Home,
   Tent,
   ChevronDown,
+  History,
   Globe,
   Compass,
   Map,
@@ -121,10 +122,18 @@ const presets: Preset[] = [
   },
 ];
 
+interface SearchHistoryEntry {
+  id: string;
+  form: SearchFormData;
+  timestamp: number;
+  label: string;
+}
+
 interface SearchFormProps {
   form: SearchFormData;
   onChange: (form: SearchFormData) => void;
   onSubmit: () => void;
+  searchHistory?: SearchHistoryEntry[];
 }
 
 function daysBetween(from: string, to: string): number | null {
@@ -198,7 +207,7 @@ function RotatingIcon() {
   );
 }
 
-export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
+export function SearchForm({ form, onChange, onSubmit, searchHistory = [] }: SearchFormProps) {
   const t = useTranslations("form");
   const tHero = useTranslations("hero");
   const tPresets = useTranslations("presets");
@@ -430,6 +439,23 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               <span className="text-[10px] font-medium text-[#9CA3AF] shrink-0">{t("optionalFilters")}</span>
               <div className="flex-1 h-px bg-[#E5E7EB]" />
             </div>
+
+            {/* Search history */}
+            {searchHistory.length > 0 && (
+              <div className="col-span-2 lg:col-span-4 flex items-center gap-2 overflow-x-auto scrollbar-hide py-0.5">
+                <History size={13} className="text-[#9CA3AF] shrink-0" />
+                {searchHistory.map((entry) => (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    onClick={() => onChange(entry.form)}
+                    className="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium text-[#6B7280] bg-[#F3F4F6] hover:bg-[#E5E7EB] transition-colors cursor-pointer truncate max-w-[200px]"
+                  >
+                    {entry.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* When */}
             <BentoCard className="col-span-2" active={!!form.dateFrom || (form.dateConstraints?.length > 0)}>

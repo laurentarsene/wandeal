@@ -9,6 +9,10 @@ import {
   Check,
   Loader2,
   X,
+  Globe,
+  Compass,
+  Map,
+  Palmtree,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AnimatedList } from "@/components/ui/animated-list";
@@ -99,12 +103,12 @@ export function LoadingScreen({ onCancel }: LoadingScreenProps) {
       {/* Animated travel icon */}
       <div className="mb-8 relative">
         <div className="w-20 h-20 rounded-full bg-[#e8f0f1] flex items-center justify-center">
-          <div className="w-12 h-12 rounded-full bg-[#264044] flex items-center justify-center animate-pulse">
-            <span className="text-white text-2xl">✈</span>
+          <div className="w-12 h-12 rounded-full bg-[#264044] flex items-center justify-center animate-[spin_8s_linear_infinite]">
+            <Globe size={24} className="text-white" />
           </div>
         </div>
         <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#264044] flex items-center justify-center">
-          <Loader2 size={12} className="text-white animate-spin" />
+          <Compass size={12} className="text-white animate-[spin_3s_linear_infinite]" />
         </div>
       </div>
 
