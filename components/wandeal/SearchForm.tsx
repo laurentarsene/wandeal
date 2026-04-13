@@ -338,7 +338,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [] }: Sea
               </div>
               {/* Hero text — bottom */}
               <div>
-                <h1 className="text-3xl xl:text-4xl font-extrabold text-white leading-[1.15] tracking-tight">
+                <h1 className="font-[var(--font-vina)] text-4xl xl:text-5xl text-white leading-[1.1]">
                   {tHero("title1")}
                   <br />
                   <span className="text-[#8dd8e0]">
@@ -384,7 +384,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [] }: Sea
 
             {/* Bottom — hero text + scroll indicator */}
             <div className="text-center">
-              <h1 className="text-3xl font-extrabold text-white leading-[1.15] tracking-tight">
+              <h1 className="font-[var(--font-vina)] text-4xl text-white leading-[1.1]">
                 {tHero("title1")}
                 <br />
                 <span className="text-[#8dd8e0]">{tHero("title2")}</span>

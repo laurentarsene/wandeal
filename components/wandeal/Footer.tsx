@@ -11,17 +11,12 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {/* Brand */}
           <div>
-            <span
-              className="font-extrabold text-xl tracking-tight"
-              style={{
-                background: "linear-gradient(135deg, #264044, #3a6068)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                letterSpacing: "-0.5px",
-              }}
-            >
-              wandeal
-            </span>
+            <div className="flex items-center gap-2">
+              <img src="/wandeal-logo.svg" alt="wandeal" className="h-5" />
+              <span className="font-[var(--font-vina)] text-xl text-[#1C48CD]">
+                wandeal
+              </span>
+            </div>
             <p className="text-[13px] text-[#6B7280] mt-1 max-w-[360px] leading-relaxed">
               {t("tagline")}
             </p>
