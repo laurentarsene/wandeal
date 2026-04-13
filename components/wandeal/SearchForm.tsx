@@ -152,7 +152,7 @@ function BentoCard({
         ${
           active
             ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
-            : "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,0.06),0_1px_4px_rgba(0,0,0,0.04)] hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.06)]"
+            : "bg-white/70 [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.03)] hover:bg-white hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.06)]"
         }
         ${className}
       `}
@@ -457,6 +457,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 </div>
               )}
             </BentoCard>
+
+            {/* Optional filters divider */}
+            <div className="col-span-2 lg:col-span-4 flex items-center gap-3 py-1">
+              <div className="flex-1 h-px bg-[#E5E7EB]" />
+              <span className="text-[10px] font-medium text-[#9CA3AF] shrink-0">{t("optionalFilters")}</span>
+              <div className="flex-1 h-px bg-[#E5E7EB]" />
+            </div>
 
             {/* Travelers */}
             <BentoCard className="col-span-1 flex flex-col" active={true}>

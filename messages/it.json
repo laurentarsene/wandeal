@@ -82,7 +82,8 @@
     "interestsHint": "— cosa ti fa sognare?",
     "searchNeedsCity": "Indica la tua citta di partenza",
     "fromHint": "Troviamo la destinazione per te",
-    "comfortLabel": "Livello di comfort"
+    "comfortLabel": "Livello di comfort",
+    "optionalFilters": "Personalizza se vuoi"
   },
   "presets": {
     "title": "Voglia di...",

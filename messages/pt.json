@@ -82,7 +82,8 @@
     "interestsHint": "— o que te faz sonhar?",
     "searchNeedsCity": "Indique a sua cidade de partida",
     "fromHint": "Encontramos o destino por si",
-    "comfortLabel": "Nivel de conforto"
+    "comfortLabel": "Nivel de conforto",
+    "optionalFilters": "Ajuste se quiser"
   },
   "presets": {
     "title": "Com vontade de...",

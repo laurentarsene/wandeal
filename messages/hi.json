@@ -82,7 +82,8 @@
     "interestsHint": "— what makes you dream?",
     "searchNeedsCity": "Enter your departure city",
     "fromHint": "We will find the destination for you",
-    "comfortLabel": "Comfort level"
+    "comfortLabel": "Comfort level",
+    "optionalFilters": "Fine-tune if you want"
   },
   "presets": {
     "title": "Feeling like...",

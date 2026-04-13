@@ -82,7 +82,8 @@
     "interestsHint": "— que te hace sonar?",
     "searchNeedsCity": "Indica tu ciudad de salida",
     "fromHint": "Encontramos el destino por ti",
-    "comfortLabel": "Nivel de confort"
+    "comfortLabel": "Nivel de confort",
+    "optionalFilters": "Ajusta si quieres"
   },
   "presets": {
     "title": "Ganas de...",

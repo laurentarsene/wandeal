@@ -82,7 +82,8 @@
     "interestsHint": "— was laesst dich traeumen?",
     "searchNeedsCity": "Gib deine Abfahrtsstadt ein",
     "fromHint": "Wir finden das Ziel fuer dich",
-    "comfortLabel": "Komfortstufe"
+    "comfortLabel": "Komfortstufe",
+    "optionalFilters": "Verfeinere wenn du willst"
   },
   "presets": {
     "title": "Lust auf...",
