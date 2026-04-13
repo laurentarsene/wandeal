@@ -83,14 +83,14 @@
     "searchNeedsCity": "Gib deine Abfahrtsstadt ein"
   },
   "presets": {
-    "title": "Schnellauswahl",
+    "title": "Lust auf...",
     "sun": "Sonne mit Freunden und kleinem Budget",
     "family": "Kultur und Pool mit der Familie",
     "nature": "Solo-Natur zum Nulltarif",
     "food": "Gourmet-Auszeit",
     "mountain": "Abenteuer in den Bergen",
     "honeymoon": "Flitterwochen",
-    "hint": "Schnellauswahl"
+    "hint": ""
   },
   "loading": {
     "title": "Wir suchen fuer dich...",

@@ -83,14 +83,14 @@
     "searchNeedsCity": "Enter your departure city"
   },
   "presets": {
-    "title": "तैयार चयन",
+    "title": "Feeling like...",
     "sun": "दोस्तों के साथ सस्ती धूप",
     "family": "परिवार के साथ संस्कृति और पूल",
     "nature": "मुफ़्त में अकेले प्रकृति",
     "food": "स्वादिष्ट पलायन",
     "mountain": "पहाड़ी रोमांच",
     "honeymoon": "हनीमून",
-    "hint": "quick fill"
+    "hint": ""
   },
   "loading": {
     "title": "आपके लिए खोज रहे हैं...",

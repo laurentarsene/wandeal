@@ -83,8 +83,8 @@
     "cityHint": "Indiquez votre ville pour ce preset"
   },
   "presets": {
-    "title": "Presets",
-    "hint": "remplissage rapide",
+    "title": "Envie de...",
+    "hint": "",
     "sun": "Soleil entre potes pas cher",
     "family": "Famille culture & piscine",
     "nature": "Nature solo pour 0€",

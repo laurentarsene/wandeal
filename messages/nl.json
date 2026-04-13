@@ -83,14 +83,14 @@
     "searchNeedsCity": "Vul je vertrekstad in"
   },
   "presets": {
-    "title": "Snelle keuzes",
+    "title": "Zin in...",
     "sun": "Zon met vrienden voor weinig",
     "family": "Cultuur en zwembad met het gezin",
     "nature": "Solo natuur en gratis",
     "food": "Culinair uitje",
     "mountain": "Bergavontuur",
     "honeymoon": "Huwelijksreis",
-    "hint": "snel invullen"
+    "hint": ""
   },
   "loading": {
     "title": "We zoeken voor je...",

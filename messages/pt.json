@@ -83,14 +83,14 @@
     "searchNeedsCity": "Indique a sua cidade de partida"
   },
   "presets": {
-    "title": "Selecoes rapidas",
+    "title": "Com vontade de...",
     "sun": "Sol com amigos e pouco gasto",
     "family": "Cultura e piscina em familia",
     "nature": "Natureza a solo e gratis",
     "food": "Escapadinha gourmet",
     "mountain": "Aventura na montanha",
     "honeymoon": "Lua de mel",
-    "hint": "preenchimento rapido"
+    "hint": ""
   },
   "loading": {
     "title": "A procurar para si...",

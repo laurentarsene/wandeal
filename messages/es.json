@@ -83,14 +83,14 @@
     "searchNeedsCity": "Indica tu ciudad de salida"
   },
   "presets": {
-    "title": "Selecciones rapidas",
+    "title": "Ganas de...",
     "sun": "Sol con amigos y bajo presupuesto",
     "family": "Cultura y piscina en familia",
     "nature": "Naturaleza en solitario gratis",
     "food": "Escapada gourmet",
     "mountain": "Aventura en la montana",
     "honeymoon": "Luna de miel",
-    "hint": "llenado rapido"
+    "hint": ""
   },
   "loading": {
     "title": "Buscando para ti...",

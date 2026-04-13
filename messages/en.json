@@ -83,8 +83,8 @@
     "cityHint": "Enter your city for this preset"
   },
   "presets": {
-    "title": "Presets",
-    "hint": "quick fill",
+    "title": "Feeling like...",
+    "hint": "",
     "sun": "Sun with friends on a budget",
     "family": "Family culture & pool",
     "nature": "Solo nature for free",
