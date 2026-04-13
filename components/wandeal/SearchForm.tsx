@@ -348,8 +348,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
           </div>
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
+          {/* Dark overlay — subtle, no gradient */}
+          <div className="absolute inset-0 bg-black/30" />
           {/* Content */}
           <div className="relative h-full flex flex-col justify-between p-6 pt-8">
             {/* Top — presets */}
@@ -400,9 +400,9 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           </div>
         </div>
 
-        {/* MOBILE: Form section */}
-        <div id="mobile-form" className="lg:hidden px-3 sm:px-6 pt-6 pb-24">
-          <div className="w-full">
+        {/* Form section — mobile below hero, desktop in right panel */}
+        <div id="mobile-form" className="px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
+          <div className="w-full lg:max-w-[900px]">
             {/* Bento Grid */}
             <div className="shrink-0">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-3">
@@ -834,8 +834,6 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           </div>
         </div>
 
-        {/* Close desktop right panel */}
-        <div className="hidden lg:block" />
       </div>
     </>
   );
