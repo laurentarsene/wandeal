@@ -46,6 +46,7 @@
     "accHostel": "Hostel",
     "accAirbnb": "Airbnb",
     "accCamping": "Camping",
+    "comfortLabel": "Comfort level",
     "comfortBudget": "Budget",
     "comfortStandard": "Standard",
     "comfortPremium": "Premium",

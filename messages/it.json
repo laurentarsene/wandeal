@@ -81,7 +81,8 @@
     "cityHint": "Inserisci la tua citta' per questa selezione",
     "interestsHint": "— cosa ti fa sognare?",
     "searchNeedsCity": "Indica la tua citta di partenza",
-    "fromHint": "Troviamo la destinazione per te"
+    "fromHint": "Troviamo la destinazione per te",
+    "comfortLabel": "Livello di comfort"
   },
   "presets": {
     "title": "Voglia di...",

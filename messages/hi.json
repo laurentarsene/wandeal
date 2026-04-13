@@ -81,7 +81,8 @@
     "cityHint": "इस चयन के लिए अपना शहर दर्ज करें",
     "interestsHint": "— what makes you dream?",
     "searchNeedsCity": "Enter your departure city",
-    "fromHint": "We will find the destination for you"
+    "fromHint": "We will find the destination for you",
+    "comfortLabel": "Comfort level"
   },
   "presets": {
     "title": "Feeling like...",

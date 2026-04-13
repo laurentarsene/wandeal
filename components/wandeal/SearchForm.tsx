@@ -738,6 +738,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                   );
                 })}
               </div>
+              <p className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] mt-1 mb-1">{t("comfortLabel")}</p>
               <div className="flex gap-1.5">
                 {(
                   [

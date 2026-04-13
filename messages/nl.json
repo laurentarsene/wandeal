@@ -81,7 +81,8 @@
     "cityHint": "Voer je stad in voor deze selectie",
     "interestsHint": "— waar droom je van?",
     "searchNeedsCity": "Vul je vertrekstad in",
-    "fromHint": "Wij vinden de bestemming voor jou"
+    "fromHint": "Wij vinden de bestemming voor jou",
+    "comfortLabel": "Comfortniveau"
   },
   "presets": {
     "title": "Zin in...",

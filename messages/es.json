@@ -81,7 +81,8 @@
     "cityHint": "Introduce tu ciudad para esta seleccion",
     "interestsHint": "— que te hace sonar?",
     "searchNeedsCity": "Indica tu ciudad de salida",
-    "fromHint": "Encontramos el destino por ti"
+    "fromHint": "Encontramos el destino por ti",
+    "comfortLabel": "Nivel de confort"
   },
   "presets": {
     "title": "Ganas de...",
