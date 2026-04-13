@@ -38,15 +38,13 @@ export function HublotVideo() {
 
   return (
     <div
-      className="mx-auto rounded-full overflow-hidden relative"
-      style={{ width: 220, height: 220, boxShadow: "0 0 0 6px #e5e7eb, 0 0 0 8px #d1d5db" }}
+      className="mx-auto rounded-full overflow-hidden relative w-[140px] h-[140px] sm:w-[200px] sm:h-[200px]"
+      style={{ boxShadow: "0 0 0 5px #e5e7eb, 0 0 0 7px #d1d5db" }}
     >
       {/* Poster image as base — always visible */}
       <img
         src="/hero-travel-poster.jpg"
         alt=""
-        width={220}
-        height={220}
         style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
       />
       {/* Video overlay — fades in when playing */}

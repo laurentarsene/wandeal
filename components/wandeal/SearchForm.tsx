@@ -303,7 +303,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col justify-center px-3 sm:px-6 lg:px-10 pt-6 sm:pt-4 pb-24 sm:pb-4 max-w-[900px] mx-auto">
         {/* Hero */}
-        <div className="text-center mb-3 shrink-0">
+        <div className="text-center mb-2 shrink-0">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
             <Sparkles size={11} />
             {tHero("badge")}
@@ -325,7 +325,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         </div>
 
         {/* Hublot video */}
-        <div className="shrink-0 mb-3">
+        <div className="shrink-0 mb-2">
           <HublotVideo />
         </div>
 
