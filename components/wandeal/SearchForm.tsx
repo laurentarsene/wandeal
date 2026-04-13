@@ -26,6 +26,7 @@ import {
   BedDouble,
   Home,
   Tent,
+  ChevronDown,
   Globe,
   Compass,
   Map,
@@ -326,55 +327,67 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         </div>
 
         {/* Right panel (desktop) / Full width (mobile) */}
-        <div className="lg:w-[58%] lg:overflow-y-auto flex flex-col lg:justify-center px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:pt-4 pb-24 sm:pb-4">
-          <div className="w-full lg:max-w-[900px]">
-            {/* Hero — mobile only (on desktop it's overlaid on the video) */}
-            <div className="text-center mb-2 shrink-0 lg:hidden">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
-                <Sparkles size={11} />
-                {tHero("badge")}
-              </div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#111] leading-[1.15] tracking-tight">
-                {tHero("title1")}
-                <br />
-                <span
-                  style={{
-                    background: "linear-gradient(135deg, #264044, #3a6068, #4a9aa8)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  {tHero("title2")}
-                </span>
-              </h1>
-              <p className="text-[11px] text-[#9CA3AF] mt-2">{tHero("madeIn")}</p>
-            </div>
-
-            {/* Video — mobile only (round) */}
-            <div className="lg:hidden shrink-0 my-3">
-              <HublotVideo />
-            </div>
-
-            {/* Presets — mobile only (desktop uses fixed sidebar) */}
-            <div className="lg:hidden shrink-0 relative mb-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1 px-1">{tPresets("title")}</p>
-              <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
+        {/* MOBILE: Fullscreen hero with video background */}
+        <div className="lg:hidden relative h-[calc(100dvh-64px)] overflow-hidden rounded-b-[32px]">
+          {/* Video background */}
+          <div className="absolute inset-0">
+            <HublotVideo variant="tall" />
+          </div>
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
+          {/* Content */}
+          <div className="relative h-full flex flex-col justify-between p-6 pt-8">
+            {/* Top — presets */}
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/50 mb-2">
+                {tPresets("title")}
+              </p>
+              <div className="flex flex-wrap gap-2">
                 {presets.map((preset) => (
                   <button
                     key={preset.label}
                     type="button"
                     onClick={() => applyPreset(preset)}
-                    className="shrink-0 snap-start inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white text-[12px] font-medium text-[#4B5563] [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.06)] active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-[11px] font-medium text-white/80 hover:bg-white/20 active:scale-95 transition-all cursor-pointer"
                   >
-                    <div className="w-7 h-7 rounded-lg bg-[#F3F4F6] flex items-center justify-center shrink-0">
-                      <preset.icon size={14} className="text-[#9CA3AF]" />
-                    </div>
-                    <span className="whitespace-nowrap">{preset.label}</span>
+                    <preset.icon size={12} className="text-white/60" />
+                    <span>{preset.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* Bottom — hero text + scroll indicator */}
+            <div className="text-center">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm text-white text-[10px] font-semibold mb-2 tracking-wide">
+                <Sparkles size={11} />
+                {tHero("badge")}
+              </div>
+              <h1 className="text-2xl font-extrabold text-white leading-[1.15] tracking-tight">
+                {tHero("title1")}
+                <br />
+                <span className="text-[#8dd8e0]">{tHero("title2")}</span>
+              </h1>
+              <p className="text-[11px] text-white/50 mt-1.5 mb-6">{tHero("madeIn")}</p>
+
+              {/* Scroll indicator */}
+              <button
+                type="button"
+                onClick={() => document.getElementById("mobile-form")?.scrollIntoView({ behavior: "smooth" })}
+                className="mx-auto flex flex-col items-center gap-1 cursor-pointer"
+              >
+                <span className="text-[11px] font-semibold text-white/70 tracking-wide">{t("search")}</span>
+                <div className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center animate-bounce">
+                  <ChevronDown size={20} className="text-white" />
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* MOBILE: Form section */}
+        <div id="mobile-form" className="lg:hidden px-3 sm:px-6 pt-6 pb-24">
+          <div className="w-full">
             {/* Bento Grid */}
             <div className="shrink-0">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-3">
@@ -805,6 +818,9 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             })()}
           </div>
         </div>
+
+        {/* Close desktop right panel */}
+        <div className="hidden lg:block" />
       </div>
     </>
   );
