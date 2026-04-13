@@ -37,6 +37,7 @@ import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { InterestChips } from "./InterestChips";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { DateRangePicker } from "./DateRangePicker";
+import { HublotVideo } from "./HublotVideo";
 import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraintTag } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 
@@ -321,6 +322,11 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </span>
           </h1>
           <p className="text-[11px] text-[#9CA3AF] mt-2">{tHero("madeIn")}</p>
+        </div>
+
+        {/* Hublot video */}
+        <div className="shrink-0 mb-3">
+          <HublotVideo />
         </div>
 
         {/* Mobile presets — horizontal scroll with fade edges */}
