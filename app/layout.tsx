@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Vina_Sans } from "next/font/google";
+import { Inter, Vina_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
 });
 
 const vinaSans = Vina_Sans({
@@ -17,11 +16,24 @@ const vinaSans = Vina_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Wandeal — Vos meilleures vacances au meilleur prix",
+  title: "Wandeal — Ur next journey",
   description:
-    "Trouvez les destinations de vacances les plus avantageuses selon vos dates, votre budget et vos envies. Météo vérifiée, prix estimés, destinations réelles.",
+    "Des vacances sur mesure, trouvées par l'IA. Dites-nous d'où vous partez, on s'occupe du reste.",
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Wandeal — Ur next journey",
+    description: "Des vacances sur mesure, trouvées par l'IA.",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+    type: "website",
+    siteName: "Wandeal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wandeal — Ur next journey",
+    description: "Des vacances sur mesure, trouvées par l'IA.",
+    images: ["/og.png"],
   },
 };
 
@@ -34,8 +46,8 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${jakarta.variable} ${vinaSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#FAFAFA]">
+    <html lang={locale} className={`${inter.variable} ${vinaSans.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-[#FAFAFA] font-[var(--font-inter)]">
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
