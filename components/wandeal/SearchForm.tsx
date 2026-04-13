@@ -767,7 +767,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
           {/* Interests */}
           <BentoCard
-            className="col-span-2 overflow-hidden"
+            className="col-span-2 lg:col-span-4 overflow-hidden"
             active={form.interests.length > 0}
           >
             <div className="flex items-baseline gap-2 mb-2">
