@@ -10,57 +10,46 @@ export function HublotVideo() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Force muted + autoplay attributes for browser policy
     video.muted = true;
-    video.autoplay = true;
-    video.playsInline = true;
     video.setAttribute("muted", "");
-    video.setAttribute("playsinline", "");
 
     const tryPlay = () => {
-      if (!video.paused) {
-        setPlaying(true);
-        return;
-      }
+      if (!video.paused) { setPlaying(true); return; }
       video.play().then(() => setPlaying(true)).catch(() => {});
     };
 
-    // Load and play
-    video.load();
     tryPlay();
-
-    // Retry on various ready events
     video.addEventListener("canplay", tryPlay);
-    video.addEventListener("loadedmetadata", tryPlay);
 
-    // Fallback: any user interaction
-    const onInteraction = () => {
-      tryPlay();
-      removeListeners();
-    };
-    const removeListeners = () => {
-      ["scroll", "touchstart", "click", "mousemove", "keydown"].forEach((evt) =>
-        window.removeEventListener(evt, onInteraction)
-      );
-    };
-    ["scroll", "touchstart", "click", "mousemove", "keydown"].forEach((evt) =>
-      window.addEventListener(evt, onInteraction, { once: true, passive: true })
-    );
+    const onInteraction = () => tryPlay();
+    window.addEventListener("scroll", onInteraction, { once: true, passive: true });
+    window.addEventListener("touchstart", onInteraction, { once: true, passive: true });
+    window.addEventListener("click", onInteraction, { once: true });
+    window.addEventListener("mousemove", onInteraction, { once: true, passive: true });
 
     return () => {
       video.removeEventListener("canplay", tryPlay);
-      video.removeEventListener("loadedmetadata", tryPlay);
-      removeListeners();
+      window.removeEventListener("scroll", onInteraction);
+      window.removeEventListener("touchstart", onInteraction);
+      window.removeEventListener("click", onInteraction);
+      window.removeEventListener("mousemove", onInteraction);
     };
   }, []);
 
   return (
-    <div className="mx-auto w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] rounded-full overflow-hidden shadow-[0_0_0_6px_#e5e7eb,0_0_0_8px_#d1d5db] relative">
+    <div
+      className="mx-auto rounded-full overflow-hidden relative"
+      style={{ width: 220, height: 220, boxShadow: "0 0 0 6px #e5e7eb, 0 0 0 8px #d1d5db" }}
+    >
+      {/* Poster image as base — always visible */}
       <img
         src="/hero-travel-poster.jpg"
         alt=""
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${playing ? "opacity-0" : "opacity-100"}`}
+        width={220}
+        height={220}
+        style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
       />
+      {/* Video overlay — fades in when playing */}
       <video
         ref={videoRef}
         src="/hero-travel.mp4"
@@ -69,11 +58,21 @@ export function HublotVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${playing ? "opacity-100" : "opacity-0"}`}
-      />
-      <div
-        className="absolute inset-0 rounded-full pointer-events-none"
         style={{
+          position: "absolute",
+          top: 0, left: 0, width: "100%", height: "100%",
+          objectFit: "cover",
+          opacity: playing ? 1 : 0,
+          transition: "opacity 0.5s",
+        }}
+      />
+      {/* Glass glare */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0, bottom: 0,
+          borderRadius: "50%",
+          pointerEvents: "none",
           background: "linear-gradient(145deg, rgba(255,255,255,0.25) 0%, transparent 40%, rgba(255,255,255,0.05) 100%)",
         }}
       />
