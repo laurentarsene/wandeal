@@ -282,14 +282,14 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video */}
-        <div className="hidden lg:flex w-[38%] shrink-0 p-5 items-center justify-end">
-          <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+        <div className="hidden lg:flex w-[38%] shrink-0 p-5 pt-6">
+          <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px]">
             <HublotVideo variant="tall" />
           </div>
         </div>
 
         {/* Right panel (desktop) / Full width (mobile) */}
-        <div className="lg:w-[62%] lg:overflow-y-auto flex flex-col justify-center px-3 sm:px-6 lg:px-8 pt-6 sm:pt-4 lg:py-6 pb-24 sm:pb-4">
+        <div className="lg:w-[62%] lg:overflow-y-auto flex flex-col px-3 sm:px-6 lg:px-8 pt-6 sm:pt-4 lg:pt-6 pb-24 sm:pb-4">
           <div className="max-w-[600px] w-full">
             {/* Hero */}
             <div className="text-center lg:text-left mb-2 shrink-0">
