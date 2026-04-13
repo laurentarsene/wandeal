@@ -147,7 +147,7 @@ function BentoCard({
   return (
     <div
       className={`
-        relative rounded-[20px] p-3 lg:p-3 transition-all duration-300 transform-gpu h-full min-h-[100px]
+        relative rounded-[20px] p-4 lg:p-5 transition-all duration-300 transform-gpu h-full min-h-[100px]
         ${
           active
             ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
@@ -377,7 +377,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Bento Grid */}
             <div className="shrink-0">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-1.5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-3">
             {/* Where */}
             <BentoCard
               className={`col-span-2 lg:col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
