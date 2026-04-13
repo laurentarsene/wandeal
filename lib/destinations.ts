@@ -82,7 +82,7 @@ export function buildPrompt(form: SearchFormData): string {
 
   let transportConstraint: string;
   if (onlyBike) {
-    transportConstraint = `CONTRAINTE TRANSPORT VÉLO : TOUTES les destinations doivent être accessibles à vélo depuis ${origin} (max 300km). flightPrice = 0 pour toutes. Ne propose PAS de destinations nécessitant un avion ou un long trajet.`;
+    transportConstraint = `CONTRAINTE TRANSPORT VÉLO : TOUTES les destinations doivent être accessibles à vélo depuis ${origin} (max 300km). flightPrice = 0 pour toutes. Ne propose PAS de destinations nécessitant un avion ou un long trajet. OBLIGATOIRE : ajoute "distanceKm" (distance en km) et "travelHours" (temps estimé en heures) pour chaque destination.`;
   } else if (form.transport.length > 0 && !hasPlane) {
     // No plane selected — strict distance limits
     const parts: string[] = [];
@@ -98,7 +98,7 @@ export function buildPrompt(form: SearchFormData): string {
       if (hasTrain) parts.push("train (flightPrice = billet AR)");
       if (hasBike) parts.push("vélo (flightPrice = 0, max 300km)");
     }
-    transportConstraint = `CONTRAINTE TRANSPORT TERRESTRE : ${parts.join(" / ")}. TOUTES les destinations doivent être accessibles par route/rail depuis ${origin} (max ${maxKm}km). PAS de destinations sur d'autres continents, PAS d'îles inaccessibles en voiture/train. Pense Europe accessible : France, Pays-Bas, Allemagne, Suisse, Italie du Nord, Espagne, etc. flightPrice = coût du trajet terrestre AR.`;
+    transportConstraint = `CONTRAINTE TRANSPORT TERRESTRE : ${parts.join(" / ")}. TOUTES les destinations doivent être accessibles par route/rail depuis ${origin} (max ${maxKm}km). PAS de destinations sur d'autres continents, PAS d'îles inaccessibles en voiture/train. Pense Europe accessible : France, Pays-Bas, Allemagne, Suisse, Italie du Nord, Espagne, etc. flightPrice = coût du trajet terrestre AR. OBLIGATOIRE : ajoute "distanceKm" (distance aller en km depuis ${origin}) et "travelHours" (temps de trajet aller estimé en heures, ex: 4.5 pour 4h30) pour chaque destination.`;
   } else if (form.transport.length > 0) {
     // Plane is included
     const parts: string[] = [];

@@ -238,19 +238,19 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
           )}
           {(() => {
             const nearby = isNearby(dest, transports);
-            // Pick the right icon/label based on selected transport
             const mode = transports?.length === 1 ? transports[0] : nearby ? "car" : "plane";
             const display = transportDisplay[mode] || transportDisplay.plane;
             const TransportIcon = display.icon;
-            return nearby && dest.flightPrice === 0 ? (
+            const hasDistance = dest.distanceKm && dest.distanceKm > 0;
+            const hasTime = dest.travelHours && dest.travelHours > 0;
+            const fmtTime = hasTime ? (dest.travelHours! >= 1 ? `${Math.floor(dest.travelHours!)}h${dest.travelHours! % 1 >= 0.5 ? "30" : ""}` : `${Math.round(dest.travelHours! * 60)}min`) : null;
+
+            return (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
                 <TransportIcon size={13} />
-                {t("reachable")}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
-                <TransportIcon size={13} />
-                ~{dest.flightPrice}€
+                {nearby && dest.flightPrice === 0 ? t("reachable") : `~${dest.flightPrice}€`}
+                {hasDistance && <span className="text-[#9CA3AF]">· {dest.distanceKm}km</span>}
+                {fmtTime && <span className="text-[#9CA3AF]">· {fmtTime}</span>}
               </span>
             );
           })()}
