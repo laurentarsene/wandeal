@@ -299,10 +299,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
-          <div className="w-full h-[calc(100dvh-104px)] rounded-[32px] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
+          <div className="w-full h-[calc(100dvh-104px)] rounded-[44px] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
             <HublotVideo variant="tall" />
             {/* Content overlay */}
-            <div className="absolute inset-0 rounded-[32px] flex flex-col justify-between p-5" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 55%, rgba(0,0,0,0.7) 100%)" }}>
+            <div className="absolute inset-0 rounded-[44px] flex flex-col justify-between p-5" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 55%, rgba(0,0,0,0.7) 100%)" }}>
               {/* Presets — top */}
               <div className="flex flex-col gap-2.5">
                 <p className="text-[13px] font-bold text-white/60">
