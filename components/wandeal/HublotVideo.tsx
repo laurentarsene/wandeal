@@ -48,7 +48,7 @@ export function HublotVideo({ variant = "round" }: HublotVideoProps) {
         ? "mx-auto w-[120px] h-[160px] sm:w-[140px] sm:h-[190px] overflow-hidden relative"
         : "w-full h-full rounded-3xl overflow-hidden relative"}
       style={isRound ? {
-        borderRadius: "40%",
+        borderRadius: "35%",
         boxShadow: "0 0 0 5px #e5e7eb, 0 0 0 7px #d1d5db",
       } : undefined}
     >

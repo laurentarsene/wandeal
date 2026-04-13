@@ -351,7 +351,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </div>
 
             {/* Video — mobile only (round) */}
-            <div className="lg:hidden shrink-0 mb-2">
+            <div className="lg:hidden shrink-0 my-3">
               <HublotVideo />
             </div>
 
