@@ -283,7 +283,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
-          <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
+          <div className="w-full h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
             <HublotVideo variant="tall" />
             {/* Text overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-3xl flex flex-col justify-end p-6">
@@ -305,7 +305,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
         {/* Right panel (desktop) / Full width (mobile) */}
         <div className="lg:w-[58%] lg:overflow-y-auto flex flex-col px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:pt-4 pb-24 sm:pb-4">
-          <div className="max-w-[600px] w-full">
+          <div className="w-full">
             {/* Hero — mobile only (on desktop it's overlaid on the video) */}
             <div className="text-center mb-2 shrink-0 lg:hidden">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
@@ -355,10 +355,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Bento Grid */}
             <div className="shrink-0">
-              <div className="grid grid-cols-2 gap-2 lg:gap-1.5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-1.5">
             {/* Where */}
             <BentoCard
-              className={`col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
+              className={`col-span-2 lg:col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
               active={!!form.city}
             >
               <SectionLabel icon={MapPin}>{t("from")}</SectionLabel>
@@ -745,7 +745,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               const hasCity = form.city.trim().length > 0;
               return (
                 <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA] to-transparent sm:static sm:bg-none sm:p-0 sm:mt-4 sm:shrink-0">
-                  <div className="max-w-[520px] lg:mx-auto">
+                  <div className="w-full">
                     {hasCity ? (
                       <ShimmerButton
                         onClick={onSubmit}
