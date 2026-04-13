@@ -281,18 +281,33 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
       {/* Desktop presets — removed sidebar, now inline on right panel */}
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
-        {/* Left panel — desktop video */}
+        {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[38%] shrink-0 p-5 pt-6">
-          <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px]">
+          <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
             <HublotVideo variant="tall" />
+            {/* Text overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-3xl flex flex-col justify-end p-6">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] font-semibold mb-2 tracking-wide w-fit">
+                <Sparkles size={11} />
+                {tHero("badge")}
+              </div>
+              <h1 className="text-2xl font-extrabold text-white leading-[1.15] tracking-tight">
+                {tHero("title1")}
+                <br />
+                <span className="text-[#8dd8e0]">
+                  {tHero("title2")}
+                </span>
+              </h1>
+              <p className="text-[11px] text-white/60 mt-2">{tHero("madeIn")}</p>
+            </div>
           </div>
         </div>
 
         {/* Right panel (desktop) / Full width (mobile) */}
         <div className="lg:w-[62%] lg:overflow-y-auto flex flex-col px-3 sm:px-6 lg:px-8 pt-6 sm:pt-4 lg:pt-6 pb-24 sm:pb-4">
           <div className="max-w-[600px] w-full">
-            {/* Hero */}
-            <div className="text-center lg:text-left mb-2 shrink-0">
+            {/* Hero — mobile only (on desktop it's overlaid on the video) */}
+            <div className="text-center mb-2 shrink-0 lg:hidden">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
                 <Sparkles size={11} />
                 {tHero("badge")}
