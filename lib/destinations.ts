@@ -216,6 +216,7 @@ Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactem
     "dateFrom": "2026-06-15",
     "dateTo": "2026-06-20",
     "datePeriodLabel": "Weekend (ven→dim)",
+    "transportMode": "car",
     "distanceKm": 1100,
     "travelHours": 10.5,
     "tempMin": 22,
@@ -249,5 +250,6 @@ ${weatherRule}
 9. Si budget serré (< 400€), proposer des destinations vraiment accessibles (proches, low-cost, auberges)
 10. JSON UNIQUEMENT — aucun texte avant ou après
 11. IMPORTANT "why" : Le champ "why" doit être SPÉCIFIQUE et CONCRET — explique POURQUOI cette destination est parfaite pour les envies sélectionnées. Cite des lieux précis, des spécialités, des expériences uniques. PAS de phrases génériques. Ex: pour "shopping" à Marrakech → parle des souks, du cuir, des épices. Pour "surf" à Biarritz → parle de la Côte des Basques, des vagues.
-${datesRule}${periodLabelRule}${accommodationConstraint ? "\n" + accommodationConstraint : ""}${budgetFilter}`;
+${datesRule}${periodLabelRule}${accommodationConstraint ? "\n" + accommodationConstraint : ""}
+14. transportMode : OBLIGATOIRE — indique le mode de transport choisi pour chaque destination parmi ceux sélectionnés ("plane", "train", "car" ou "bike"). Si transport terrestre, ajoute aussi distanceKm (aller en km) et travelHours (aller en heures, ex: 4.5). Pour l'avion, omets distanceKm et travelHours.${budgetFilter}`;
 }

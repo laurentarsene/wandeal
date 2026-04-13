@@ -48,7 +48,9 @@ function toYYMMDD(dateStr: string): string {
 
 function isNearby(dest: Destination, transports?: TransportMode[]): boolean {
   if (dest.isLocal || dest.flightPrice === 0) return true;
-  // If only ground transport selected, it's "nearby" style (no flights)
+  // If the AI chose a ground transport for this destination
+  if (dest.transportMode && dest.transportMode !== "plane") return true;
+  // If only ground transport selected
   if (transports && transports.length > 0 && !transports.includes("plane")) return true;
   return false;
 }
@@ -239,7 +241,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
           )}
           {(() => {
             const nearby = isNearby(dest, transports);
-            const mode = transports?.length === 1 ? transports[0] : nearby ? "car" : "plane";
+            const mode = (dest.transportMode as TransportMode) || (transports?.length === 1 ? transports[0] : nearby ? "car" : "plane");
             const display = transportDisplay[mode] || transportDisplay.plane;
             const TransportIcon = display.icon;
             const hasDistance = dest.distanceKm && dest.distanceKm > 0;
@@ -271,8 +273,9 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             </span>
           )}
           {dest.fritesPrice > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="group/frites inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563] transition-all duration-200 hover:scale-110 hover:bg-[#264044] hover:text-white cursor-default">
               🍟 {dest.fritesPrice}€
+              <span className="max-w-0 overflow-hidden opacity-0 group-hover/frites:max-w-[80px] group-hover/frites:opacity-100 transition-all duration-300 whitespace-nowrap">la frite</span>
             </span>
           )}
         </div>

@@ -51,6 +51,7 @@ export interface Destination {
   datePeriodLabel?: string; // ex: "Pont de l'Ascension", "Weekend (ven→dim)", "Toussaint 2026"
   isLocal: boolean;
   isSurprise: boolean;
+  transportMode?: "plane" | "train" | "car" | "bike"; // mode de transport choisi par l'IA
   distanceKm?: number;    // distance route/vélo depuis l'origin en km
   travelHours?: number;   // temps de trajet estimé en heures
   originIata?: string;    // code IATA de la ville de départ (ex: BRU)
