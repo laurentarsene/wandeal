@@ -21,6 +21,8 @@ import {
   CalendarDays,
   MapPin,
   Car,
+  TrainFront,
+  Bike,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -43,8 +45,11 @@ function toYYMMDD(dateStr: string): string {
   return dateStr.slice(2, 4) + dateStr.slice(5, 7) + dateStr.slice(8, 10);
 }
 
-function isNearby(dest: Destination): boolean {
-  return dest.isLocal || dest.flightPrice === 0;
+function isNearby(dest: Destination, transports?: TransportMode[]): boolean {
+  if (dest.isLocal || dest.flightPrice === 0) return true;
+  // If only ground transport selected, it's "nearby" style (no flights)
+  if (transports && transports.length > 0 && !transports.includes("plane")) return true;
+  return false;
 }
 
 function buildDirectionsUrl(dest: Destination, originCity?: string): string {
@@ -78,14 +83,24 @@ function buildFlightUrl(dest: Destination): string {
   return `https://www.google.com/travel/flights?q=${encodeURIComponent(parts.join(" "))}`;
 }
 
+type TransportMode = "plane" | "train" | "car" | "bike";
+
 interface DestCardProps {
   dest: Destination;
   originCity?: string;
+  transports?: TransportMode[];
   isFavorite?: boolean;
   onToggleFavorite?: (dest: Destination) => void;
 }
 
-export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: DestCardProps) {
+const transportDisplay: Record<TransportMode, { icon: typeof Plane; label: string }> = {
+  plane: { icon: Plane, label: "Vol" },
+  train: { icon: TrainFront, label: "Train" },
+  car: { icon: Car, label: "Trajet" },
+  bike: { icon: Bike, label: "Velo" },
+};
+
+export function DestCard({ dest, originCity, transports, isFavorite, onToggleFavorite }: DestCardProps) {
   const t = useTranslations("results");
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
@@ -221,17 +236,24 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
               )}
             </span>
           )}
-          {isNearby(dest) ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
-              <Car size={13} />
-              {t("reachable")}
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
-              <Plane size={13} />
-              ~{dest.flightPrice}€
-            </span>
-          )}
+          {(() => {
+            const nearby = isNearby(dest, transports);
+            // Pick the right icon/label based on selected transport
+            const mode = transports?.length === 1 ? transports[0] : nearby ? "car" : "plane";
+            const display = transportDisplay[mode] || transportDisplay.plane;
+            const TransportIcon = display.icon;
+            return nearby && dest.flightPrice === 0 ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+                <TransportIcon size={13} />
+                {t("reachable")}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+                <TransportIcon size={13} />
+                ~{dest.flightPrice}€
+              </span>
+            );
+          })()}
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
             <Hotel size={13} />
             ~{dest.hotelPerNight}€/{t("perNight")}
@@ -321,7 +343,7 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
             )}
           </button>
           <a
-            href={isNearby(dest) ? buildDirectionsUrl(dest, originCity) : buildFlightUrl(dest)}
+            href={isNearby(dest, transports) ? buildDirectionsUrl(dest, originCity) : buildFlightUrl(dest)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1"
@@ -333,7 +355,7 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
               className="w-full py-2.5 text-sm font-medium"
             >
               <span className="inline-flex items-center gap-1.5">
-                {isNearby(dest) ? (
+                {isNearby(dest, transports) ? (
                   <><MapPin size={13} /> {t("getDirections")}</>
                 ) : (
                   <><ExternalLink size={13} /> {t("seeFlights")}</>

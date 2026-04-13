@@ -108,6 +108,7 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
               <DestCard
                 dest={dest}
                 originCity={form.city}
+                transports={form.transport}
                 isFavorite={isFavorite(dest)}
                 onToggleFavorite={onToggleFavorite}
               />
