@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Vina_Sans } from "next/font/google";
+import { DM_Sans, Vina_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   variable: "--font-inter",
   subsets: ["latin"],
 });
@@ -46,7 +46,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${inter.variable} ${vinaSans.variable} h-full antialiased`}>
+    <html lang={locale} className={`${dmSans.variable} ${vinaSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-[#FAFAFA] font-sans">
         <NextIntlClientProvider messages={messages}>
           {children}
