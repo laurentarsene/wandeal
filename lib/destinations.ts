@@ -106,7 +106,7 @@ export function buildPrompt(form: SearchFormData): string {
     if (hasBike) parts.push("vélo (flightPrice = 0, max 300km)");
     transportConstraint = `Modes de transport acceptés : ${parts.join(" / ")}. Choisir le meilleur mode pour chaque destination parmi ceux sélectionnés. flightPrice correspond au coût du transport choisi.`;
   } else {
-    transportConstraint = "flightPrice = prix du transport aller-retour (avion, train ou autre selon la destination).";
+    transportConstraint = `Aucun mode de transport imposé. Pour chaque destination, choisis le mode le plus adapté (plane, train, car ou bike) en fonction de la distance depuis ${origin}. flightPrice = prix du transport AR pour le mode choisi. Pour les destinations proches (< 400km), privilégie voiture ou train. Pour les lointaines, privilégie l'avion. Ajoute distanceKm et travelHours pour les transports terrestres.`;
   }
 
   const hasCity = form.city.trim().length > 0;
