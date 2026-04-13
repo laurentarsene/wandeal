@@ -353,7 +353,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [] }: Sea
 
         {/* Right panel (desktop) / Full width (mobile) */}
         {/* MOBILE: Fullscreen hero with video background */}
-        <div className="lg:hidden relative h-[calc(100dvh-64px)] overflow-hidden isolate" style={{ borderRadius: "2.5rem" }}>
+        <div className="lg:hidden relative h-[calc(100dvh-64px-24px)] mx-3 mt-3 overflow-hidden isolate" style={{ borderRadius: "3rem" }}>
           {/* Video background */}
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
