@@ -296,7 +296,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
     <>
       {/* Desktop presets — overlaid on video panel, top area */}
 
-      <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
+      <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row bg-black lg:bg-transparent">
         {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
           <div className="w-full h-[calc(100dvh-104px)] rounded-[32px] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
