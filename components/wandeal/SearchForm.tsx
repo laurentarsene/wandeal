@@ -278,40 +278,19 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
   return (
     <>
-      {/* Desktop presets — fixed to right edge */}
-      <div className="hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-2 pr-8">
-        <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#264044] mb-0.5 px-1">
-          {tPresets("title")}
-        </p>
-        {presets.map((preset) => (
-          <button
-            key={preset.label}
-            type="button"
-            onClick={() => applyPreset(preset)}
-            className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/90 backdrop-blur-sm border border-[#E5E7EB] text-left text-[13px] font-medium text-[#4B5563] hover:border-[#264044] hover:bg-[#e8f0f1] hover:text-[#1a2e31] transition-all cursor-pointer group shadow-sm w-[220px]"
-          >
-            <div className="w-8 h-8 rounded-xl bg-[#F3F4F6] flex items-center justify-center shrink-0 group-hover:bg-[#264044] transition-colors">
-              <preset.icon
-                size={16}
-                className="text-[#9CA3AF] group-hover:text-white transition-colors"
-              />
-            </div>
-            <span className="leading-snug">{preset.label}</span>
-          </button>
-        ))}
-      </div>
+      {/* Desktop presets — removed sidebar, now inline on right panel */}
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video */}
-        <div className="hidden lg:flex w-1/2 p-6 items-center justify-center">
-          <div className="w-full max-w-[480px] h-[calc(100dvh-112px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+        <div className="hidden lg:flex w-[38%] shrink-0 p-5 items-center justify-end">
+          <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
             <HublotVideo variant="tall" />
           </div>
         </div>
 
         {/* Right panel (desktop) / Full width (mobile) */}
-        <div className="lg:w-1/2 lg:overflow-y-auto flex flex-col justify-center px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:py-6 pb-24 sm:pb-4">
-          <div className="max-w-[520px] lg:mx-auto w-full">
+        <div className="lg:w-[62%] lg:overflow-y-auto flex flex-col justify-center px-3 sm:px-6 lg:px-8 pt-6 sm:pt-4 lg:py-6 pb-24 sm:pb-4">
+          <div className="max-w-[600px] w-full">
             {/* Hero */}
             <div className="text-center lg:text-left mb-2 shrink-0">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
@@ -339,8 +318,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               <HublotVideo />
             </div>
 
-            {/* Mobile presets */}
-            <div className="lg:hidden shrink-0 relative mb-2.5">
+            {/* Presets */}
+            <div className="shrink-0 relative mb-2.5">
               <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1.5 px-1">{tPresets("title")}</p>
               <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
                 {presets.map((preset) => (
@@ -361,7 +340,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Bento Grid */}
             <div className="shrink-0">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
+              <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
             {/* Where */}
             <BentoCard
               className={`col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
@@ -524,7 +503,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               const lockedByConstraint = dc.includes("weekend") || dc.includes("bridge");
               const lockedByDates = !!daysFromDates || lockedByConstraint;
               return (
-                <BentoCard className="col-span-1 lg:col-span-2 flex flex-col" active={form.durationEnabled || lockedByDates}>
+                <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates}>
                   <div className="flex items-center justify-between mb-2">
                     <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
                     {!lockedByDates && (
@@ -610,12 +589,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             })()}
 
             {/* Transport */}
-            <BentoCard className="col-span-1 lg:col-span-2 flex flex-col" active={form.transport.length > 0}>
+            <BentoCard className="col-span-1 flex flex-col" active={form.transport.length > 0}>
               <SectionLabel icon={Plane}>{t("transport")}</SectionLabel>
               {form.transport.length === 0 && (
                 <p className="text-sm font-medium text-[#9CA3AF] mb-2">{t("transportAll")}</p>
               )}
-              <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-1.5 content-center">
+              <div className="flex-1 grid grid-cols-2 gap-1.5 content-center">
                 {(
                   [
                     { mode: "plane" as TransportMode, icon: Plane, label: t("transportPlane") },
@@ -659,12 +638,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </BentoCard>
 
             {/* Accommodation */}
-            <BentoCard className="col-span-2 lg:col-span-2 flex flex-col" active={form.accommodation.length > 0 || form.comfort !== "standard"}>
+            <BentoCard className="col-span-2 flex flex-col" active={form.accommodation.length > 0 || form.comfort !== "standard"}>
               <SectionLabel icon={BedDouble}>{t("accommodation")}</SectionLabel>
               {form.accommodation.length === 0 && (
                 <p className="text-sm font-medium text-[#9CA3AF] mb-1.5">{t("accommodationAll")}</p>
               )}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 mb-2.5">
+              <div className="grid grid-cols-2 gap-1.5 mb-2.5">
                 {(
                   [
                     { mode: "hotel" as AccommodationType, icon: Hotel, label: t("accHotel") },
@@ -729,7 +708,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
           {/* Interests */}
           <BentoCard
-            className="col-span-2 lg:col-span-4 overflow-hidden"
+            className="col-span-2 overflow-hidden"
             active={form.interests.length > 0}
           >
             <div className="flex items-baseline gap-2 mb-2">
