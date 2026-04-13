@@ -39,7 +39,6 @@ import { InterestChips } from "./InterestChips";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { DateRangePicker } from "./DateRangePicker";
 import { HublotVideo } from "./HublotVideo";
-import { TypingAnimation } from "@/components/ui/typing-animation";
 import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraintTag } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 
@@ -158,7 +157,7 @@ function BentoCard({
             ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
             : "bg-white/70 [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.03)] hover:bg-white hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.06)]"
         }
-        ${onClick && !active ? "cursor-pointer" : ""}
+        ${onClick && !active ? "cursor-pointer group" : ""}
         ${className}
       `}
     >
@@ -519,13 +518,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 {!form.budgetEnabled ? (
-                  <TypingAnimation
-                    className="text-sm font-medium text-[#9CA3AF] leading-snug"
-                    duration={60}
-                    showCursor={false}
-                  >
-                    {t("budgetAll")}
-                  </TypingAnimation>
+                  <div>
+                    <span className="text-sm font-medium text-[#9CA3AF] leading-snug lg:group-hover:hidden block">{t("budgetAll")}</span>
+                    <span className="text-sm font-medium text-[#264044] leading-snug hidden lg:group-hover:block">{t("budgetActivate")}</span>
+                  </div>
                 ) : (
                   <div>
                     <div className="mb-2">
@@ -599,13 +595,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                         </span>
                       </div>
                     ) : !form.durationEnabled ? (
-                      <TypingAnimation
-                        className="text-sm font-medium text-[#9CA3AF] leading-snug"
-                        duration={60}
-                        showCursor={false}
-                      >
-                        {t("durationAll")}
-                      </TypingAnimation>
+                      <div>
+                        <span className="text-sm font-medium text-[#9CA3AF] leading-snug lg:group-hover:hidden block">{t("durationAll")}</span>
+                        <span className="text-sm font-medium text-[#264044] leading-snug hidden lg:group-hover:block">{t("durationActivate")}</span>
+                      </div>
                     ) : (
                       <div>
                         <div className="mb-2">
