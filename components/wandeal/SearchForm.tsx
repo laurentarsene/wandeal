@@ -313,10 +313,10 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     key={preset.label}
                     type="button"
                     onClick={() => applyPreset(preset)}
-                    className="w-fit flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-left text-[11px] font-medium text-white/80 hover:bg-white/20 hover:text-white transition-all cursor-pointer group"
+                    className="w-fit flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 text-left text-[12px] font-medium text-white/85 hover:bg-white/20 hover:border-white/25 hover:text-white transition-all cursor-pointer group"
                   >
-                    <div className="w-6 h-6 rounded-lg bg-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/25 transition-colors">
-                      <preset.icon size={12} className="text-white/70" />
+                    <div className="w-7 h-7 rounded-xl bg-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/25 transition-colors">
+                      <preset.icon size={14} className="text-white/70" />
                     </div>
                     <span className="leading-snug">{preset.label}</span>
                   </button>
@@ -357,15 +357,15 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/50 mb-2">
                 {tPresets("title")}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2.5">
                 {presets.map((preset) => (
                   <button
                     key={preset.label}
                     type="button"
                     onClick={() => applyPreset(preset)}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-[11px] font-medium text-white/80 hover:bg-white/20 active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 text-[12px] font-medium text-white/85 hover:bg-white/20 hover:border-white/25 active:scale-95 transition-all cursor-pointer"
                   >
-                    <preset.icon size={12} className="text-white/60" />
+                    <preset.icon size={14} className="text-white/60" />
                     <span>{preset.label}</span>
                   </button>
                 ))}
