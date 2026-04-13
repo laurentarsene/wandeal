@@ -147,7 +147,7 @@ function BentoCard({
   return (
     <div
       className={`
-        relative rounded-xl p-4 transition-all duration-300 transform-gpu h-full min-h-[120px]
+        relative rounded-xl p-3 lg:p-3 transition-all duration-300 transform-gpu h-full min-h-[100px]
         ${
           active
             ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
@@ -282,7 +282,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video + hero overlay */}
-        <div className="hidden lg:flex w-[38%] shrink-0 p-5 pt-6">
+        <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
           <div className="w-full max-w-[400px] h-[calc(100dvh-104px)] rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
             <HublotVideo variant="tall" />
             {/* Text overlay */}
@@ -304,7 +304,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
         </div>
 
         {/* Right panel (desktop) / Full width (mobile) */}
-        <div className="lg:w-[62%] lg:overflow-y-auto flex flex-col px-3 sm:px-6 lg:px-8 pt-6 sm:pt-4 lg:pt-6 pb-24 sm:pb-4">
+        <div className="lg:w-[58%] lg:overflow-y-auto flex flex-col px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:pt-4 pb-24 sm:pb-4">
           <div className="max-w-[600px] w-full">
             {/* Hero — mobile only (on desktop it's overlaid on the video) */}
             <div className="text-center mb-2 shrink-0 lg:hidden">
@@ -334,8 +334,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             </div>
 
             {/* Presets */}
-            <div className="shrink-0 relative mb-2.5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1.5 px-1">{tPresets("title")}</p>
+            <div className="shrink-0 relative mb-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1 px-1">{tPresets("title")}</p>
               <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
                 {presets.map((preset) => (
                   <button
@@ -355,7 +355,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Bento Grid */}
             <div className="shrink-0">
-              <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+              <div className="grid grid-cols-2 gap-2 lg:gap-1.5">
             {/* Where */}
             <BentoCard
               className={`col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
