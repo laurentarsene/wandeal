@@ -327,7 +327,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
         {/* Right panel (desktop) / Full width (mobile) */}
         <div className="lg:w-[58%] lg:overflow-y-auto flex flex-col lg:justify-center px-3 sm:px-6 lg:px-6 pt-6 sm:pt-4 lg:pt-4 pb-24 sm:pb-4">
-          <div className="w-full">
+          <div className="w-full lg:max-w-[640px]">
             {/* Hero — mobile only (on desktop it's overlaid on the video) */}
             <div className="text-center mb-2 shrink-0 lg:hidden">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e8f0f1] text-[#264044] text-[10px] font-semibold mb-1.5 tracking-wide">
