@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Sun,
   Waves,
@@ -7,7 +9,6 @@ import {
   Footprints,
   Wine,
   Music,
-  Users,
   Landmark,
   Sparkles,
   TreePine,
@@ -18,11 +19,11 @@ import {
   ShoppingBag,
   Droplets,
   Car,
-  Camera,
   Binoculars,
   ScrollText,
   Ticket,
   Backpack,
+  ChevronDown,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -35,7 +36,6 @@ const iconMap: Record<IconKey, React.ComponentType<{ size?: number }>> = {
   footprints: Footprints,
   wine: Wine,
   music: Music,
-  users: Users,
   landmark: Landmark,
   sparkles: Sparkles,
   "tree-pine": TreePine,
@@ -46,7 +46,6 @@ const iconMap: Record<IconKey, React.ComponentType<{ size?: number }>> = {
   "shopping-bag": ShoppingBag,
   droplets: Droplets,
   car: Car,
-  camera: Camera,
   binoculars: Binoculars,
   "scroll-text": ScrollText,
   ticket: Ticket,
@@ -77,6 +76,8 @@ const interests: { value: string; icon: IconKey; tKey: string }[] = [
   { value: "backpacker", icon: "backpack", tKey: "interestBackpacker" },
 ];
 
+const VISIBLE_COUNT = 10;
+
 interface InterestChipsProps {
   selected: string[];
   onChange: (interests: string[]) => void;
@@ -84,6 +85,7 @@ interface InterestChipsProps {
 
 export function InterestChips({ selected, onChange }: InterestChipsProps) {
   const t = useTranslations("form");
+  const [expanded, setExpanded] = useState(false);
 
   const toggle = (value: string) => {
     if (selected.includes(value)) {
@@ -93,19 +95,28 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
     }
   };
 
+  // Always show selected ones even if beyond VISIBLE_COUNT
+  const visible = expanded
+    ? interests
+    : interests.filter((opt, i) => i < VISIBLE_COUNT || selected.includes(opt.value));
+  const hasMore = !expanded && interests.length > VISIBLE_COUNT;
+
   return (
     <div className="flex flex-wrap gap-2">
-      {interests.map((opt) => {
+      {visible.map((opt) => {
         const active = selected.includes(opt.value);
         const Icon = iconMap[opt.icon];
         return (
-          <button
+          <motion.button
             key={opt.value}
             type="button"
             onClick={() => toggle(opt.value)}
+            whileTap={{ scale: 0.93 }}
+            animate={active ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+            transition={{ duration: 0.2 }}
             className={`
               inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px]
-              transition-all duration-150 cursor-pointer select-none
+              transition-colors duration-150 cursor-pointer select-none
               ${
                 active
                   ? "bg-[#264044] text-white font-semibold [box-shadow:0_0_0_1px_#264044,0_2px_6px_rgba(38,64,68,0.25)]"
@@ -115,9 +126,19 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
           >
             <Icon size={14} />
             <span>{t(opt.tKey)}</span>
-          </button>
+          </motion.button>
         );
       })}
+      {hasMore && (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-[13px] font-medium text-[#264044] bg-[#e8f0f1] hover:bg-[#d5e7e9] transition-colors cursor-pointer"
+        >
+          <ChevronDown size={14} />
+          <span>{t("interestsMore")}</span>
+        </button>
+      )}
     </div>
   );
 }

@@ -54,6 +54,7 @@
     "comfortPremium": "Premium",
     "interests": "Envies",
     "interestsHint": "— qu'est-ce qui vous fait rever ?",
+    "interestsMore": "Plus d'envies",
     "interestSun": "Soleil",
     "interestBeach": "Plage",
     "interestSki": "Ski",
@@ -81,10 +82,10 @@
     "optionalFilters": "Affinez si vous voulez",
     "searchNeedsCity": "Indiquez votre ville de depart",
     "dateWeekend": "Weekend",
-    "dateHolidaysWB": "Vacances WB/BXL",
-    "dateHolidaysFL": "Vacances Flandre",
-    "dateOffHolidays": "Hors vacances",
-    "dateBridge": "Jour férié / pont",
+    "dateHolidaysWB": "Conge Wallonie",
+    "dateHolidaysFL": "Conge Flandre",
+    "dateOffHolidays": "Hors conges",
+    "dateBridge": "Jour ferie",
     "cityHint": "Indiquez votre ville pour ce preset"
   },
   "presets": {

@@ -249,7 +249,7 @@ export function DateRangePicker({
               mode="single"
               selected={selected as Date | undefined}
               onDayClick={handleDayClick}
-              numberOfMonths={2}
+              numberOfMonths={1}
               locale={dfLocale}
               disabled={{ before: new Date() }}
               modifiers={{

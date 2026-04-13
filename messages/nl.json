@@ -83,7 +83,8 @@
     "searchNeedsCity": "Vul je vertrekstad in",
     "fromHint": "Wij vinden de bestemming voor jou",
     "comfortLabel": "Comfortniveau",
-    "optionalFilters": "Verfijn als je wilt"
+    "optionalFilters": "Verfijn als je wilt",
+    "interestsMore": "Meer opties"
   },
   "presets": {
     "title": "Zin in...",

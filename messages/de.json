@@ -83,7 +83,8 @@
     "searchNeedsCity": "Gib deine Abfahrtsstadt ein",
     "fromHint": "Wir finden das Ziel fuer dich",
     "comfortLabel": "Komfortstufe",
-    "optionalFilters": "Verfeinere wenn du willst"
+    "optionalFilters": "Verfeinere wenn du willst",
+    "interestsMore": "Mehr Optionen"
   },
   "presets": {
     "title": "Lust auf...",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import {
   MapPin,
@@ -661,9 +662,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 ).map((opt) => {
                   const isSelected = form.transport.includes(opt.mode);
                   return (
-                  <button
+                  <motion.button
                     key={opt.mode}
                     type="button"
+                    whileTap={{ scale: 0.93 }}
+                    animate={isSelected ? { scale: [1, 1.06, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.2 }}
                     onClick={() => {
                       const newTransport = isSelected
                         ? form.transport.filter((m) => m !== opt.mode)
@@ -677,7 +681,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       }
                     }}
                     className={`
-                      flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-semibold transition-all cursor-pointer
+                      flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer
                       ${
                         isSelected
                           ? "bg-[#264044] text-white"
@@ -687,7 +691,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                   >
                     <opt.icon size={14} />
                     {opt.label}
-                  </button>
+                  </motion.button>
                   );
                 })}
               </div>
@@ -710,9 +714,12 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 ).map((opt) => {
                   const isSelected = form.accommodation.includes(opt.mode);
                   return (
-                    <button
+                    <motion.button
                       key={opt.mode}
                       type="button"
+                      whileTap={{ scale: 0.93 }}
+                      animate={isSelected ? { scale: [1, 1.06, 1] } : { scale: 1 }}
+                      transition={{ duration: 0.2 }}
                       onClick={() => {
                         const next = isSelected
                           ? form.accommodation.filter((m) => m !== opt.mode)
@@ -720,7 +727,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                         update({ accommodation: next });
                       }}
                       className={`
-                        flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-semibold transition-all cursor-pointer
+                        flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer
                         ${isSelected
                           ? "bg-[#264044] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
@@ -729,11 +736,15 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                     >
                       <opt.icon size={13} />
                       {opt.label}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
-              <p className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] mt-1 mb-1">{t("comfortLabel")}</p>
+              <div className="flex items-center gap-2 mt-2 mb-1">
+                <div className="flex-1 h-px bg-[#E5E7EB]" />
+                <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] shrink-0">{t("comfortLabel")}</span>
+                <div className="flex-1 h-px bg-[#E5E7EB]" />
+              </div>
               <div className="flex gap-1.5">
                 {(
                   [
@@ -744,12 +755,15 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                 ).map((opt) => {
                   const isActive = form.comfort === opt.level;
                   return (
-                    <button
+                    <motion.button
                       key={opt.level}
                       type="button"
+                      whileTap={{ scale: 0.93 }}
+                      animate={isActive ? { scale: [1, 1.06, 1] } : { scale: 1 }}
+                      transition={{ duration: 0.2 }}
                       onClick={() => update({ comfort: opt.level })}
                       className={`
-                        flex-1 py-1.5 rounded-xl text-[10px] font-semibold transition-all cursor-pointer text-center
+                        flex-1 py-1.5 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer text-center
                         ${isActive
                           ? "bg-[#264044] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
@@ -757,7 +771,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       `}
                     >
                       {opt.label}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>

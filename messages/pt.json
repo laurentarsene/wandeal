@@ -83,7 +83,8 @@
     "searchNeedsCity": "Indique a sua cidade de partida",
     "fromHint": "Encontramos o destino por si",
     "comfortLabel": "Nivel de conforto",
-    "optionalFilters": "Ajuste se quiser"
+    "optionalFilters": "Ajuste se quiser",
+    "interestsMore": "Mais opcoes"
   },
   "presets": {
     "title": "Com vontade de...",

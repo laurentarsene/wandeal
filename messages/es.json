@@ -83,7 +83,8 @@
     "searchNeedsCity": "Indica tu ciudad de salida",
     "fromHint": "Encontramos el destino por ti",
     "comfortLabel": "Nivel de confort",
-    "optionalFilters": "Ajusta si quieres"
+    "optionalFilters": "Ajusta si quieres",
+    "interestsMore": "Mas opciones"
   },
   "presets": {
     "title": "Ganas de...",

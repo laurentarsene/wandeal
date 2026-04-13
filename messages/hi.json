@@ -83,7 +83,8 @@
     "searchNeedsCity": "Enter your departure city",
     "fromHint": "We will find the destination for you",
     "comfortLabel": "Comfort level",
-    "optionalFilters": "Fine-tune if you want"
+    "optionalFilters": "Fine-tune if you want",
+    "interestsMore": "More interests"
   },
   "presets": {
     "title": "Feeling like...",
