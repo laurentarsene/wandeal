@@ -147,7 +147,7 @@ function BentoCard({
   return (
     <div
       className={`
-        relative rounded-xl p-3 lg:p-3 transition-all duration-300 transform-gpu h-full min-h-[100px]
+        relative rounded-[20px] p-3 lg:p-3 transition-all duration-300 transform-gpu h-full min-h-[100px]
         ${
           active
             ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
@@ -658,7 +658,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       }
                     }}
                     className={`
-                      flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer
+                      flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-semibold transition-all cursor-pointer
                       ${
                         isSelected
                           ? "bg-[#264044] text-white"
@@ -701,7 +701,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                         update({ accommodation: next });
                       }}
                       className={`
-                        flex items-center justify-center gap-1.5 py-2 rounded-lg text-[10px] font-semibold transition-all cursor-pointer
+                        flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-semibold transition-all cursor-pointer
                         ${isSelected
                           ? "bg-[#264044] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
@@ -729,7 +729,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       type="button"
                       onClick={() => update({ comfort: opt.level })}
                       className={`
-                        flex-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all cursor-pointer text-center
+                        flex-1 py-1.5 rounded-xl text-[10px] font-semibold transition-all cursor-pointer text-center
                         ${isActive
                           ? "bg-[#264044] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"

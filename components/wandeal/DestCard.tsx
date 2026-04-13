@@ -103,7 +103,7 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
 
   return (
     <motion.div
-      className="rounded-2xl overflow-hidden bg-white border border-[#E5E7EB] transition-all duration-250"
+      className="rounded-[20px] overflow-hidden bg-white border border-[#E5E7EB] transition-all duration-250"
       whileHover={{
         y: -3,
         borderColor: "#264044",
@@ -213,7 +213,7 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
         {/* Info pills */}
         <div className="flex flex-wrap gap-2 mt-4">
           {dateLabel && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
               <CalendarDays size={13} />
               {dateLabel}
               {dest.datePeriodLabel && (
@@ -222,33 +222,33 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
             </span>
           )}
           {isNearby(dest) ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
               <Car size={13} />
               {t("reachable")}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
               <Plane size={13} />
               ~{dest.flightPrice}€
             </span>
           )}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
             <Hotel size={13} />
             ~{dest.hotelPerNight}€/{t("perNight")}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
             <WeatherIc size={13} />
             <Thermometer size={11} />
             {dest.tempMin}-{dest.tempMax}°
           </span>
           {dest.mealPrice > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
               <UtensilsCrossed size={13} />
               {dest.mealPrice}€/repas
             </span>
           )}
           {dest.fritesPrice > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
               🍟 {dest.fritesPrice}€
             </span>
           )}
@@ -308,7 +308,7 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
         <div className="flex gap-2 mt-4">
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
           >
             {expanded ? (
               <>
@@ -329,7 +329,7 @@ export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: Des
             <ShimmerButton
               background="#264044"
               shimmerColor="rgba(255,255,255,0.2)"
-              borderRadius="12px"
+              borderRadius="16px"
               className="w-full py-2.5 text-sm font-medium"
             >
               <span className="inline-flex items-center gap-1.5">
