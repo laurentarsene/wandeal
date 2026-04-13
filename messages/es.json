@@ -128,6 +128,8 @@
     "badgeLocal": "Cerca de ti",
     "badgeSurprise": "Joya oculta",
     "favoritesTitle": "Mis favoritos ({count})",
-    "noFavorites": "Sin favoritos por ahora — toca el corazon en un destino"
+    "noFavorites": "Sin favoritos por ahora — toca el corazon en un destino",
+    "getDirections": "Como llegar",
+    "reachable": "Cerca"
   }
 }

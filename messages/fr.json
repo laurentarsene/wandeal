@@ -125,6 +125,8 @@
     "seeLess": "Voir moins",
     "book": "Réserver",
     "seeFlights": "Voir les vols",
+    "getDirections": "S'y rendre",
+    "reachable": "A proximite",
     "badgeLocal": "Séjour local",
     "badgeSurprise": "Coup de cœur",
     "favoritesTitle": "Mes favoris ({count})",

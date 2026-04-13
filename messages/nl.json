@@ -128,6 +128,8 @@
     "badgeLocal": "Dichtbij",
     "badgeSurprise": "Verborgen pareltje",
     "favoritesTitle": "Mijn favorieten ({count})",
-    "noFavorites": "Nog geen favorieten — tik op het hartje bij een bestemming"
+    "noFavorites": "Nog geen favorieten — tik op het hartje bij een bestemming",
+    "getDirections": "Routebeschrijving",
+    "reachable": "Dichtbij"
   }
 }

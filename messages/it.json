@@ -128,6 +128,8 @@
     "badgeLocal": "Vicino a te",
     "badgeSurprise": "Perla nascosta",
     "favoritesTitle": "I miei preferiti ({count})",
-    "noFavorites": "Nessun preferito — tocca il cuore su una destinazione"
+    "noFavorites": "Nessun preferito — tocca il cuore su una destinazione",
+    "getDirections": "Indicazioni",
+    "reachable": "Vicino"
   }
 }

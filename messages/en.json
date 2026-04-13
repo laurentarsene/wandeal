@@ -125,6 +125,8 @@
     "seeLess": "See less",
     "book": "Book",
     "seeFlights": "See flights",
+    "getDirections": "Get directions",
+    "reachable": "Nearby",
     "badgeLocal": "Local stay",
     "badgeSurprise": "Hidden gem",
     "favoritesTitle": "My favorites ({count})",

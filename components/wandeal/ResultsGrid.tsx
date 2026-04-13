@@ -107,6 +107,7 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
             <BlurFade key={`${dest.name}-${dest.country}`} delay={idx * 0.06}>
               <DestCard
                 dest={dest}
+                originCity={form.city}
                 isFavorite={isFavorite(dest)}
                 onToggleFavorite={onToggleFavorite}
               />

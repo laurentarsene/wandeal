@@ -19,6 +19,8 @@ import {
   UtensilsCrossed,
   Heart,
   CalendarDays,
+  MapPin,
+  Car,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -41,7 +43,17 @@ function toYYMMDD(dateStr: string): string {
   return dateStr.slice(2, 4) + dateStr.slice(5, 7) + dateStr.slice(8, 10);
 }
 
-function buildSearchUrl(dest: Destination): string {
+function isNearby(dest: Destination): boolean {
+  return dest.isLocal || dest.flightPrice === 0;
+}
+
+function buildDirectionsUrl(dest: Destination, originCity?: string): string {
+  const from = encodeURIComponent(originCity || "");
+  const to = encodeURIComponent(`${dest.name}, ${dest.country}`);
+  return `https://www.google.com/maps/dir/${from}/${to}/`;
+}
+
+function buildFlightUrl(dest: Destination): string {
   const from = dest.originIata?.toLowerCase();
   const to = dest.destIata?.toLowerCase();
   const hasDates = dest.dateFrom && dest.dateTo;
@@ -68,11 +80,12 @@ function buildSearchUrl(dest: Destination): string {
 
 interface DestCardProps {
   dest: Destination;
+  originCity?: string;
   isFavorite?: boolean;
   onToggleFavorite?: (dest: Destination) => void;
 }
 
-export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) {
+export function DestCard({ dest, originCity, isFavorite, onToggleFavorite }: DestCardProps) {
   const t = useTranslations("results");
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
@@ -208,10 +221,17 @@ export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) 
               )}
             </span>
           )}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
-            <Plane size={13} />
-            ~{dest.flightPrice}€
-          </span>
+          {isNearby(dest) ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+              <Car size={13} />
+              {t("reachable")}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
+              <Plane size={13} />
+              ~{dest.flightPrice}€
+            </span>
+          )}
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/80 text-[#4B5563]">
             <Hotel size={13} />
             ~{dest.hotelPerNight}€/{t("perNight")}
@@ -301,7 +321,7 @@ export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) 
             )}
           </button>
           <a
-            href={buildSearchUrl(dest)}
+            href={isNearby(dest) ? buildDirectionsUrl(dest, originCity) : buildFlightUrl(dest)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1"
@@ -313,7 +333,11 @@ export function DestCard({ dest, isFavorite, onToggleFavorite }: DestCardProps) 
               className="w-full py-2.5 text-sm font-medium"
             >
               <span className="inline-flex items-center gap-1.5">
-                {t("seeFlights")} <ExternalLink size={13} />
+                {isNearby(dest) ? (
+                  <><MapPin size={13} /> {t("getDirections")}</>
+                ) : (
+                  <><ExternalLink size={13} /> {t("seeFlights")}</>
+                )}
               </span>
             </ShimmerButton>
           </a>
