@@ -493,7 +493,18 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
             {/* Budget */}
             <BentoCard className="col-span-1 flex flex-col" active={form.budgetEnabled}>
-              <SectionLabel icon={Wallet}>{t("budget")}</SectionLabel>
+              <div className="flex items-center justify-between">
+                <SectionLabel icon={Wallet}>{t("budget")}</SectionLabel>
+                {form.budgetEnabled && (
+                  <button
+                    type="button"
+                    onClick={() => update({ budgetEnabled: false })}
+                    className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
+                  >
+                    <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
+                  </button>
+                )}
+              </div>
               <div className="flex-1 flex flex-col justify-center">
                 {!form.budgetEnabled ? (
                   <button
@@ -505,22 +516,13 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                   </button>
                 ) : (
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
-                          {form.budget}€
-                        </span>
-                        <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
-                          {t("budgetPerPerson")}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => update({ budgetEnabled: false })}
-                        className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
-                      >
-                        <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
-                      </button>
+                    <div className="mb-2">
+                      <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                        {form.budget}€
+                      </span>
+                      <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+                        {t("budgetPerPerson")}
+                      </span>
                     </div>
                 <div className="relative w-full h-6 flex items-center">
                   <div className="absolute inset-x-0 h-1.5 rounded-full bg-[#E5E7EB]" />
@@ -561,7 +563,18 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               const lockedByDates = !!daysFromDates || lockedByConstraint;
               return (
                 <BentoCard className="col-span-1 flex flex-col" active={form.durationEnabled || lockedByDates}>
-                  <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
+                  <div className="flex items-center justify-between">
+                    <SectionLabel icon={Clock}>{t("duration")}</SectionLabel>
+                    {form.durationEnabled && !lockedByDates && (
+                      <button
+                        type="button"
+                        onClick={() => update({ durationEnabled: false })}
+                        className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
+                      >
+                        <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
+                      </button>
+                    )}
+                  </div>
                   <div className="flex-1 flex flex-col justify-center">
                     {lockedByDates ? (
                       <div className="text-center mb-2">
@@ -583,23 +596,14 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       </button>
                     ) : (
                       <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <div>
-                            <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
-                              {form.duration}
-                            </span>
-                            <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
-                            <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
-                              {t("durationApprox")}
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => update({ durationEnabled: false })}
-                            className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
-                          >
-                            <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
-                          </button>
+                        <div className="mb-2">
+                          <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                            {form.duration}
+                          </span>
+                          <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
+                          <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+                            {t("durationApprox")}
+                          </span>
                         </div>
                         <div className="relative w-full h-6 flex items-center">
                           <div className="absolute inset-x-0 h-1.5 rounded-full bg-[#E5E7EB]" />
