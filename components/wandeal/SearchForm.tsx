@@ -278,7 +278,28 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
 
   return (
     <>
-      {/* Desktop presets — removed sidebar, now inline on right panel */}
+      {/* Desktop presets — fixed to right edge */}
+      <div className="hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-1.5 pr-4">
+        <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#264044] mb-0.5 px-1">
+          {tPresets("title")}
+        </p>
+        {presets.map((preset) => (
+          <button
+            key={preset.label}
+            type="button"
+            onClick={() => applyPreset(preset)}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-[#E5E7EB] text-left text-[11px] font-medium text-[#4B5563] hover:border-[#264044] hover:bg-[#e8f0f1] hover:text-[#1a2e31] transition-all cursor-pointer group shadow-sm w-[180px]"
+          >
+            <div className="w-6 h-6 rounded-lg bg-[#F3F4F6] flex items-center justify-center shrink-0 group-hover:bg-[#264044] transition-colors">
+              <preset.icon
+                size={12}
+                className="text-[#9CA3AF] group-hover:text-white transition-colors"
+              />
+            </div>
+            <span className="leading-snug truncate">{preset.label}</span>
+          </button>
+        ))}
+      </div>
 
       <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
         {/* Left panel — desktop video + hero overlay */}
@@ -333,8 +354,8 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
               <HublotVideo />
             </div>
 
-            {/* Presets */}
-            <div className="shrink-0 relative mb-2">
+            {/* Presets — mobile only (desktop uses fixed sidebar) */}
+            <div className="lg:hidden shrink-0 relative mb-2">
               <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-1 px-1">{tPresets("title")}</p>
               <div className="flex gap-2.5 overflow-x-auto scrollbar-hide py-1 snap-x">
                 {presets.map((preset) => (
