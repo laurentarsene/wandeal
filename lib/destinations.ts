@@ -213,10 +213,15 @@ Règles STRICTES :
 2. weatherIcon = sun | cloud | snow | rain
 3. matchScore entre 65 et 99
 ${localRule}
-5. TOUJOURS exactement 1 destination avec isSurprise: true → destination vraiment inattendue et originale
+5. TOUJOURS exactement 1 destination avec isSurprise: true → destination que presque personne ne connait, un vrai secret de voyageur
 6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights)
 ${weatherRule}
-8. Varier les types de voyage
+8. DIVERSITÉ OBLIGATOIRE dans les 8 destinations :
+   - 2-3 classiques populaires (les incontournables qui matchent les envies)
+   - 2-3 alternatives méconnues (petites villes, îles peu connues, régions hors des sentiers battus)
+   - 1 surprise totale (isSurprise=true, un lieu que même les voyageurs réguliers ne connaissent pas)
+   - 1 local (isLocal=true)
+   INTERDIT de proposer uniquement des capitales ou des destinations touristiques de masse. Pense aux villages côtiers, aux villes secondaires, aux régions reculées, aux pays sous-estimés (Albanie, Géorgie, Slovénie, Oman, Colombie, etc.)
 9. Si budget serré (< 400€), proposer des destinations vraiment accessibles (proches, low-cost, auberges)
 10. JSON UNIQUEMENT — aucun texte avant ou après
 11. IMPORTANT "why" : Le champ "why" doit être SPÉCIFIQUE et CONCRET — explique POURQUOI cette destination est parfaite pour les envies sélectionnées. Cite des lieux précis, des spécialités, des expériences uniques. PAS de phrases génériques. Ex: pour "shopping" à Marrakech → parle des souks, du cuir, des épices. Pour "surf" à Biarritz → parle de la Côte des Basques, des vagues.
