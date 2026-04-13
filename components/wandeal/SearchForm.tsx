@@ -517,9 +517,9 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                       <button
                         type="button"
                         onClick={() => update({ budgetEnabled: false })}
-                        className="text-[10px] text-[#9CA3AF] hover:text-[#264044] cursor-pointer transition-colors"
+                        className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
                       >
-                        ✕
+                        <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
                       </button>
                     </div>
                 <div className="relative w-full h-6 flex items-center">
@@ -596,9 +596,9 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
                           <button
                             type="button"
                             onClick={() => update({ durationEnabled: false })}
-                            className="text-[10px] text-[#9CA3AF] hover:text-[#264044] cursor-pointer transition-colors"
+                            className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
                           >
-                            ✕
+                            <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
                           </button>
                         </div>
                         <div className="relative w-full h-6 flex items-center">
