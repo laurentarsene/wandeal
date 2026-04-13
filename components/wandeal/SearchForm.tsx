@@ -305,7 +305,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
             <div className="absolute inset-0 rounded-[32px] flex flex-col justify-between p-5" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 55%, rgba(0,0,0,0.7) 100%)" }}>
               {/* Presets — top */}
               <div className="flex flex-col gap-2.5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-white/50">
+                <p className="text-[13px] font-bold text-white/60">
                   {tPresets("title")}
                 </p>
                 {presets.map((preset) => (
@@ -354,7 +354,7 @@ export function SearchForm({ form, onChange, onSubmit }: SearchFormProps) {
           <div className="relative h-full flex flex-col justify-between p-6 pt-8">
             {/* Top — presets */}
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/50 mb-2">
+              <p className="text-[13px] font-bold text-white/60 mb-2">
                 {tPresets("title")}
               </p>
               <div className="flex flex-wrap gap-2.5">
