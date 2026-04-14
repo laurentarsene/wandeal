@@ -244,7 +244,7 @@ Règles STRICTES :
 3. matchScore entre 65 et 99
 ${localRule}
 5. TOUJOURS exactement 1 destination avec isSurprise: true → destination que presque personne ne connait, un vrai secret de voyageur
-6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights). fritesPrice : prix d'un cornet de frites UNIQUEMENT pour les destinations en Europe. Pour les autres continents, fritesPrice = 0.
+6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights)
 ${weatherRule}
 8. DIVERSITÉ OBLIGATOIRE dans les 8 destinations :
    - 2-3 classiques populaires (les incontournables qui matchent les envies)
