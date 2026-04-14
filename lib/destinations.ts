@@ -199,6 +199,7 @@ export function buildPrompt(form: SearchFormData & { locale?: string }): string 
 
   return `Tu es un expert en voyages et en bons plans. Génère des recommandations de vacances personnalisées et réalistes.
 LANGUE : Tous les textes (why, activities) DOIVENT être en ${lang}.
+IMPORTANT : Toutes les destinations et tous les prix doivent être calculés DEPUIS ${origin}. La ville de départ est ${origin}, PAS Bruxelles (sauf si c'est la ville choisie).
 
 Voyageur :
 ${cityLine}
@@ -244,7 +245,7 @@ Règles STRICTES :
 3. matchScore entre 65 et 99
 ${localRule}
 5. TOUJOURS exactement 1 destination avec isSurprise: true → destination que presque personne ne connait, un vrai secret de voyageur
-6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights)
+6. Prix RÉALISTES depuis ${origin} — flightPrice = prix du transport DEPUIS ${origin} (pas depuis Bruxelles sauf si c'est la ville de départ). totalPerPerson = flightPrice + (hotelPerNight × nights). Les prix varient selon la ville de départ !
 ${weatherRule}
 8. DIVERSITÉ OBLIGATOIRE dans les 8 destinations :
    - 2-3 classiques populaires (les incontournables qui matchent les envies)
