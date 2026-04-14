@@ -206,7 +206,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
           })()}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
           {/* Preload next photos */}
-          {photos.filter((_, i) => i !== photoIdx % photos.length).map((url) => (
+          {(dest.photoUrls || []).filter((_, i) => i !== photoIdx % (dest.photoUrls?.length || 1)).map((url) => (
             <img key={url} src={url} alt="" className="hidden" />
           ))}
           {onToggleFavorite && (
