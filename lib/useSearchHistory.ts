@@ -47,9 +47,25 @@ export function useSearchHistory() {
       // Don't add duplicates (same city + same interests)
       const label = buildLabel(form);
       const filtered = prev.filter((e) => e.label !== label);
+      // Clean copy to avoid cyclic refs
+      const cleanForm: SearchFormData = {
+        city: form.city,
+        dateFrom: form.dateFrom,
+        dateTo: form.dateTo,
+        dateConstraints: form.dateConstraints,
+        travelers: form.travelers,
+        budgetEnabled: form.budgetEnabled,
+        budget: form.budget,
+        durationEnabled: form.durationEnabled,
+        duration: form.duration,
+        transport: [...form.transport],
+        accommodation: [...form.accommodation],
+        comfort: form.comfort,
+        interests: [...form.interests],
+      };
       const entry: SearchHistoryEntry = {
         id: Date.now().toString(36),
-        form: { ...form },
+        form: cleanForm,
         timestamp: Date.now(),
         label,
       };
