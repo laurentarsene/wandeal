@@ -134,7 +134,8 @@
     "favoritesTitle": "Meine Favoriten ({count})",
     "noFavorites": "Noch keine Favoriten — tippe auf das Herz bei einem Reiseziel",
     "getDirections": "Route planen",
-    "reachable": "In der Naehe"
+    "reachable": "In der Naehe",
+    "seeHotels": "Hotels"
   },
   "footer": {
     "tagline": "Massgeschneiderter Urlaub, von KI gefunden.",

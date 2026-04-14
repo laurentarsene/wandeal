@@ -134,7 +134,8 @@
     "favoritesTitle": "Mis favoritos ({count})",
     "noFavorites": "Sin favoritos por ahora — toca el corazon en un destino",
     "getDirections": "Como llegar",
-    "reachable": "Cerca"
+    "reachable": "Cerca",
+    "seeHotels": "Hoteles"
   },
   "footer": {
     "tagline": "Vacaciones a medida, encontradas por IA.",

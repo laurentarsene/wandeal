@@ -62,21 +62,23 @@ function buildDirectionsUrl(dest: Destination, originCity?: string): string {
 }
 
 function buildFlightUrl(dest: Destination): string {
-  const from = dest.originIata?.toLowerCase();
-  const to = dest.destIata?.toLowerCase();
-  const hasDates = dest.dateFrom && dest.dateTo;
+  const from = dest.originIata?.toUpperCase();
+  const to = dest.destIata?.toUpperCase();
+  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "";
 
-  // Both IATA codes → Skyscanner
-  if (from && to) {
-    const base = `https://www.skyscanner.net/transport/flights/${from}/${to}`;
-    return hasDates ? `${base}/${toYYMMDD(dest.dateFrom)}/${toYYMMDD(dest.dateTo)}/` : `${base}/`;
+  // Aviasales affiliate link (Travelpayouts)
+  if (from && to && dest.dateFrom) {
+    const dd = dest.dateFrom.slice(8, 10);
+    const mm = dest.dateFrom.slice(5, 7);
+    const url = `https://www.aviasales.com/search/${from}${dd}${mm}${to}1`;
+    return marker ? `${url}?marker=${marker}` : url;
   }
 
-  // Missing origin or dest → Google Flights with dates in natural language
+  // Fallback: Google Flights
   const parts = ["flights"];
-  if (from) parts.push(`from ${from.toUpperCase()}`);
+  if (from) parts.push(`from ${from}`);
   parts.push(`to ${dest.name}`);
-  if (hasDates) {
+  if (dest.dateFrom && dest.dateTo) {
     const fmt = (s: string) => {
       const d = new Date(s + "T00:00:00");
       return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -84,6 +86,15 @@ function buildFlightUrl(dest: Destination): string {
     parts.push(`on ${fmt(dest.dateFrom)} to ${fmt(dest.dateTo)}`);
   }
   return `https://www.google.com/travel/flights?q=${encodeURIComponent(parts.join(" "))}`;
+}
+
+function buildHotelUrl(dest: Destination): string {
+  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "";
+  const city = encodeURIComponent(dest.name);
+  const checkIn = dest.dateFrom || "";
+  const checkOut = dest.dateTo || "";
+  const base = `https://search.hotellook.com/hotels?destination=${city}&checkIn=${checkIn}&checkOut=${checkOut}&currency=EUR`;
+  return marker ? `${base}&marker=${marker}` : base;
 }
 
 type TransportMode = "plane" | "train" | "car" | "bike";
@@ -334,17 +345,9 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
         <div className="flex gap-2 mt-4">
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
           >
-            {expanded ? (
-              <>
-                {t("seeLess")} <ChevronUp size={14} />
-              </>
-            ) : (
-              <>
-                {t("seeMore")} <ChevronDown size={14} />
-              </>
-            )}
+            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
           <a
             href={isNearby(dest, transports) ? buildDirectionsUrl(dest, originCity) : buildFlightUrl(dest)}
@@ -366,6 +369,19 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
                 )}
               </span>
             </ShimmerButton>
+          </a>
+          <a
+            href={buildHotelUrl(dest)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1"
+          >
+            <button className="w-full py-2.5 rounded-2xl text-sm font-medium text-[#264044] bg-[#e8f0f1] hover:bg-[#d5e7e9] transition-colors cursor-pointer">
+              <span className="inline-flex items-center gap-1.5">
+                <Hotel size={13} />
+                {t("seeHotels")}
+              </span>
+            </button>
           </a>
         </div>
       </div>

@@ -134,7 +134,8 @@
     "favoritesTitle": "Mijn favorieten ({count})",
     "noFavorites": "Nog geen favorieten — tik op het hartje bij een bestemming",
     "getDirections": "Routebeschrijving",
-    "reachable": "Dichtbij"
+    "reachable": "Dichtbij",
+    "seeHotels": "Hotels"
   },
   "footer": {
     "tagline": "Vakantie op maat, gevonden door AI.",

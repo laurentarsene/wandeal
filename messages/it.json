@@ -134,7 +134,8 @@
     "favoritesTitle": "I miei preferiti ({count})",
     "noFavorites": "Nessun preferito — tocca il cuore su una destinazione",
     "getDirections": "Indicazioni",
-    "reachable": "Vicino"
+    "reachable": "Vicino",
+    "seeHotels": "Hotel"
   },
   "footer": {
     "tagline": "Vacanze su misura, trovate dall IA.",

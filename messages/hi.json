@@ -134,7 +134,8 @@
     "favoritesTitle": "मेरे पसंदीदा ({count})",
     "noFavorites": "अभी कोई पसंदीदा नहीं — किसी गंतव्य पर दिल पर टैप करें",
     "getDirections": "Get directions",
-    "reachable": "Nearby"
+    "reachable": "Nearby",
+    "seeHotels": "Hotels"
   },
   "footer": {
     "tagline": "AI-powered tailor-made vacations.",
