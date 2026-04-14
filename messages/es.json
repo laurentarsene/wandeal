@@ -135,7 +135,8 @@
     "noFavorites": "Sin favoritos por ahora — toca el corazon en un destino",
     "getDirections": "Como llegar",
     "reachable": "Cerca",
-    "seeHotels": "Hoteles"
+    "seeHotels": "Hoteles",
+    "copied": "Copiado!"
   },
   "footer": {
     "tagline": "Vacaciones a medida, encontradas por IA.",

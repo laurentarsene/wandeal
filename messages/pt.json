@@ -135,7 +135,8 @@
     "noFavorites": "Sem favoritos — toque no coracao de um destino",
     "getDirections": "Como chegar",
     "reachable": "Proximo",
-    "seeHotels": "Hoteis"
+    "seeHotels": "Hoteis",
+    "copied": "Copiado!"
   },
   "footer": {
     "tagline": "Ferias a medida, encontradas por IA.",

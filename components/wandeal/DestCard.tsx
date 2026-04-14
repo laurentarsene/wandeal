@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "motion/react";
+import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   Plane,
@@ -119,6 +119,11 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
   const t = useTranslations("results");
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
+  const [toast, setToast] = useState(false);
+  const showToast = useCallback(() => {
+    setToast(true);
+    setTimeout(() => setToast(false), 2000);
+  }, []);
   const theme = colorThemes[dest.colorTheme] || colorThemes.teal;
   const WeatherIc = weatherIconMap[dest.weatherIcon] || Sun;
 
@@ -356,9 +361,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
               if (navigator.share) {
                 navigator.share({ title: `${dest.name} — Wandeal`, text }).catch(() => {});
               } else {
-                navigator.clipboard.writeText(text).then(() => {
-                  alert("Copié !");
-                });
+                navigator.clipboard.writeText(text).then(() => showToast());
               }
             }}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
@@ -401,6 +404,19 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
           </a>
         </div>
       </div>
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-[#264044] text-white text-xs font-medium shadow-lg z-10"
+          >
+            {t("copied")}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
