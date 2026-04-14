@@ -67,8 +67,8 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
 
   for (const q of searchQueries) {
     try {
-      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=800&format=json&origin=*`;
-      const res = await fetch(url);
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=800&format=json`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
       if (!res.ok) continue;
       const data = await res.json();
       const pages = data?.query?.pages;
@@ -91,7 +91,7 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
   // Fallback: Wikipedia pageimage (single)
   try {
     const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(cityName)}&prop=pageimages&pithumbsize=800&format=json`;
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
     if (res.ok) {
       const data = await res.json();
       const pages = data?.query?.pages;
@@ -102,8 +102,23 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
     }
   } catch {}
 
-  // Last fallback
-  return [`https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=800&h=500&fit=crop&q=80`];
+  // Last fallback: unique per destination using hash
+  const fallbacks = [
+    "1500835556837-99ac94a94552",
+    "1488085061387-422e29b40080",
+    "1507525428034-b723cf961d3e",
+    "1502602898657-3e91760cbb34",
+    "1523906834658-6e24ef2386f9",
+    "1469854523086-cc02fe5d8800",
+    "1476514525535-07fb3b4a6e8a",
+    "1530789253388-582c481c54b0",
+  ];
+  let hash = 0;
+  for (let i = 0; i < cityName.length; i++) {
+    hash = ((hash << 5) - hash + cityName.charCodeAt(i)) | 0;
+  }
+  const idx = Math.abs(hash) % fallbacks.length;
+  return [`https://images.unsplash.com/photo-${fallbacks[idx]}?w=800&h=500&fit=crop&q=80`];
 }
 
 export async function POST(request: Request) {
