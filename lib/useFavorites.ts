@@ -20,7 +20,11 @@ function readStorage(): Destination[] {
 }
 
 function writeStorage(favs: Destination[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(favs));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(favs));
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
 
 export function useFavorites() {

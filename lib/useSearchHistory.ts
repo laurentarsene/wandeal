@@ -32,7 +32,12 @@ function readStorage(): SearchHistoryEntry[] {
 }
 
 function writeStorage(entries: SearchHistoryEntry[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  } catch {
+    // Clear corrupted data
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
 
 export function useSearchHistory() {

@@ -44,7 +44,7 @@ export default function Home() {
   const handleSearch = async (skipCache = false) => {
     setStep("loading");
     setError(null);
-    addSearch(form);
+    try { addSearch(form); } catch { /* ignore history save errors */ }
 
     abortRef.current = new AbortController();
 
@@ -56,16 +56,16 @@ export default function Home() {
           city: form.city,
           dateFrom: form.dateFrom,
           dateTo: form.dateTo,
-          dateConstraints: form.dateConstraints,
+          dateConstraints: Array.isArray(form.dateConstraints) ? [...form.dateConstraints] : [],
           travelers: form.travelers,
           budgetEnabled: form.budgetEnabled,
           budget: form.budget,
           durationEnabled: form.durationEnabled,
           duration: form.duration,
-          transport: form.transport,
-          accommodation: form.accommodation,
+          transport: [...form.transport],
+          accommodation: [...form.accommodation],
           comfort: form.comfort,
-          interests: form.interests,
+          interests: [...form.interests],
           locale,
           skipCache,
         }),
