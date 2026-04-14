@@ -165,7 +165,7 @@ function BentoCard({
         relative rounded-[20px] p-4 lg:p-5 transition-all duration-300 transform-gpu h-full min-h-[100px]
         ${
           active
-            ? "bg-[#f0f7f7] [box-shadow:0_0_0_2px_#264044,0_2px_12px_rgba(38,64,68,0.12)]"
+            ? "bg-[#EEF2FF] [box-shadow:0_0_0_2px_#1C48CD,0_2px_12px_rgba(28,72,205,0.12)]"
             : "bg-white/70 [box-shadow:0_0_0_1px_rgba(0,0,0,0.04),0_1px_4px_rgba(0,0,0,0.03)] hover:bg-white hover:[box-shadow:0_0_0_1px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.06)]"
         }
         ${onClick && !active ? "cursor-pointer group" : ""}
@@ -342,7 +342,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                 <h1 className="font-sans text-4xl xl:text-5xl font-extrabold text-white leading-[1.1] tracking-tight">
                   {tHero("title1")}
                   <br />
-                  <span className="text-[#8dd8e0]">
+                  <span className="text-[#93B5FF]">
                     {tHero("title2")}
                   </span>
                 </h1>
@@ -388,7 +388,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               <h1 className="font-sans text-4xl font-extrabold text-white leading-[1.1] tracking-tight">
                 {tHero("title1")}
                 <br />
-                <span className="text-[#8dd8e0]">{tHero("title2")}</span>
+                <span className="text-[#93B5FF]">{tHero("title2")}</span>
               </h1>
               <p className="text-[13px] text-white/70 mt-2 mb-6 font-medium">{tHero("madeIn")}</p>
 
@@ -415,7 +415,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-3">
             {/* Where */}
             <BentoCard
-              className={`col-span-2 lg:col-span-2 ${cityHint ? "!bg-[#e8f0f1]/50 ![box-shadow:0_0_0_2px_#264044]" : ""}`}
+              className={`col-span-2 lg:col-span-2 ${cityHint ? "!bg-[#EEF2FF]/50 ![box-shadow:0_0_0_2px_#1C48CD]" : ""}`}
               active={!!form.city}
             >
               <SectionLabel icon={MapPin}>{t("from")}</SectionLabel>
@@ -424,7 +424,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                 onChange={(city) => update({ city })}
               />
               {cityHint ? (
-                <p className="text-[10px] text-[#264044] font-medium mt-1 animate-pulse">
+                <p className="text-[10px] text-[#1C48CD] font-medium mt-1 animate-pulse">
                   {t("cityHint")}
                 </p>
               ) : !form.city && (
@@ -484,7 +484,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                         className={`
                           px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer
                           ${active
-                            ? "bg-[#264044] text-white"
+                            ? "bg-[#1C48CD] text-white"
                             : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
                           }
                         `}
@@ -506,7 +506,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   onClick={() =>
                     update({ travelers: Math.max(1, form.travelers - 1) })
                   }
-                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] hover:border-[#264044] hover:text-[#264044] hover:bg-[#e8f0f1] transition-all cursor-pointer shrink-0"
+                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] hover:border-[#1C48CD] hover:text-[#1C48CD] hover:bg-[#EEF2FF] transition-all cursor-pointer shrink-0"
                 >
                   <Minus size={15} />
                 </button>
@@ -523,7 +523,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   onClick={() =>
                     update({ travelers: Math.min(10, form.travelers + 1) })
                   }
-                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] hover:border-[#264044] hover:text-[#264044] hover:bg-[#e8f0f1] transition-all cursor-pointer shrink-0"
+                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] hover:border-[#1C48CD] hover:text-[#1C48CD] hover:bg-[#EEF2FF] transition-all cursor-pointer shrink-0"
                 >
                   <Plus size={15} />
                 </button>
@@ -538,7 +538,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   <button
                     type="button"
                     onClick={() => update({ budgetEnabled: false })}
-                    className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
+                    className="relative w-9 h-5 rounded-full bg-[#1C48CD] cursor-pointer shrink-0"
                   >
                     <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
                   </button>
@@ -548,12 +548,12 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                 {!form.budgetEnabled ? (
                   <div>
                     <span className="text-sm font-medium text-[#9CA3AF] leading-snug lg:group-hover:hidden block">{t("budgetAll")}</span>
-                    <span className="text-sm font-medium text-[#264044] leading-snug hidden lg:group-hover:block">{t("budgetActivate")}</span>
+                    <span className="text-sm font-medium text-[#1C48CD] leading-snug hidden lg:group-hover:block">{t("budgetActivate")}</span>
                   </div>
                 ) : (
                   <div>
                     <div className="mb-2">
-                      <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                      <span className="text-3xl font-extrabold text-[#1C48CD] tabular-nums leading-none">
                         {form.budget}€
                       </span>
                       <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
@@ -563,11 +563,11 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                 <div className="relative w-full h-6 flex items-center">
                   <div className="absolute inset-x-0 h-1.5 rounded-full bg-[#E5E7EB]" />
                   <div
-                    className={`absolute left-0 h-1.5 rounded-full transition-colors ${form.budgetEnabled ? "bg-gradient-to-r from-[#264044] to-[#4a9aa8]" : "bg-[#D1D5DB]"}`}
+                    className={`absolute left-0 h-1.5 rounded-full transition-colors ${form.budgetEnabled ? "bg-gradient-to-r from-[#1C48CD] to-[#5B8AF0]" : "bg-[#D1D5DB]"}`}
                     style={{ width: `${((form.budget - 100) / 2900) * 100}%` }}
                   />
                   <div
-                    className={`absolute w-5 h-5 rounded-full bg-white border-2 shadow-md -translate-x-1/2 pointer-events-none transition-colors ${form.budgetEnabled ? "border-[#264044]" : "border-[#D1D5DB]"}`}
+                    className={`absolute w-5 h-5 rounded-full bg-white border-2 shadow-md -translate-x-1/2 pointer-events-none transition-colors ${form.budgetEnabled ? "border-[#1C48CD]" : "border-[#D1D5DB]"}`}
                     style={{ left: `${((form.budget - 100) / 2900) * 100}%` }}
                   />
                   <input
@@ -605,7 +605,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       <button
                         type="button"
                         onClick={() => update({ durationEnabled: false })}
-                        className="relative w-9 h-5 rounded-full bg-[#264044] cursor-pointer shrink-0"
+                        className="relative w-9 h-5 rounded-full bg-[#1C48CD] cursor-pointer shrink-0"
                       >
                         <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
                       </button>
@@ -614,10 +614,10 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   <div className="flex-1 flex flex-col justify-center">
                     {lockedByDates ? (
                       <div className="text-center mb-2">
-                        <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                        <span className="text-3xl font-extrabold text-[#1C48CD] tabular-nums leading-none">
                           {dc.includes("weekend") && dc.includes("bridge") ? "2-4" : dc.includes("weekend") ? "2-3" : dc.includes("bridge") ? "3-4" : daysFromDates}
                         </span>
-                        <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
+                        <span className="text-lg font-bold text-[#1C48CD] ml-1">{t("durationDays")}</span>
                         <span className="block text-[10px] text-[#9CA3AF] mt-1">
                           {lockedByConstraint ? dc.filter(c => c === "weekend" || c === "bridge").map(c => t(c === "weekend" ? "dateWeekend" : "dateBridge")).join(" + ") : t("durationLocked")}
                         </span>
@@ -625,15 +625,15 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                     ) : !form.durationEnabled ? (
                       <div>
                         <span className="text-sm font-medium text-[#9CA3AF] leading-snug lg:group-hover:hidden block">{t("durationAll")}</span>
-                        <span className="text-sm font-medium text-[#264044] leading-snug hidden lg:group-hover:block">{t("durationActivate")}</span>
+                        <span className="text-sm font-medium text-[#1C48CD] leading-snug hidden lg:group-hover:block">{t("durationActivate")}</span>
                       </div>
                     ) : (
                       <div>
                         <div className="mb-2">
-                          <span className="text-3xl font-extrabold text-[#264044] tabular-nums leading-none">
+                          <span className="text-3xl font-extrabold text-[#1C48CD] tabular-nums leading-none">
                             {form.duration}
                           </span>
-                          <span className="text-lg font-bold text-[#264044] ml-1">{t("durationDays")}</span>
+                          <span className="text-lg font-bold text-[#1C48CD] ml-1">{t("durationDays")}</span>
                           <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
                             {t("durationApprox")}
                           </span>
@@ -641,11 +641,11 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                         <div className="relative w-full h-6 flex items-center">
                           <div className="absolute inset-x-0 h-1.5 rounded-full bg-[#E5E7EB]" />
                           <div
-                            className={`absolute left-0 h-1.5 rounded-full transition-colors ${form.durationEnabled ? "bg-gradient-to-r from-[#264044] to-[#4a9aa8]" : "bg-[#D1D5DB]"}`}
+                            className={`absolute left-0 h-1.5 rounded-full transition-colors ${form.durationEnabled ? "bg-gradient-to-r from-[#1C48CD] to-[#5B8AF0]" : "bg-[#D1D5DB]"}`}
                             style={{ width: `${((form.duration - 2) / 26) * 100}%` }}
                           />
                           <div
-                            className={`absolute w-5 h-5 rounded-full bg-white border-2 shadow-md -translate-x-1/2 pointer-events-none transition-colors ${form.durationEnabled ? "border-[#264044]" : "border-[#D1D5DB]"}`}
+                            className={`absolute w-5 h-5 rounded-full bg-white border-2 shadow-md -translate-x-1/2 pointer-events-none transition-colors ${form.durationEnabled ? "border-[#1C48CD]" : "border-[#D1D5DB]"}`}
                             style={{ left: `${((form.duration - 2) / 26) * 100}%` }}
                           />
                           <input
@@ -711,7 +711,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer
                       ${
                         isSelected
-                          ? "bg-[#264044] text-white"
+                          ? "bg-[#1C48CD] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
                       }
                     `}
@@ -756,7 +756,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       className={`
                         flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer
                         ${isSelected
-                          ? "bg-[#264044] text-white"
+                          ? "bg-[#1C48CD] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
                         }
                       `}
@@ -792,7 +792,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       className={`
                         flex-1 py-1.5 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer text-center
                         ${isActive
-                          ? "bg-[#264044] text-white"
+                          ? "bg-[#1C48CD] text-white"
                           : "bg-[#F3F4F6] text-[#6B7280] hover:bg-[#E5E7EB]"
                         }
                       `}
@@ -839,7 +839,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                     {hasCity ? (
                       <ShimmerButton
                         onClick={onSubmit}
-                        background="#264044"
+                        background="#1C48CD"
                         shimmerColor="rgba(255,255,255,0.3)"
                         className="w-full py-3.5 text-sm font-bold"
                       >

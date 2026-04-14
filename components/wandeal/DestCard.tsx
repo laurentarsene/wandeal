@@ -141,8 +141,8 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
       className="rounded-[20px] overflow-hidden bg-white border border-[#E5E7EB] transition-all duration-250"
       whileHover={{
         y: -3,
-        borderColor: "#264044",
-        boxShadow: "0 8px 32px rgba(38,64,68,0.15)",
+        borderColor: "#1C48CD",
+        boxShadow: "0 8px 32px rgba(28,72,205,0.15)",
       }}
     >
       {/* Photo */}
@@ -212,8 +212,8 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
                 <span
                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
                   style={{
-                    borderColor: dest.isSurprise ? "#264044" : theme.stripe,
-                    color: dest.isSurprise ? "#264044" : theme.text,
+                    borderColor: dest.isSurprise ? "#1C48CD" : theme.stripe,
+                    color: dest.isSurprise ? "#1C48CD" : theme.text,
                   }}
                 >
                   {dest.isLocal ? (
@@ -252,7 +252,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
               <CalendarDays size={13} />
               {dateLabel}
               {dest.datePeriodLabel && (
-                <span className="font-semibold text-[#264044]">· {dest.datePeriodLabel}</span>
+                <span className="font-semibold text-[#1C48CD]">· {dest.datePeriodLabel}</span>
               )}
             </span>
           )}
@@ -290,7 +290,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             </span>
           )}
           {dest.fritesPrice > 0 && (
-            <span className="group/frites inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563] transition-all duration-200 hover:scale-110 hover:bg-[#264044] hover:text-white cursor-default">
+            <span className="group/frites inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563] transition-all duration-200 hover:scale-110 hover:bg-[#1C48CD] hover:text-white cursor-default">
               🍟 {dest.fritesPrice}€
               <span className="max-w-0 overflow-hidden opacity-0 group-hover/frites:max-w-[80px] group-hover/frites:opacity-100 transition-all duration-300 whitespace-nowrap">la frite</span>
             </span>
@@ -320,7 +320,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
               {dest.activities.map((act) => (
                 <span
                   key={act}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#e8f0f1] text-[#1a2e31]"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#EEF2FF] text-[#1e2a4a]"
                 >
                   {act}
                 </span>
@@ -336,7 +336,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
                   {dest.matchedInterests.map((interest) => (
                     <span
                       key={interest}
-                      className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#264044] text-white"
+                      className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#1C48CD] text-white"
                     >
                       {interest}
                     </span>
@@ -390,7 +390,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             className="flex-1"
           >
             <ShimmerButton
-              background="#264044"
+              background="#1C48CD"
               shimmerColor="rgba(255,255,255,0.2)"
               borderRadius="16px"
               className="w-full py-2.5 text-sm font-medium"
@@ -410,7 +410,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             rel="noopener noreferrer"
             className="flex-1"
           >
-            <button className="w-full py-2.5 rounded-2xl text-sm font-medium text-[#264044] bg-[#e8f0f1] hover:bg-[#d5e7e9] transition-colors cursor-pointer">
+            <button className="w-full py-2.5 rounded-2xl text-sm font-medium text-[#1C48CD] bg-[#EEF2FF] hover:bg-[#DEE5FF] transition-colors cursor-pointer">
               <span className="inline-flex items-center gap-1.5">
                 <Hotel size={13} />
                 {t("seeHotels")}
@@ -426,7 +426,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-[#264044] text-white text-xs font-medium shadow-lg z-10"
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-[#1C48CD] text-white text-xs font-medium shadow-lg z-10"
           >
             {t("copied")}
           </motion.div>

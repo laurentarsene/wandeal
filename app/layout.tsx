@@ -88,7 +88,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#FAFAFA] font-sans">
+      <body className="min-h-full flex flex-col bg-[#FFFBF7] font-sans">
         <NextIntlClientProvider messages={messages}>
           {children}
           <Analytics />

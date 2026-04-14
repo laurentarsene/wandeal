@@ -71,13 +71,13 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
             {form.durationEnabled ? ` · ~${form.duration}j` : ""}
           </p>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-bold text-[#264044]">
+            <p className="text-sm font-bold text-[#1C48CD]">
               {t("destinations", { count: filtered.length })}
             </p>
             {onRelaunch && (
               <button
                 onClick={onRelaunch}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-[#264044] bg-[#e8f0f1] hover:bg-[#d5e7e9] transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-[#1C48CD] bg-[#EEF2FF] hover:bg-[#DEE5FF] transition-colors cursor-pointer"
               >
                 <RefreshCw size={12} />
                 {t("relaunch")}
@@ -113,7 +113,7 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
                 onClick={() => setFilter(pill.key)}
                 className={`
                   shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer
-                  ${active ? "bg-[#264044] text-white" : "bg-white text-[#4B5563] border border-[#E5E7EB] hover:border-[#D1D5DB]"}
+                  ${active ? "bg-[#1C48CD] text-white" : "bg-white text-[#4B5563] border border-[#E5E7EB] hover:border-[#D1D5DB]"}
                 `}
               >
                 <pill.icon size={14} className={pill.key === "fav" && active ? "fill-red-400 text-red-400" : ""} />
@@ -158,7 +158,7 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full bg-[#264044] text-white text-sm font-medium shadow-lg z-50"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full bg-[#1C48CD] text-white text-sm font-medium shadow-lg z-50"
           >
             {t("copied")}
           </motion.div>

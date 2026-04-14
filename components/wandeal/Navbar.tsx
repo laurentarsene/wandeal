@@ -31,7 +31,7 @@ export function Navbar({ showBack, onBack, favCount = 0, onFavorites }: NavbarPr
             className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
           >
             <Heart size={16} className="fill-red-500 text-red-500" />
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center px-1 rounded-full bg-[#264044] text-white text-[10px] font-bold">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center px-1 rounded-full bg-[#1C48CD] text-white text-[10px] font-bold">
               {favCount}
             </span>
           </button>

@@ -121,7 +121,7 @@ export function CityAutocomplete({ value, onChange }: CityAutocompleteProps) {
               onMouseEnter={() => setActiveIndex(i)}
               className={`
                 flex items-center gap-2.5 px-4 py-2.5 text-sm cursor-pointer transition-colors
-                ${i === activeIndex ? "bg-[#e8f0f1] text-[#1a2e31]" : "text-[#4B5563] hover:bg-[#F9FAFB]"}
+                ${i === activeIndex ? "bg-[#EEF2FF] text-[#1e2a4a]" : "text-[#4B5563] hover:bg-[#F9FAFB]"}
               `}
             >
               <MapPin size={14} className="text-[#9CA3AF] shrink-0" />

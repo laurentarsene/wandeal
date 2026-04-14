@@ -226,7 +226,7 @@ export function DateRangePicker({
                   <button
                     type="button"
                     onClick={clear}
-                    className="text-xs text-[#264044] font-medium hover:underline cursor-pointer"
+                    className="text-xs text-[#1C48CD] font-medium hover:underline cursor-pointer"
                   >
                     {t("datesCalendarClear")}
                   </button>
@@ -265,11 +265,11 @@ export function DateRangePicker({
               }}
               modifiersClassNames={{
                 range_start:
-                  "!bg-[#264044] !text-white !rounded-l-full",
+                  "!bg-[#1C48CD] !text-white !rounded-l-full",
                 range_end:
-                  "!bg-[#264044] !text-white !rounded-r-full",
-                range_middle: "!bg-[#e8f0f1] !text-[#1a2e31] !rounded-none",
-                selected: "!bg-[#264044] !text-white !rounded-full",
+                  "!bg-[#1C48CD] !text-white !rounded-r-full",
+                range_middle: "!bg-[#EEF2FF] !text-[#1e2a4a] !rounded-none",
+                selected: "!bg-[#1C48CD] !text-white !rounded-full",
               }}
               className="rdp-wandeal"
             />

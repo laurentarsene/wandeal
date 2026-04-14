@@ -30,7 +30,7 @@ function StepItem({
     <div className="flex items-center gap-3 bg-white border border-[#E5E7EB]/60 rounded-xl px-4 py-3 shadow-sm w-full">
       <div
         className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 ${
-          done ? "bg-[#264044] text-white" : "bg-[#F3F4F6] text-[#9CA3AF]"
+          done ? "bg-[#1C48CD] text-white" : "bg-[#F3F4F6] text-[#9CA3AF]"
         }`}
       >
         {done ? (
@@ -41,7 +41,7 @@ function StepItem({
       </div>
       <span
         className={`text-sm font-medium flex-1 transition-colors ${
-          done ? "text-[#264044]" : "text-[#4B5563]"
+          done ? "text-[#1C48CD]" : "text-[#4B5563]"
         }`}
       >
         {label}
@@ -49,7 +49,7 @@ function StepItem({
       <Icon
         size={16}
         className={`shrink-0 transition-colors ${
-          done ? "text-[#264044]" : "text-[#D1D5DB]"
+          done ? "text-[#1C48CD]" : "text-[#D1D5DB]"
         }`}
       />
     </div>
@@ -93,7 +93,7 @@ export function LoadingScreen({ onCancel }: LoadingScreenProps) {
       {onCancel && (
         <button
           onClick={onCancel}
-          className="absolute top-6 right-6 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E7EB] bg-white text-xs font-medium text-[#6B7280] hover:border-[#264044] hover:text-[#264044] transition-all cursor-pointer"
+          className="absolute top-6 right-6 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E7EB] bg-white text-xs font-medium text-[#6B7280] hover:border-[#1C48CD] hover:text-[#1C48CD] transition-all cursor-pointer"
         >
           <X size={14} />
           Annuler
@@ -102,12 +102,12 @@ export function LoadingScreen({ onCancel }: LoadingScreenProps) {
 
       {/* Animated travel icon */}
       <div className="mb-8 relative">
-        <div className="w-20 h-20 rounded-full bg-[#e8f0f1] flex items-center justify-center">
-          <div className="w-12 h-12 rounded-full bg-[#264044] flex items-center justify-center animate-[spin_8s_linear_infinite]">
+        <div className="w-20 h-20 rounded-full bg-[#EEF2FF] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-[#1C48CD] flex items-center justify-center animate-[spin_8s_linear_infinite]">
             <Globe size={24} className="text-white" />
           </div>
         </div>
-        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#264044] flex items-center justify-center">
+        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#1C48CD] flex items-center justify-center">
           <Compass size={12} className="text-white animate-[spin_3s_linear_infinite]" />
         </div>
       </div>
@@ -118,7 +118,7 @@ export function LoadingScreen({ onCancel }: LoadingScreenProps) {
 
       <p
         key={msgIndex}
-        className="text-[#264044] text-sm font-medium mb-8 animate-pulse text-center"
+        className="text-[#1C48CD] text-sm font-medium mb-8 animate-pulse text-center"
       >
         {messages[msgIndex]}
       </p>

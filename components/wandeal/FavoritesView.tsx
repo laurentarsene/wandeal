@@ -20,7 +20,7 @@ export function FavoritesView({ favorites, isFavorite, onToggleFavorite }: Favor
       <BlurFade delay={0}>
         <div className="flex items-center gap-3 mb-6">
           <Heart size={20} className="fill-red-500 text-red-500" />
-          <h2 className="text-xl font-extrabold text-[#264044]">
+          <h2 className="text-xl font-extrabold text-[#1C48CD]">
             {t("favoritesTitle", { count: favorites.length })}
           </h2>
         </div>

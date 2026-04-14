@@ -46,7 +46,7 @@ export function LanguageSwitcher() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#6B7280] hover:text-[#264044] hover:bg-[#e8f0f1] transition-all cursor-pointer"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#6B7280] hover:text-[#1C48CD] hover:bg-[#EEF2FF] transition-all cursor-pointer"
       >
         <Globe size={14} />
         {current?.code.toUpperCase()}
@@ -61,7 +61,7 @@ export function LanguageSwitcher() {
               className={`
                 w-full text-left px-3 py-2 text-sm transition-colors cursor-pointer
                 ${locale.code === currentLocale
-                  ? "bg-[#e8f0f1] text-[#264044] font-semibold"
+                  ? "bg-[#EEF2FF] text-[#1C48CD] font-semibold"
                   : "text-[#4B5563] hover:bg-[#F9FAFB]"
                 }
               `}

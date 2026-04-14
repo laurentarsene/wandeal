@@ -119,7 +119,7 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
               transition-colors duration-150 cursor-pointer select-none
               ${
                 active
-                  ? "bg-[#264044] text-white font-semibold [box-shadow:0_0_0_1px_#264044,0_2px_6px_rgba(38,64,68,0.25)]"
+                  ? "bg-[#1C48CD] text-white font-semibold [box-shadow:0_0_0_1px_#1C48CD,0_2px_6px_rgba(28,72,205,0.25)]"
                   : "bg-[#F3F4F6] text-[#4B5563] hover:bg-[#E5E7EB] font-medium"
               }
             `}
@@ -133,7 +133,7 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
         <button
           type="button"
           onClick={() => setExpanded(true)}
-          className="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-[13px] font-medium text-[#264044] bg-[#e8f0f1] hover:bg-[#d5e7e9] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-[13px] font-medium text-[#1C48CD] bg-[#EEF2FF] hover:bg-[#DEE5FF] transition-colors cursor-pointer"
         >
           <ChevronDown size={14} />
           <span>{t("interestsMore")}</span>
