@@ -136,7 +136,8 @@
     "getDirections": "Como chegar",
     "reachable": "Proximo",
     "seeHotels": "Hoteis",
-    "copied": "Copiado!"
+    "copied": "Copiado!",
+    "relaunch": "Atualizar"
   },
   "footer": {
     "tagline": "Ferias a medida, encontradas por IA.",

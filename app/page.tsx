@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useLocale } from "next-intl";
 import { AnimatePresence, motion } from "motion/react";
 import { Navbar } from "@/components/wandeal/Navbar";
 import { SearchForm } from "@/components/wandeal/SearchForm";
@@ -23,6 +24,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
+  const locale = useLocale();
   const { history, addSearch } = useSearchHistory();
 
   const goToFavorites = () => {
@@ -50,7 +52,7 @@ export default function Home() {
       const res = await fetch("/api/destinations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, locale }),
         signal: abortRef.current.signal,
       });
 
@@ -139,6 +141,7 @@ export default function Home() {
                 favorites={favorites}
                 isFavorite={isFavorite}
                 onToggleFavorite={toggleFavorite}
+                onRelaunch={handleSearch}
               />
             </motion.div>
           )}

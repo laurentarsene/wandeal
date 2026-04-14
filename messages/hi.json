@@ -136,7 +136,8 @@
     "getDirections": "Get directions",
     "reachable": "Nearby",
     "seeHotels": "Hotels",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "relaunch": "Refresh"
   },
   "footer": {
     "tagline": "AI-powered tailor-made vacations.",

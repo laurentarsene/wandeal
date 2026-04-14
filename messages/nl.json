@@ -136,7 +136,8 @@
     "getDirections": "Routebeschrijving",
     "reachable": "Dichtbij",
     "seeHotels": "Hotels",
-    "copied": "Gekopieerd!"
+    "copied": "Gekopieerd!",
+    "relaunch": "Vernieuwen"
   },
   "footer": {
     "tagline": "Vakantie op maat, gevonden door AI.",

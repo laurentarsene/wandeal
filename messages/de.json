@@ -136,7 +136,8 @@
     "getDirections": "Route planen",
     "reachable": "In der Naehe",
     "seeHotels": "Hotels",
-    "copied": "Kopiert!"
+    "copied": "Kopiert!",
+    "relaunch": "Neu laden"
   },
   "footer": {
     "tagline": "Massgeschneiderter Urlaub, von KI gefunden.",

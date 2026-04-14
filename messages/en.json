@@ -111,6 +111,7 @@
     "step4": "Selecting best offers"
   },
   "results": {
+    "relaunch": "Refresh",
     "destinations": "{count} destinations",
     "flexible": "Flexible dates",
     "datesChosen": "Dates chosen",

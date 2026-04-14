@@ -136,7 +136,8 @@
     "getDirections": "Como llegar",
     "reachable": "Cerca",
     "seeHotels": "Hoteles",
-    "copied": "Copiado!"
+    "copied": "Copiado!",
+    "relaunch": "Actualizar"
   },
   "footer": {
     "tagline": "Vacaciones a medida, encontradas por IA.",

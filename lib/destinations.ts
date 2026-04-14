@@ -1,7 +1,19 @@
 import type { SearchFormData } from "./types";
 import { formatHolidaysForPrompt, formatPublicHolidaysForPrompt } from "./school-holidays";
 
-export function buildPrompt(form: SearchFormData): string {
+const localeNames: Record<string, string> = {
+  fr: "français",
+  en: "English",
+  nl: "Nederlands",
+  de: "Deutsch",
+  es: "español",
+  it: "italiano",
+  pt: "português",
+  hi: "English",
+};
+
+export function buildPrompt(form: SearchFormData & { locale?: string }): string {
+  const lang = localeNames[form.locale || "fr"] || "français";
   const budgetPart = form.budgetEnabled
     ? `Budget STRICT max ${form.budget}€/personne tout compris (transport + hébergement). AUCUNE destination au-dessus de ce budget.`
     : "Pas de contrainte de budget";
@@ -186,6 +198,7 @@ export function buildPrompt(form: SearchFormData): string {
     : "";
 
   return `Tu es un expert en voyages et en bons plans. Génère des recommandations de vacances personnalisées et réalistes.
+LANGUE : Tous les textes (why, activities) DOIVENT être en ${lang}.
 
 Voyageur :
 ${cityLine}
@@ -231,7 +244,7 @@ Règles STRICTES :
 3. matchScore entre 65 et 99
 ${localRule}
 5. TOUJOURS exactement 1 destination avec isSurprise: true → destination que presque personne ne connait, un vrai secret de voyageur
-6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights)
+6. Prix RÉALISTES — totalPerPerson = flightPrice + (hotelPerNight × nights). fritesPrice : prix d'un cornet de frites UNIQUEMENT pour les destinations en Europe. Pour les autres continents, fritesPrice = 0.
 ${weatherRule}
 8. DIVERSITÉ OBLIGATOIRE dans les 8 destinations :
    - 2-3 classiques populaires (les incontournables qui matchent les envies)

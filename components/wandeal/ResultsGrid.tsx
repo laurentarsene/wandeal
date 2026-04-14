@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Coins, Home, Heart } from "lucide-react";
+import { Star, Coins, Home, Heart, RefreshCw, Share2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { DestCard } from "./DestCard";
@@ -15,9 +15,10 @@ interface ResultsGridProps {
   favorites: Destination[];
   isFavorite: (dest: Destination) => boolean;
   onToggleFavorite: (dest: Destination) => void;
+  onRelaunch?: () => void;
 }
 
-export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavorite }: ResultsGridProps) {
+export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavorite, onRelaunch }: ResultsGridProps) {
   const t = useTranslations("results");
   const locale = useLocale();
   const [filter, setFilter] = useState<Filter>("match");
@@ -66,9 +67,34 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
             {form.budgetEnabled ? ` · max ${form.budget}€/pers.` : ""}
             {form.durationEnabled ? ` · ~${form.duration}j` : ""}
           </p>
-          <p className="text-sm font-bold text-[#264044]">
-            {t("destinations", { count: filtered.length })}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-bold text-[#264044]">
+              {t("destinations", { count: filtered.length })}
+            </p>
+            {onRelaunch && (
+              <button
+                onClick={onRelaunch}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-[#264044] bg-[#e8f0f1] hover:bg-[#d5e7e9] transition-colors cursor-pointer"
+              >
+                <RefreshCw size={12} />
+                {t("relaunch")}
+              </button>
+            )}
+            <button
+              onClick={() => {
+                const interests = form.interests.length > 0 ? form.interests.join(", ") : "toutes envies";
+                const text = `${form.city} · ${interests}${form.budgetEnabled ? ` · max ${form.budget}€` : ""}\n${filtered.length} destinations trouvées\n\nwandeal.vercel.app`;
+                if (navigator.share) {
+                  navigator.share({ title: "Wandeal — Ma recherche", text }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(text);
+                }
+              }}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-full text-[#9CA3AF] hover:bg-[#E5E7EB] transition-colors cursor-pointer"
+            >
+              <Share2 size={14} />
+            </button>
+          </div>
         </div>
       </BlurFade>
 
