@@ -52,7 +52,23 @@ export default function Home() {
       const res = await fetch("/api/destinations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, locale, skipCache }),
+        body: JSON.stringify({
+          city: form.city,
+          dateFrom: form.dateFrom,
+          dateTo: form.dateTo,
+          dateConstraints: form.dateConstraints,
+          travelers: form.travelers,
+          budgetEnabled: form.budgetEnabled,
+          budget: form.budget,
+          durationEnabled: form.durationEnabled,
+          duration: form.duration,
+          transport: form.transport,
+          accommodation: form.accommodation,
+          comfort: form.comfort,
+          interests: form.interests,
+          locale,
+          skipCache,
+        }),
         signal: abortRef.current.signal,
       });
 
