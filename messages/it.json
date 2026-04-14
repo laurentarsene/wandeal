@@ -106,7 +106,8 @@
     "step1": "Analisi delle tue preferenze",
     "step2": "Controllo meteo",
     "step3": "Calcolo dei prezzi",
-    "step4": "Selezione delle migliori offerte"
+    "step4": "Selezione delle migliori offerte",
+    "cancel": "Annulla"
   },
   "results": {
     "destinations": "{count} destinazioni",

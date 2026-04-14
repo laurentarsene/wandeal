@@ -106,7 +106,8 @@
     "step1": "Je voorkeuren analyseren",
     "step2": "Weer controleren",
     "step3": "Prijzen berekenen",
-    "step4": "Beste aanbiedingen selecteren"
+    "step4": "Beste aanbiedingen selecteren",
+    "cancel": "Annuleren"
   },
   "results": {
     "destinations": "{count} bestemmingen",

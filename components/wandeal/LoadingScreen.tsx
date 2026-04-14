@@ -96,7 +96,7 @@ export function LoadingScreen({ onCancel }: LoadingScreenProps) {
           className="absolute top-6 right-6 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5E7EB] bg-white text-xs font-medium text-[#6B7280] hover:border-[#1C48CD] hover:text-[#1C48CD] transition-all cursor-pointer"
         >
           <X size={14} />
-          Annuler
+          {t("cancel")}
         </button>
       )}
 

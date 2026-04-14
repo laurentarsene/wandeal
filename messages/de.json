@@ -106,7 +106,8 @@
     "step1": "Analyse deiner Vorlieben",
     "step2": "Wetter pruefen",
     "step3": "Preise berechnen",
-    "step4": "Beste Angebote auswaehlen"
+    "step4": "Beste Angebote auswaehlen",
+    "cancel": "Abbrechen"
   },
   "results": {
     "destinations": "{count} Reiseziele",

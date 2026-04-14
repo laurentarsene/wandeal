@@ -46,7 +46,7 @@ import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, Da
 import { defaultForm } from "@/lib/types";
 
 interface Preset {
-  label: string;
+  tKey: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   form: Partial<SearchFormData>;
   needsCity?: boolean;
@@ -54,7 +54,7 @@ interface Preset {
 
 const presets: Preset[] = [
   {
-    label: "Soleil entre potes pas cher",
+    tKey: "sun",
     icon: Sun,
     form: {
       travelers: 4,
@@ -65,7 +65,7 @@ const presets: Preset[] = [
     },
   },
   {
-    label: "Famille culture & piscine",
+    tKey: "family",
     icon: Landmark,
     form: {
       travelers: 4,
@@ -76,7 +76,7 @@ const presets: Preset[] = [
     },
   },
   {
-    label: "Nature solo pour 0€",
+    tKey: "nature",
     icon: TreePine,
     needsCity: true,
     form: {
@@ -89,7 +89,7 @@ const presets: Preset[] = [
     },
   },
   {
-    label: "Escapade gastronomique",
+    tKey: "food",
     icon: Wine,
     form: {
       travelers: 2,
@@ -100,7 +100,7 @@ const presets: Preset[] = [
     },
   },
   {
-    label: "Aventure montagne",
+    tKey: "mountain",
     icon: Mountain,
     form: {
       travelers: 2,
@@ -111,7 +111,7 @@ const presets: Preset[] = [
     },
   },
   {
-    label: "Lune de miel",
+    tKey: "honeymoon",
     icon: Heart,
     form: {
       travelers: 2,
@@ -326,7 +326,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                 </p>
                 {presets.map((preset) => (
                   <button
-                    key={preset.label}
+                    key={preset.tKey}
                     type="button"
                     onClick={() => applyPreset(preset)}
                     className="w-fit flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 text-left text-[12px] font-medium text-white/85 hover:bg-white/20 hover:border-white/25 hover:text-white transition-all cursor-pointer group"
@@ -334,7 +334,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                     <div className="w-7 h-7 rounded-xl bg-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/25 transition-colors">
                       <preset.icon size={14} className="text-white/70" />
                     </div>
-                    <span className="leading-snug">{preset.label}</span>
+                    <span className="leading-snug">{tPresets(preset.tKey)}</span>
                   </button>
                 ))}
               </div>
@@ -375,13 +375,13 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               <div className="flex flex-wrap gap-2.5">
                 {presets.map((preset) => (
                   <button
-                    key={preset.label}
+                    key={preset.tKey}
                     type="button"
                     onClick={() => applyPreset(preset)}
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 text-[12px] font-medium text-white/85 hover:bg-white/20 hover:border-white/25 active:scale-95 transition-all cursor-pointer"
                   >
                     <preset.icon size={14} className="text-white/60" />
-                    <span>{preset.label}</span>
+                    <span>{tPresets(preset.tKey)}</span>
                   </button>
                 ))}
               </div>

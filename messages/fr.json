@@ -99,6 +99,7 @@
     "honeymoon": "Lune de miel"
   },
   "loading": {
+    "cancel": "Annuler",
     "title": "On cherche pour vous...",
     "msg1": "Analyse de vos envies en cours...",
     "msg2": "Vérification météo sur vos dates...",

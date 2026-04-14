@@ -99,6 +99,7 @@
     "honeymoon": "Honeymoon"
   },
   "loading": {
+    "cancel": "Cancel",
     "title": "Searching for you...",
     "msg1": "Analyzing your preferences...",
     "msg2": "Checking weather forecasts...",

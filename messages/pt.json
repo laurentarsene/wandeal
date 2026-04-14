@@ -106,7 +106,8 @@
     "step1": "A analisar as suas preferencias",
     "step2": "A verificar o tempo",
     "step3": "A calcular precos",
-    "step4": "A selecionar as melhores ofertas"
+    "step4": "A selecionar as melhores ofertas",
+    "cancel": "Cancelar"
   },
   "results": {
     "destinations": "{count} destinos",
