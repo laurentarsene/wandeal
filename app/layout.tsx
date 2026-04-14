@@ -57,8 +57,34 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Wandeal",
+    url: "https://wandeal.vercel.app",
+    description: "Des vacances sur mesure, trouvées par l'IA. Dites-nous d'où vous partez, on s'occupe du reste.",
+    applicationCategory: "TravelApplication",
+    operatingSystem: "All",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+    },
+    creator: {
+      "@type": "Organization",
+      name: "Wandeal",
+      url: "https://wandeal.vercel.app",
+    },
+  };
+
   return (
     <html lang={locale} className={`${dmSans.variable} ${vinaSans.variable} h-full antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-[#FAFAFA] font-sans">
         <NextIntlClientProvider messages={messages}>
           {children}

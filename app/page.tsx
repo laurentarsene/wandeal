@@ -35,6 +35,7 @@ export default function Home() {
       setStep(prevStep);
     } else {
       setStep("form");
+      document.title = "Wandeal — Ur next journey";
     }
   };
 
@@ -64,6 +65,9 @@ export default function Home() {
       }
       setResults(data.destinations);
       setStep("results");
+      // Dynamic page title for SEO/sharing
+      const interests = form.interests.length > 0 ? form.interests.slice(0, 2).join(", ") : "vacances";
+      document.title = `${data.destinations.length} destinations ${interests} depuis ${form.city || "partout"} — Wandeal`;
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
         setStep("form");
