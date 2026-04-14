@@ -134,6 +134,7 @@ interface SearchFormProps {
   onChange: (form: SearchFormData) => void;
   onSubmit: () => void;
   searchHistory?: SearchHistoryEntry[];
+  error?: string | null;
 }
 
 function daysBetween(from: string, to: string): number | null {
@@ -207,7 +208,7 @@ function RotatingIcon() {
   );
 }
 
-export function SearchForm({ form, onChange, onSubmit, searchHistory = [] }: SearchFormProps) {
+export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error }: SearchFormProps) {
   const t = useTranslations("form");
   const tHero = useTranslations("hero");
   const tPresets = useTranslations("presets");
@@ -821,6 +822,13 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [] }: Sea
           </BentoCard>
               </div>
             </div>
+
+            {/* Error message */}
+            {error && (
+              <div className="mt-3 px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-sm text-red-700">
+                {error}
+              </div>
+            )}
 
             {/* CTA */}
             {(() => {

@@ -20,6 +20,7 @@ export default function Home() {
   const [prevStep, setPrevStep] = useState<Step>("form");
   const [form, setForm] = useState<SearchFormData>(defaultForm);
   const [results, setResults] = useState<Destination[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
   const { history, addSearch } = useSearchHistory();
@@ -39,9 +40,9 @@ export default function Home() {
 
   const handleSearch = async () => {
     setStep("loading");
+    setError(null);
     addSearch(form);
 
-    // Create abort controller for this search
     abortRef.current = new AbortController();
 
     try {
@@ -53,19 +54,23 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Erreur serveur");
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Erreur ${res.status}`);
       }
 
       const data = await res.json();
+      if (!data.destinations?.length) {
+        throw new Error("Aucune destination trouvée. Essayez d'autres filtres.");
+      }
       setResults(data.destinations);
       setStep("results");
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
-        // User cancelled — go back to form silently
         setStep("form");
         return;
       }
+      const msg = err instanceof Error ? err.message : "Une erreur est survenue";
+      setError(msg);
       setStep("form");
     }
   };
@@ -99,6 +104,7 @@ export default function Home() {
                 onChange={setForm}
                 onSubmit={handleSearch}
                 searchHistory={history}
+                error={error}
               />
             </motion.div>
           )}

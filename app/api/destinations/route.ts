@@ -12,6 +12,50 @@ const openai = new OpenAI({
 
 const tpToken = process.env.TRAVELPAYOUTS_TOKEN || "";
 
+// --- Rate limiting (in-memory, resets on cold start) ---
+const RATE_LIMIT = 10; // requests per window
+const RATE_WINDOW = 60 * 60 * 1000; // 1 hour
+const ipRequests = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = ipRequests.get(ip);
+  if (!entry || now > entry.resetAt) {
+    ipRequests.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
+// --- Response cache (in-memory, 1h TTL) ---
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const responseCache = new Map<string, { data: Destination[]; expiresAt: number }>();
+
+function getCacheKey(form: SearchFormData): string {
+  const key = JSON.stringify({
+    city: form.city,
+    dateFrom: form.dateFrom,
+    dateTo: form.dateTo,
+    dateConstraints: form.dateConstraints,
+    transport: form.transport,
+    accommodation: form.accommodation,
+    comfort: form.comfort,
+    interests: form.interests,
+    budgetEnabled: form.budgetEnabled,
+    budget: form.budgetEnabled ? form.budget : 0,
+    durationEnabled: form.durationEnabled,
+    duration: form.durationEnabled ? form.duration : 0,
+  });
+  // Simple hash
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash = ((hash << 5) - hash + key.charCodeAt(i)) | 0;
+  }
+  return hash.toString(36);
+}
+
 // Get the main Wikipedia photo for a city/region — free, no API key
 async function getPhotoUrl(cityName: string, country: string): Promise<string> {
   // Try multiple queries: exact name, name + country, English name + city/region
@@ -55,7 +99,25 @@ async function getPhotoUrl(cityName: string, country: string): Promise<string> {
 
 export async function POST(request: Request) {
   try {
+    // --- Rate limiting ---
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      || request.headers.get("x-real-ip")
+      || "unknown";
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: "Trop de recherches. Réessayez dans quelques minutes." },
+        { status: 429 }
+      );
+    }
+
     const form: SearchFormData = await request.json();
+
+    // --- Check cache ---
+    const cacheKey = getCacheKey(form);
+    const cached = responseCache.get(cacheKey);
+    if (cached && Date.now() < cached.expiresAt) {
+      return NextResponse.json({ destinations: cached.data });
+    }
 
     // --- Step 1: LLM suggests destinations ---
     const prompt = buildPrompt(form);
@@ -227,6 +289,9 @@ export async function POST(request: Request) {
 
     // Sort by matchScore descending
     destinations.sort((a, b) => b.matchScore - a.matchScore);
+
+    // Cache the result
+    responseCache.set(cacheKey, { data: destinations, expiresAt: Date.now() + CACHE_TTL });
 
     return NextResponse.json({ destinations });
   } catch (error) {
