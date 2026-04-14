@@ -80,24 +80,18 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
   const cleanName = cleanPlaceName(cityName);
 
   if (pexelsKey) {
-    const queries = [`${cleanName} ${country} travel`, `${cleanName} ${country}`, `${cleanName} travel`];
+    const queries = [`${cleanName} ${country}`, cleanName];
     for (const q of queries) {
       try {
         const res = await fetch(
-          `https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=8&orientation=landscape`,
+          `https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=4&orientation=landscape`,
           { headers: { Authorization: pexelsKey }, signal: AbortSignal.timeout(5000) }
         );
         if (!res.ok) continue;
         const data = await res.json();
-        // Filter out paintings/art: only keep photos (Pexels tags photos vs illustrations)
         const urls = (data.photos || [])
-          .filter((p: { alt?: string }) => {
-            const alt = (p.alt || "").toLowerCase();
-            return !alt.includes("painting") && !alt.includes("illustration") && !alt.includes("drawing") && !alt.includes("artwork") && !alt.includes("canvas");
-          })
           .map((p: { src?: { large?: string } }) => p.src?.large)
-          .filter(Boolean)
-          .slice(0, 4) as string[];
+          .filter(Boolean) as string[];
         if (urls.length >= 1) {
           photoCache.set(cacheKey, urls);
           return urls;
