@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
+  verification: {
+    google: "zD2Z_R_RRkUOnVbcAVgj9-zAgYGY6PSedf8mZ03eDyQ",
+  },
   other: {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
