@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Star, Coins, Home, Heart, RefreshCw, Share2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { BlurFade } from "@/components/ui/blur-fade";
@@ -22,6 +23,8 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
   const t = useTranslations("results");
   const locale = useLocale();
   const [filter, setFilter] = useState<Filter>("match");
+  const [toast, setToast] = useState(false);
+  const showToast = useCallback(() => { setToast(true); setTimeout(() => setToast(false), 2000); }, []);
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return "";
@@ -83,11 +86,11 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
             <button
               onClick={() => {
                 const interests = form.interests.length > 0 ? form.interests.join(", ") : "toutes envies";
-                const text = `${form.city} · ${interests}${form.budgetEnabled ? ` · max ${form.budget}€` : ""}\n${filtered.length} destinations trouvées\n\nwandeal.vercel.app`;
+                const text = `${form.city} · ${interests}${form.budgetEnabled ? ` · max ${form.budget}€` : ""}\n${filtered.length} destinations trouvées\n\nwandeal.com`;
                 if (navigator.share) {
                   navigator.share({ title: "Wandeal — Ma recherche", text }).catch(() => {});
                 } else {
-                  navigator.clipboard.writeText(text);
+                  navigator.clipboard.writeText(text).then(() => showToast());
                 }
               }}
               className="inline-flex items-center justify-center w-8 h-8 rounded-full text-[#9CA3AF] hover:bg-[#E5E7EB] transition-colors cursor-pointer"
@@ -147,6 +150,20 @@ export function ResultsGrid({ results, form, favorites, isFavorite, onToggleFavo
           <p className="text-sm text-[#9CA3AF]">{t("noFavorites")}</p>
         </div>
       )}
+
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full bg-[#264044] text-white text-sm font-medium shadow-lg z-50"
+          >
+            {t("copied")}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

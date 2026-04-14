@@ -64,7 +64,7 @@ export default async function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Wandeal",
-    url: "https://wandeal.vercel.app",
+    url: "https://wandeal.com",
     description: "Des vacances sur mesure, trouvées par l'IA. Dites-nous d'où vous partez, on s'occupe du reste.",
     applicationCategory: "TravelApplication",
     operatingSystem: "All",
@@ -76,7 +76,7 @@ export default async function RootLayout({
     creator: {
       "@type": "Organization",
       name: "Wandeal",
-      url: "https://wandeal.vercel.app",
+      url: "https://wandeal.com",
     },
   };
 

@@ -359,7 +359,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             onClick={async () => {
               const dates = dest.dateFrom && dest.dateTo ? `${fmtDate(dest.dateFrom)} → ${fmtDate(dest.dateTo)}` : "";
               const frites = dest.fritesPrice > 0 ? `\n🍟 ${dest.fritesPrice}€ la frite` : "";
-              const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€/pers · ${dest.nights} nuits${dates ? ` · ${dates}` : ""}\n\n${dest.why}${frites}\n\nTrouvé sur wandeal.vercel.app`;
+              const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€/pers · ${dest.nights} nuits${dates ? ` · ${dates}` : ""}\n\n${dest.why}${frites}\n\nTrouvé sur wandeal.com`;
 
               // Try sharing with photo (mobile)
               if (navigator.share && dest.photoUrl) {

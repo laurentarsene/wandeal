@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wandeal.vercel.app/sitemap.xml
+Sitemap: https://wandeal.com/sitemap.xml
