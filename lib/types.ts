@@ -58,6 +58,7 @@ export interface Destination {
   destIata?: string;      // code IATA de la destination (ex: LIS)
   bookingUrl?: string;
   photoUrl?: string;
+  photoUrls?: string[];
 }
 
 export const defaultForm: SearchFormData = {

@@ -119,6 +119,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
   const t = useTranslations("results");
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
+  const [photoIdx, setPhotoIdx] = useState(0);
   const [toast, setToast] = useState(false);
   const showToast = useCallback(() => {
     setToast(true);
@@ -145,16 +146,51 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
         boxShadow: "0 8px 32px rgba(28,72,205,0.15)",
       }}
     >
-      {/* Photo */}
-      {dest.photoUrl && (
-        <div className="relative h-36 overflow-hidden">
-          <img
-            src={dest.photoUrl}
-            alt={dest.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+      {/* Photo carousel */}
+      {(dest.photoUrls?.length || dest.photoUrl) && (
+        <div className="relative h-40 overflow-hidden group/photo">
+          {(() => {
+            const photos = dest.photoUrls?.length ? dest.photoUrls : dest.photoUrl ? [dest.photoUrl] : [];
+            const current = photos[photoIdx % photos.length];
+            return (
+              <>
+                <img
+                  src={current}
+                  alt={dest.name}
+                  className="w-full h-full object-cover transition-opacity duration-300"
+                  loading="lazy"
+                />
+                {photos.length > 1 && (
+                  <>
+                    {/* Dots */}
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                      {photos.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={(e) => { e.stopPropagation(); setPhotoIdx(i); }}
+                          className={`w-1.5 h-1.5 rounded-full transition-all cursor-pointer ${i === photoIdx % photos.length ? "bg-white w-3" : "bg-white/50"}`}
+                        />
+                      ))}
+                    </div>
+                    {/* Arrows */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setPhotoIdx((photoIdx - 1 + photos.length) % photos.length); }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover/photo:opacity-100 transition-opacity cursor-pointer"
+                    >
+                      <ChevronUp size={14} className="rotate-[-90deg]" />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setPhotoIdx((photoIdx + 1) % photos.length); }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover/photo:opacity-100 transition-opacity cursor-pointer"
+                    >
+                      <ChevronDown size={14} className="rotate-[-90deg]" />
+                    </button>
+                  </>
+                )}
+              </>
+            );
+          })()}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
           {onToggleFavorite && (
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFavorite(dest); }}

@@ -56,45 +56,53 @@ function getCacheKey(form: SearchFormData): string {
   return hash.toString(36);
 }
 
-// Get the main Wikipedia photo for a city/region — free, no API key
-async function getPhotoUrl(cityName: string, country: string): Promise<string> {
-  // Try multiple queries: exact name, name + country, English name + city/region
-  const queries = [
-    cityName,
-    `${cityName} (${country})`,
+// Get photos via Wikimedia Commons search — free, no API key, multiple results
+async function getPhotoUrls(cityName: string, country: string): Promise<string[]> {
+  const searchQueries = [
+    `${cityName} ${country} landscape`,
     `${cityName} ${country}`,
     `${cityName} city`,
   ];
 
-  for (const q of queries) {
+  for (const q of searchQueries) {
     try {
-      const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(q)}&prop=pageimages&pithumbsize=800&format=json`;
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=800&format=json&origin=*`;
       const res = await fetch(url);
       if (!res.ok) continue;
       const data = await res.json();
       const pages = data?.query?.pages;
       if (!pages) continue;
-      const page = Object.values(pages)[0] as { thumbnail?: { source?: string } };
-      if (page?.thumbnail?.source) return page.thumbnail.source;
+
+      const urls: string[] = [];
+      for (const page of Object.values(pages) as { imageinfo?: { thumburl?: string; mime?: string }[] }[]) {
+        const info = page?.imageinfo?.[0];
+        if (info?.thumburl && info.mime?.startsWith("image/") && !info.mime.includes("svg")) {
+          urls.push(info.thumburl);
+        }
+        if (urls.length >= 4) break;
+      }
+      if (urls.length >= 2) return urls;
     } catch {
       // try next query
     }
   }
 
-  // Fallback: generic travel photo based on city name hash
-  const fallbacks = [
-    "1500835556837-99ac94a94552",
-    "1488085061387-422e29b40080",
-    "1507525428034-b723cf961d3e",
-    "1502602898657-3e91760cbb34",
-    "1523906834658-6e24ef2386f9",
-    "1469854523086-cc02fe5d8800",
-  ];
-  let hash = 0;
-  for (let i = 0; i < cityName.length; i++) {
-    hash = ((hash << 5) - hash + cityName.charCodeAt(i)) | 0;
-  }
-  return `https://images.unsplash.com/photo-${fallbacks[Math.abs(hash) % fallbacks.length]}?w=800&h=500&fit=crop&q=80`;
+  // Fallback: Wikipedia pageimage (single)
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(cityName)}&prop=pageimages&pithumbsize=800&format=json`;
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      const pages = data?.query?.pages;
+      if (pages) {
+        const page = Object.values(pages)[0] as { thumbnail?: { source?: string } };
+        if (page?.thumbnail?.source) return [page.thumbnail.source];
+      }
+    }
+  } catch {}
+
+  // Last fallback
+  return [`https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=800&h=500&fit=crop&q=80`];
 }
 
 export async function POST(request: Request) {
@@ -201,7 +209,9 @@ export async function POST(request: Request) {
         }
 
         // --- Photo ---
-        enriched.photoUrl = await getPhotoUrl(dest.name, dest.country);
+        const photos = await getPhotoUrls(dest.name, dest.country);
+        enriched.photoUrl = photos[0];
+        enriched.photoUrls = photos;
 
         // --- IATA codes (always resolve for Skyscanner links) ---
         if (originCode) enriched.originIata = originCode;
@@ -278,7 +288,7 @@ export async function POST(request: Request) {
         const allWithPhotos = await Promise.all(
           parsed.destinations.map(async (d) => ({
             ...d,
-            photoUrl: await getPhotoUrl(d.name, d.country),
+            photoUrl: (await getPhotoUrls(d.name, d.country))[0],
             totalPerPerson: d.flightPrice + d.hotelPerNight * d.nights,
           }))
         );
