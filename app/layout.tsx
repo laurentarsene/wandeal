@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, Vina_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -21,6 +22,14 @@ export const metadata: Metadata = {
     "Des vacances sur mesure, trouvées par l'IA. Dites-nous d'où vous partez, on s'occupe du reste.",
   icons: {
     icon: "/favicon.svg",
+    apple: "/wandeal-logo.svg",
+  },
+  manifest: "/manifest.json",
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "theme-color": "#1C48CD",
   },
   openGraph: {
     title: "Wandeal — Ur next journey",
@@ -50,6 +59,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col bg-[#FAFAFA] font-sans">
         <NextIntlClientProvider messages={messages}>
           {children}
+          <Analytics />
         </NextIntlClientProvider>
       </body>
     </html>

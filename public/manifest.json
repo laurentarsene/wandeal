@@ -1,0 +1,18 @@
+{
+  "name": "Wandeal",
+  "short_name": "Wandeal",
+  "description": "Des vacances sur mesure, trouvées par l'IA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAFA",
+  "theme_color": "#1C48CD",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/wandeal-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

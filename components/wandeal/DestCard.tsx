@@ -24,6 +24,7 @@ import {
   TrainFront,
   Bike,
   Clock,
+  Share2,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -348,6 +349,21 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
           >
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+          <button
+            onClick={() => {
+              const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€/pers · ${dest.nights} nuits\n${dest.why}\n\nTrouvé sur wandeal.vercel.app`;
+              if (navigator.share) {
+                navigator.share({ title: `${dest.name} — Wandeal`, text }).catch(() => {});
+              } else {
+                navigator.clipboard.writeText(text).then(() => {
+                  alert("Copié !");
+                });
+              }
+            }}
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
+          >
+            <Share2 size={14} />
           </button>
           <a
             href={isNearby(dest, transports) ? buildDirectionsUrl(dest, originCity) : buildFlightUrl(dest)}
