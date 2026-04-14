@@ -44,31 +44,34 @@ export default function Home() {
   const handleSearch = async (skipCache = false) => {
     setStep("loading");
     setError(null);
-    try { addSearch(form); } catch { /* ignore history save errors */ }
+    try { addSearch(form); } catch { /* ignore */ }
 
     abortRef.current = new AbortController();
 
     try {
+      // Build a clean plain object to avoid any React internals / cyclic refs
+      const payload = JSON.parse(JSON.stringify({
+        city: String(form.city || ""),
+        dateFrom: String(form.dateFrom || ""),
+        dateTo: String(form.dateTo || ""),
+        dateConstraints: Array.from(form.dateConstraints || []),
+        travelers: Number(form.travelers) || 1,
+        budgetEnabled: Boolean(form.budgetEnabled),
+        budget: Number(form.budget) || 500,
+        durationEnabled: Boolean(form.durationEnabled),
+        duration: Number(form.duration) || 7,
+        transport: Array.from(form.transport || []),
+        accommodation: Array.from(form.accommodation || []),
+        comfort: String(form.comfort || "standard"),
+        interests: Array.from(form.interests || []),
+        locale: String(locale),
+        skipCache: Boolean(skipCache),
+      }));
+
       const res = await fetch("/api/destinations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          city: form.city,
-          dateFrom: form.dateFrom,
-          dateTo: form.dateTo,
-          dateConstraints: Array.isArray(form.dateConstraints) ? [...form.dateConstraints] : [],
-          travelers: form.travelers,
-          budgetEnabled: form.budgetEnabled,
-          budget: form.budget,
-          durationEnabled: form.durationEnabled,
-          duration: form.duration,
-          transport: [...form.transport],
-          accommodation: [...form.accommodation],
-          comfort: form.comfort,
-          interests: [...form.interests],
-          locale,
-          skipCache,
-        }),
+        body: JSON.stringify(payload),
         signal: abortRef.current.signal,
       });
 
