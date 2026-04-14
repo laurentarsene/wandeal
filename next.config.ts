@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { hostname: "source.unsplash.com" },
       { hostname: "images.unsplash.com" },
       { hostname: "upload.wikimedia.org" },
+      { hostname: "images.pexels.com" },
     ],
   },
 };
