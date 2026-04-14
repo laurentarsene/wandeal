@@ -123,11 +123,11 @@ export const colorThemes: Record<
   ColorTheme,
   { bg: string; stripe: string; text: string }
 > = {
-  amber: { bg: "#FFFBEB", stripe: "#F59E0B", text: "#92400E" },
-  teal: { bg: "#F0FDFA", stripe: "#0D9488", text: "#134E4A" },
-  blue: { bg: "#EFF6FF", stripe: "#2563EB", text: "#1E3A8A" },
-  coral: { bg: "#FFF1F2", stripe: "#E11D48", text: "#881337" },
-  purple: { bg: "#FAF5FF", stripe: "#7C3AED", text: "#4C1D95" },
-  green: { bg: "#F0FDF4", stripe: "#16A34A", text: "#14532D" },
-  slate: { bg: "#F8FAFC", stripe: "#475569", text: "#0F172A" },
+  amber: { bg: "#FFF7E0", stripe: "#F59E0B", text: "#78350F" },
+  teal: { bg: "#E6FAF5", stripe: "#14B8A6", text: "#0F4F46" },
+  blue: { bg: "#E8F0FE", stripe: "#3B82F6", text: "#1E3A8A" },
+  coral: { bg: "#FFE4E8", stripe: "#F43F5E", text: "#881337" },
+  purple: { bg: "#F3E8FF", stripe: "#8B5CF6", text: "#4C1D95" },
+  green: { bg: "#DCFCE7", stripe: "#22C55E", text: "#14532D" },
+  slate: { bg: "#F1F5F9", stripe: "#64748B", text: "#0F172A" },
 };

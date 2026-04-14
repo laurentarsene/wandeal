@@ -16,7 +16,11 @@ export function ScoreBar({ score }: ScoreBarProps) {
         <motion.div
           className="h-full rounded-full"
           style={{
-            background: "linear-gradient(90deg, #1C48CD, #3B6BE0)",
+            background: score >= 85
+              ? "linear-gradient(90deg, #F59E0B, #EF4444)"
+              : score >= 70
+                ? "linear-gradient(90deg, #F59E0B, #FB923C)"
+                : "linear-gradient(90deg, #9CA3AF, #6B7280)",
           }}
           initial={{ width: 0 }}
           animate={{ width: `${score}%` }}

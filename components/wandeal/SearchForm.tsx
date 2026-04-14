@@ -41,6 +41,7 @@ import { InterestChips } from "./InterestChips";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { DateRangePicker } from "./DateRangePicker";
 import { HublotVideo } from "./HublotVideo";
+import { InspirationTicker } from "./InspirationTicker";
 import type { SearchFormData, TransportMode, AccommodationType, ComfortLevel, DateConstraintTag } from "@/lib/types";
 import { defaultForm } from "@/lib/types";
 
@@ -347,6 +348,9 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   </span>
                 </h1>
                 <p className="text-[15px] text-white/70 mt-3 font-medium">{tHero("madeIn")}</p>
+                <div className="mt-3">
+                  <InspirationTicker />
+                </div>
               </div>
             </div>
           </div>
@@ -390,7 +394,10 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                 <br />
                 <span className="text-[#93B5FF]">{tHero("title2")}</span>
               </h1>
-              <p className="text-[13px] text-white/70 mt-2 mb-6 font-medium">{tHero("madeIn")}</p>
+              <p className="text-[13px] text-white/70 mt-2 font-medium">{tHero("madeIn")}</p>
+              <div className="mt-2 mb-4">
+                <InspirationTicker />
+              </div>
 
               {/* Scroll indicator */}
               <button
