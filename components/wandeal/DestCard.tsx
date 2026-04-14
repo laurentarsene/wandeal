@@ -172,16 +172,16 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
                         />
                       ))}
                     </div>
-                    {/* Arrows */}
+                    {/* Arrows — always visible on mobile, hover on desktop */}
                     <button
                       onClick={(e) => { e.stopPropagation(); setPhotoIdx((photoIdx - 1 + photos.length) % photos.length); }}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover/photo:opacity-100 transition-opacity cursor-pointer"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-100 lg:opacity-0 lg:group-hover/photo:opacity-100 transition-opacity cursor-pointer"
                     >
                       <ChevronUp size={14} className="rotate-[-90deg]" />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); setPhotoIdx((photoIdx + 1) % photos.length); }}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover/photo:opacity-100 transition-opacity cursor-pointer"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-100 lg:opacity-0 lg:group-hover/photo:opacity-100 transition-opacity cursor-pointer"
                     >
                       <ChevronDown size={14} className="rotate-[-90deg]" />
                     </button>
