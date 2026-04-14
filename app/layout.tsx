@@ -21,8 +21,11 @@ export const metadata: Metadata = {
   description:
     "Des vacances sur mesure, trouvées par l'IA. Dites-nous d'où vous partez, on s'occupe du reste.",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/wandeal-logo.svg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
   other: {
