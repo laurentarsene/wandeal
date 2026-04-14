@@ -79,19 +79,20 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
 
   for (const q of searchQueries) {
     try {
-      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=800&format=json`;
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=10&prop=imageinfo&iiprop=url|mime&iiurlwidth=800&format=json`;
       const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
       if (!res.ok) continue;
       const data = await res.json();
       const pages = data?.query?.pages;
       if (!pages) continue;
 
+      const junk = /map|carte|plan|logo|flag|drapeau|blason|coat.of.arms|wappen|icon|diagram|schema|location|locator|position|seal|emblem|stamp|sign|plaque|banner/i;
       const urls: string[] = [];
       for (const page of Object.values(pages) as { imageinfo?: { thumburl?: string; mime?: string }[] }[]) {
         const info = page?.imageinfo?.[0];
-        if (info?.thumburl && info.mime?.startsWith("image/") && !info.mime.includes("svg")) {
-          urls.push(info.thumburl);
-        }
+        if (!info?.thumburl || !info.mime?.startsWith("image/") || info.mime.includes("svg")) continue;
+        if (junk.test(info.thumburl)) continue;
+        urls.push(info.thumburl);
         if (urls.length >= 4) break;
       }
       if (urls.length >= 2) return urls;
