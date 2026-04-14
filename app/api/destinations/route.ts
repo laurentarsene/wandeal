@@ -79,19 +79,30 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
 
   for (const q of searchQueries) {
     try {
-      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=800&format=json`;
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=12&prop=imageinfo&iiprop=url|mime|size&iiurlwidth=800&format=json`;
       const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
       if (!res.ok) continue;
       const data = await res.json();
       const pages = data?.query?.pages;
       if (!pages) continue;
 
+      // Blacklist patterns: maps, logos, flags, icons, coats of arms, diagrams
+      const blacklist = /\b(map|carte|plan|logo|flag|drapeau|blason|coat.of.arms|wappen|icon|pictogram|diagram|schema|location|locator|position|admin|banner|seal|emblem|stamp|sign|plaque)\b/i;
+
       const urls: string[] = [];
-      for (const page of Object.values(pages) as { imageinfo?: { thumburl?: string; mime?: string }[] }[]) {
+      for (const page of Object.values(pages) as { title?: string; imageinfo?: { thumburl?: string; mime?: string; width?: number; height?: number }[] }[]) {
         const info = page?.imageinfo?.[0];
-        if (info?.thumburl && info.mime?.startsWith("image/") && !info.mime.includes("svg")) {
-          urls.push(info.thumburl);
+        if (!info?.thumburl || !info.mime?.startsWith("image/") || info.mime.includes("svg")) continue;
+        // Skip small images (likely icons/logos)
+        if (info.width && info.height && (info.width < 400 || info.height < 300)) continue;
+        // Skip by filename
+        if (page.title && blacklist.test(page.title)) continue;
+        // Skip very wide/tall aspect ratios (likely panorama maps or banners)
+        if (info.width && info.height) {
+          const ratio = info.width / info.height;
+          if (ratio > 4 || ratio < 0.2) continue;
         }
+        urls.push(info.thumburl);
         if (urls.length >= 4) break;
       }
       if (urls.length >= 2) return urls;
