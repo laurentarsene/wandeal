@@ -57,12 +57,24 @@ function getCacheKey(form: SearchFormData & { locale?: string }): string {
   return hash.toString(36);
 }
 
+// Clean destination name for photo search — strip activity prefixes
+function cleanPlaceName(name: string): string {
+  // Remove activity prefixes like "Ski & Spa au", "Escapade à", "Trek et Aventure au"
+  const cleaned = name
+    .replace(/^(ski|spa|trek|surf|plongée|randonnée|road\s*trip|city\s*break)\s*(&|\+|et)\s*\w*\s*(au|aux|à|en|de\s*la|du|des|de)\s*/gi, "")
+    .replace(/^(séjour|escapade|weekend|aventure|découverte)\s*(à|au|aux|en|de)\s*/gi, "")
+    .trim();
+  // Only use cleaned if it's long enough (avoid "Ré" from "Île de Ré")
+  return cleaned.length >= 4 ? cleaned : name;
+}
+
 // Get photos via Wikimedia Commons search — free, no API key, multiple results
 async function getPhotoUrls(cityName: string, country: string): Promise<string[]> {
+  const cleanName = cleanPlaceName(cityName);
   const searchQueries = [
-    `${cityName} ${country} landscape`,
-    `${cityName} ${country}`,
-    `${cityName} city`,
+    `${cleanName} ${country} landscape`,
+    `${cleanName} ${country}`,
+    `${cleanName} city`,
   ];
 
   for (const q of searchQueries) {
@@ -88,19 +100,20 @@ async function getPhotoUrls(cityName: string, country: string): Promise<string[]
     }
   }
 
-  // Fallback: Wikipedia pageimage (single)
-  try {
-    const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(cityName)}&prop=pageimages&pithumbsize=800&format=json`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    if (res.ok) {
+  // Fallback: Wikipedia pageimage (try with country disambiguation)
+  const wikiQueries = [cleanName, `${cleanName}, ${country}`, `${cleanName} (${country})`];
+  for (const wq of wikiQueries) {
+    try {
+      const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(wq)}&prop=pageimages&pithumbsize=800&format=json`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
+      if (!res.ok) continue;
       const data = await res.json();
       const pages = data?.query?.pages;
-      if (pages) {
-        const page = Object.values(pages)[0] as { thumbnail?: { source?: string } };
-        if (page?.thumbnail?.source) return [page.thumbnail.source];
-      }
-    }
-  } catch {}
+      if (!pages) continue;
+      const page = Object.values(pages)[0] as { pageid?: number; thumbnail?: { source?: string } };
+      if (page?.pageid && page.pageid > 0 && page?.thumbnail?.source) return [page.thumbnail.source];
+    } catch { continue; }
+  }
 
   // Last fallback: unique per destination using hash
   const fallbacks = [
