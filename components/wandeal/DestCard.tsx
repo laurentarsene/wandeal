@@ -356,8 +356,23 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
           <button
-            onClick={() => {
-              const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€/pers · ${dest.nights} nuits\n${dest.why}\n\nTrouvé sur wandeal.vercel.app`;
+            onClick={async () => {
+              const dates = dest.dateFrom && dest.dateTo ? `${fmtDate(dest.dateFrom)} → ${fmtDate(dest.dateTo)}` : "";
+              const frites = dest.fritesPrice > 0 ? `\n🍟 ${dest.fritesPrice}€ la frite` : "";
+              const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€/pers · ${dest.nights} nuits${dates ? ` · ${dates}` : ""}\n\n${dest.why}${frites}\n\nTrouvé sur wandeal.vercel.app`;
+
+              // Try sharing with photo (mobile)
+              if (navigator.share && dest.photoUrl) {
+                try {
+                  const res = await fetch(dest.photoUrl);
+                  const blob = await res.blob();
+                  const file = new File([blob], `${dest.name}.jpg`, { type: blob.type });
+                  await navigator.share({ title: `${dest.name} — Wandeal`, text, files: [file] });
+                  return;
+                } catch {
+                  // Fallback to text-only share
+                }
+              }
               if (navigator.share) {
                 navigator.share({ title: `${dest.name} — Wandeal`, text }).catch(() => {});
               } else {
