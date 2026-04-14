@@ -120,6 +120,7 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
   const [photoIdx, setPhotoIdx] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
   const [toast, setToast] = useState(false);
   const showToast = useCallback(() => {
     setToast(true);
@@ -148,7 +149,20 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
     >
       {/* Photo carousel */}
       {(dest.photoUrls?.length || dest.photoUrl) && (
-        <div className="relative h-40 overflow-hidden group/photo">
+        <div
+          className="relative h-40 overflow-hidden group/photo"
+          onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            if (touchStart === null) return;
+            const diff = touchStart - e.changedTouches[0].clientX;
+            const photos = dest.photoUrls?.length ? dest.photoUrls : dest.photoUrl ? [dest.photoUrl] : [];
+            if (Math.abs(diff) > 50 && photos.length > 1) {
+              if (diff > 0) setPhotoIdx((photoIdx + 1) % photos.length);
+              else setPhotoIdx((photoIdx - 1 + photos.length) % photos.length);
+            }
+            setTouchStart(null);
+          }}
+        >
           {(() => {
             const photos = dest.photoUrls?.length ? dest.photoUrls : dest.photoUrl ? [dest.photoUrl] : [];
             const current = photos[photoIdx % photos.length];
@@ -191,6 +205,10 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
             );
           })()}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+          {/* Preload next photos */}
+          {photos.filter((_, i) => i !== photoIdx % photos.length).map((url) => (
+            <img key={url} src={url} alt="" className="hidden" />
+          ))}
           {onToggleFavorite && (
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFavorite(dest); }}
