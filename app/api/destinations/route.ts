@@ -33,7 +33,7 @@ function checkRateLimit(ip: string): boolean {
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 const responseCache = new Map<string, { data: Destination[]; expiresAt: number }>();
 
-function getCacheKey(form: SearchFormData): string {
+function getCacheKey(form: SearchFormData & { locale?: string }): string {
   const key = JSON.stringify({
     city: form.city,
     dateFrom: form.dateFrom,
@@ -47,6 +47,7 @@ function getCacheKey(form: SearchFormData): string {
     budget: form.budgetEnabled ? form.budget : 0,
     durationEnabled: form.durationEnabled,
     duration: form.durationEnabled ? form.duration : 0,
+    locale: form.locale || "fr",
   });
   // Simple hash
   let hash = 0;
@@ -118,12 +119,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const form: SearchFormData = await request.json();
+    const body = await request.json();
+    const { skipCache, ...form } = body as SearchFormData & { skipCache?: boolean };
 
     // --- Check cache ---
     const cacheKey = getCacheKey(form);
     const cached = responseCache.get(cacheKey);
-    if (cached && Date.now() < cached.expiresAt) {
+    if (!skipCache && cached && Date.now() < cached.expiresAt) {
       return NextResponse.json({ destinations: cached.data });
     }
 

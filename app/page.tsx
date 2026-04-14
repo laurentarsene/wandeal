@@ -41,7 +41,7 @@ export default function Home() {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (skipCache = false) => {
     setStep("loading");
     setError(null);
     addSearch(form);
@@ -52,7 +52,7 @@ export default function Home() {
       const res = await fetch("/api/destinations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, locale }),
+        body: JSON.stringify({ ...form, locale, skipCache }),
         signal: abortRef.current.signal,
       });
 
@@ -141,7 +141,7 @@ export default function Home() {
                 favorites={favorites}
                 isFavorite={isFavorite}
                 onToggleFavorite={toggleFavorite}
-                onRelaunch={handleSearch}
+                onRelaunch={() => handleSearch(true)}
               />
             </motion.div>
           )}
