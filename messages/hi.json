@@ -6,11 +6,11 @@
     "badge": "AI द्वारा संचालित",
     "title1": "कहीं न कहीं, आपके लिए एक",
     "title2": "बेहतरीन छुट्टी इंतज़ार कर रही है।",
-    "madeIn": "Made in Belgium, between two rain showers."
+    "madeIn": "बेल्जियम में बनाया गया, दो बारिशों के बीच।"
   },
   "form": {
     "from": "I am leaving from...",
-    "fromPlaceholder": "Where are you leaving from?",
+    "fromPlaceholder": "आप कहाँ से निकल रहे हैं?",
     "dates": "तारीखें",
     "datesEmpty": "मुझे अभी नहीं पता",
     "datesEmptySub": "कोई बात नहीं, हम ढल जाएंगे",
@@ -28,10 +28,12 @@
     "budget": "अधिकतम बजट",
     "budgetPerPerson": "प्रति व्यक्ति अधिकतम",
     "budgetAll": "कोई भी कीमत",
+    "budgetActivate": "बजट सेट करें",
     "duration": "अवधि",
     "durationDays": "दिन",
     "durationApprox": "लगभग, +/- 3 दिन",
     "durationAll": "कोई भी अवधि",
+    "durationActivate": "अवधि चुनें",
     "durationLocked": "आपकी तारीखों के अनुसार",
     "transport": "परिवहन",
     "transportAll": "कोई भी साधन",
@@ -72,22 +74,22 @@
     "interestHistory": "इतिहास",
     "interestFestival": "त्योहार",
     "interestBackpacker": "बैकपैकर",
-    "search": "Surprise me",
+    "search": "मुझे चौंकाओ",
     "dateWeekend": "सप्ताहांत",
     "dateHolidaysWB": "छुट्टियां WB/BXL",
     "dateHolidaysFL": "छुट्टियां फ़्लैंडर्स",
     "dateOffHolidays": "छुट्टियों के बाहर",
     "dateBridge": "सार्वजनिक अवकाश",
     "cityHint": "इस चयन के लिए अपना शहर दर्ज करें",
-    "interestsHint": "— what makes you dream?",
-    "searchNeedsCity": "Enter your departure city",
-    "fromHint": "We will find the destination for you",
-    "comfortLabel": "Comfort level",
-    "optionalFilters": "Fine-tune if you want",
-    "interestsMore": "More interests"
+    "interestsHint": "— आपका सपना क्या है?",
+    "searchNeedsCity": "अपना शहर दर्ज करें",
+    "fromHint": "हम आपके लिए गंतव्य खोजेंगे",
+    "comfortLabel": "आराम स्तर",
+    "optionalFilters": "अगर चाहें तो फ़िल्टर करें",
+    "interestsMore": "और विकल्प"
   },
   "presets": {
-    "title": "Feeling like...",
+    "title": "मन कर रहा है...",
     "sun": "दोस्तों के साथ सस्ती धूप",
     "family": "परिवार के साथ संस्कृति और पूल",
     "nature": "मुफ़्त में अकेले प्रकृति",
@@ -107,7 +109,7 @@
     "step2": "मौसम की जांच",
     "step3": "कीमतों की गणना",
     "step4": "सबसे अच्छे विकल्प चुन रहे हैं",
-    "cancel": "Cancel"
+    "cancel": "रद्द करें"
   },
   "results": {
     "destinations": "{count} गंतव्य",
@@ -134,11 +136,11 @@
     "badgeSurprise": "छुपा रत्न",
     "favoritesTitle": "मेरे पसंदीदा ({count})",
     "noFavorites": "अभी कोई पसंदीदा नहीं — किसी गंतव्य पर दिल पर टैप करें",
-    "getDirections": "Get directions",
-    "reachable": "Nearby",
-    "seeHotels": "Hotels",
-    "copied": "Copied!",
-    "relaunch": "Refresh"
+    "getDirections": "रास्ता देखें",
+    "reachable": "पास में",
+    "seeHotels": "होटल",
+    "copied": "कॉपी हो गया!",
+    "relaunch": "फिर से खोजें"
   },
   "footer": {
     "tagline": "AI-powered tailor-made vacations.",
