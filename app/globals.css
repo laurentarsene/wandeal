@@ -128,14 +128,6 @@
   }
 }
 
-/* Mobile scroll snap — applied when SearchForm mounts */
-@media (max-width: 1023px) {
-  html.wandeal-snap {
-    scroll-snap-type: y mandatory;
-    scroll-padding-top: 4rem; /* 64px = navbar height */
-  }
-}
-
 /* Custom animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }

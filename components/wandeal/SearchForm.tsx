@@ -216,13 +216,50 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
   const [cityHint, setCityHint] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
 
-  // Enable full-page scroll snap on mobile. Snap is on the html element so the
-  // native window scroll is the container — avoids all inner-div overflow issues.
-  // scroll-padding-top accounts for the sticky navbar (64px).
+  // JS-based snap between video and form sections on mobile.
+  // Fires only in the "snap zone" (above + one viewport into the form).
+  // Deep in the form or below → page scrolls freely, no snap at all.
   useEffect(() => {
-    document.documentElement.classList.add("wandeal-snap");
-    window.scrollTo({ top: 0, behavior: "instant" });
-    return () => document.documentElement.classList.remove("wandeal-snap");
+    if (window.innerWidth >= 1024) return;
+
+    const NAVBAR_H = 64;
+    let isSnapping = false;
+    let touchStartY = 0;
+
+    const snapTo = (el: HTMLElement) => {
+      if (isSnapping) return;
+      isSnapping = true;
+      window.scrollTo({ top: Math.max(0, el.offsetTop - NAVBAR_H), behavior: "smooth" });
+      setTimeout(() => { isSnapping = false; }, 700);
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (isSnapping) return;
+      const dy = touchStartY - e.changedTouches[0].clientY; // >0 = swipe down
+      if (Math.abs(dy) < 20) return; // ignore taps
+
+      const video = document.getElementById("mobile-video-snap");
+      const form = document.getElementById("mobile-form");
+      if (!video || !form) return;
+
+      const formSnapY = form.offsetTop - NAVBAR_H;
+      // Outside snap zone (deep in the form) → let page scroll freely
+      if (window.scrollY > formSnapY + window.innerHeight) return;
+
+      snapTo(dy > 0 ? form : video);
+    };
+
+    window.scrollTo(0, 0);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
   }, []);
 
   useEffect(() => {
@@ -368,7 +405,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
         {/* Right panel (desktop) / Full width (mobile) */}
         {/* MOBILE: Fullscreen hero with video background */}
         {/* Snap target fills the full area below the navbar so snap-start aligns correctly */}
-        <div className="snap-start snap-always lg:hidden h-[calc(100dvh-64px)] flex flex-col">
+        <div id="mobile-video-snap" className="lg:hidden h-[calc(100dvh-64px)] flex flex-col">
           <div className="relative flex-1 mx-3 mt-3 overflow-hidden isolate" style={{ borderRadius: "3rem" }}>
           {/* Video background */}
           <div className="absolute inset-0">
@@ -427,7 +464,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
         </div>
 
         {/* Form section — mobile below hero, desktop in right panel */}
-        <div id="mobile-form" className="snap-start snap-always px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
+        <div id="mobile-form" className="px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
           <div className="w-full lg:max-w-[900px]">
             {/* Bento Grid */}
             <div className="shrink-0">
