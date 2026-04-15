@@ -312,7 +312,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
     <>
       {/* Desktop presets — overlaid on video panel, top area */}
 
-      <div className="min-h-[calc(100dvh-64px)] flex flex-col lg:flex-row">
+      <div className="h-[calc(100dvh-64px)] overflow-y-auto snap-y snap-mandatory flex flex-col lg:flex-row lg:h-auto lg:min-h-[calc(100dvh-64px)] lg:overflow-visible lg:snap-none">
         {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
           <div className="w-full h-[calc(100dvh-104px)] rounded-[44px] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
@@ -358,7 +358,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
 
         {/* Right panel (desktop) / Full width (mobile) */}
         {/* MOBILE: Fullscreen hero with video background */}
-        <div className="lg:hidden relative h-[calc(100dvh-64px-24px)] mx-3 mt-3 overflow-hidden isolate" style={{ borderRadius: "3rem" }}>
+        <div className="snap-start lg:hidden relative h-[calc(100dvh-64px-24px)] mx-3 mt-3 overflow-hidden isolate" style={{ borderRadius: "3rem" }}>
           {/* Video background */}
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
@@ -415,7 +415,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
         </div>
 
         {/* Form section — mobile below hero, desktop in right panel */}
-        <div id="mobile-form" className="px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
+        <div id="mobile-form" className="snap-start px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
           <div className="w-full lg:max-w-[900px]">
             {/* Bento Grid */}
             <div className="shrink-0">
@@ -425,7 +425,12 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               className={`col-span-2 lg:col-span-2 ${cityHint ? "!bg-[#EEF2FF]/50 ![box-shadow:0_0_0_2px_#1C48CD]" : ""}`}
               active={!!form.city}
             >
-              <SectionLabel icon={MapPin}>{t("from")}</SectionLabel>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#EEF2FF] shrink-0">
+                  <MapPin size={13} className="text-[#1C48CD]" />
+                </div>
+                <span className="text-[13px] font-bold text-[#1e2a4a] leading-none">{t("from")}</span>
+              </div>
               <CityAutocomplete
                 value={form.city}
                 onChange={(city) => update({ city })}
