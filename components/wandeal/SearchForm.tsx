@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import {
@@ -215,6 +215,13 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
   const tPresets = useTranslations("presets");
   const [cityHint, setCityHint] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
+  const snapRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll to top on every mount so the video section is always visible first.
+  // Without this, browsers restore the snap container's scrollTop across visits.
+  useEffect(() => {
+    if (snapRef.current) snapRef.current.scrollTop = 0;
+  }, []);
 
   useEffect(() => {
     if (form.city.trim()) setCityHint(false);
@@ -312,7 +319,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
     <>
       {/* Desktop presets — overlaid on video panel, top area */}
 
-      <div className="h-[calc(100dvh-64px)] overflow-y-auto snap-y snap-mandatory flex flex-col lg:flex-row lg:h-auto lg:min-h-[calc(100dvh-64px)] lg:overflow-visible lg:snap-none">
+      <div ref={snapRef} className="h-[calc(100dvh-64px)] overflow-y-scroll snap-y snap-mandatory scroll-pt-3 flex flex-col lg:flex-row lg:h-auto lg:min-h-[calc(100dvh-64px)] lg:overflow-visible lg:snap-none">
         {/* Left panel — desktop video + hero overlay */}
         <div className="hidden lg:flex w-[42%] shrink-0 p-5 pt-6">
           <div className="w-full h-[calc(100dvh-104px)] rounded-[44px] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.1)] sticky top-[80px] relative">
@@ -358,7 +365,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
 
         {/* Right panel (desktop) / Full width (mobile) */}
         {/* MOBILE: Fullscreen hero with video background */}
-        <div className="snap-start lg:hidden relative h-[calc(100dvh-64px-24px)] mx-3 mt-3 overflow-hidden isolate" style={{ borderRadius: "3rem" }}>
+        <div className="snap-start snap-always lg:hidden relative h-[calc(100dvh-64px-24px)] mx-3 mt-3 overflow-hidden isolate" style={{ borderRadius: "3rem" }}>
           {/* Video background */}
           <div className="absolute inset-0">
             <HublotVideo variant="tall" />
@@ -415,7 +422,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
         </div>
 
         {/* Form section — mobile below hero, desktop in right panel */}
-        <div id="mobile-form" className="snap-start px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
+        <div id="mobile-form" className="snap-start snap-always px-3 sm:px-6 lg:px-6 pt-6 pb-24 sm:pb-4 lg:flex lg:flex-col lg:justify-center lg:w-[58%]">
           <div className="w-full lg:max-w-[900px]">
             {/* Bento Grid */}
             <div className="shrink-0">
