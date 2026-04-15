@@ -246,11 +246,17 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
       const form = document.getElementById("mobile-form");
       if (!video || !form) return;
 
+      const scrollY = window.scrollY;
       const formSnapY = form.offsetTop - NAVBAR_H;
-      // Outside snap zone (deep in the form) → let page scroll freely
-      if (window.scrollY > formSnapY + window.innerHeight) return;
 
-      snapTo(dy > 0 ? form : video);
+      if (dy > 0) {
+        // Swipe down: snap to form only if currently in the video section
+        if (scrollY < formSnapY) snapTo(form);
+      } else {
+        // Swipe up: snap to video only if at the very top of the form (<100px in)
+        if (scrollY < formSnapY + 100) snapTo(video);
+      }
+      // Everywhere else → no snap, normal page scroll
     };
 
     window.scrollTo(0, 0);
