@@ -446,6 +446,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               <CityAutocomplete
                 value={form.city}
                 onChange={(city) => update({ city })}
+                placeholder={t("fromPlaceholder")}
               />
               {cityHint ? (
                 <p className="text-[10px] text-[#1C48CD] font-medium mt-1 animate-pulse">

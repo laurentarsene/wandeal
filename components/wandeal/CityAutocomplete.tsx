@@ -8,9 +8,10 @@ import { searchCities } from "@/lib/cities";
 interface CityAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
+  placeholder?: string;
 }
 
-export function CityAutocomplete({ value, onChange }: CityAutocompleteProps) {
+export function CityAutocomplete({ value, onChange, placeholder = "Départ de..." }: CityAutocompleteProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [suggestions, setSuggestions] = useState<
@@ -97,7 +98,7 @@ export function CityAutocomplete({ value, onChange }: CityAutocompleteProps) {
         ref={inputRef}
         data-city-input
         type="text"
-        placeholder="Ville ou pays..."
+        placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => {

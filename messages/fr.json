@@ -10,7 +10,7 @@
   },
   "form": {
     "from": "Je pars de...",
-    "fromPlaceholder": "D'ou partez-vous ?",
+    "fromPlaceholder": "Départ de...",
     "fromHint": "On trouve la destination pour vous",
     "dates": "Dates",
     "datesEmpty": "Je ne sais pas encore",
