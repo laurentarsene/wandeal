@@ -118,6 +118,22 @@ function namesMatch(query: string, candidate: string): boolean {
  * The locale matters: the place names we search with come from the user's own
  * language, so querying in another one produces near-misses we would reject.
  */
+async function lookup(term: string, locale: string): Promise<unknown[] | null> {
+  try {
+    const res = await fetch(
+      `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(
+        term
+      )}&locale=${encodeURIComponent(locale)}&types[]=city`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    return Array.isArray(data) ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function cityToIATA(
   cityName: string,
   locale = "en"
@@ -125,29 +141,21 @@ export async function cityToIATA(
   const term = cityName.trim();
   if (term.length < 2) return null;
 
-  let res: Response;
-  try {
-    res = await fetch(
-      `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(
-        term
-      )}&locale=${encodeURIComponent(locale)}&types[]=city`,
-      { signal: AbortSignal.timeout(5000) }
-    );
-  } catch {
-    return null;
-  }
-  if (!res.ok) return null;
-
-  const data = await res.json().catch(() => null);
-  if (!Array.isArray(data) || !data.length) return null;
+  // Retry in English when the localised catalogue has no entry — the two
+  // catalogues do not cover the same places, and a single miss here removes the
+  // flight link from every card at once.
+  let data = await lookup(term, locale);
+  if ((!data || !data.length) && locale !== "en") data = await lookup(term, "en");
+  if (!data || !data.length) return null;
 
   // Prefer an entry whose name actually resembles the query, not just the first.
   // The weight filter drops general-aviation strips that share a town's name —
   // "Cascais" resolves to CAT, an aerodrome with no scheduled service, and a
   // flight search for it comes back empty. Returning null lets the caller fall
   // back to the airport that actually serves the destination.
+  const entries = data as Array<{ code?: string; name?: string; weight?: number }>;
   const match =
-    data.find(
+    entries.find(
       (e) =>
         e?.code &&
         Number(e.weight ?? 0) >= 25 &&

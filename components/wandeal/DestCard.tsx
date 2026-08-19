@@ -52,15 +52,21 @@ const transportIcons: Record<TransportMode, typeof Plane> = {
 };
 
 /**
- * A destination is "nearby" when no flight is involved — the primary CTA then
- * becomes directions rather than a flight search.
+ * A destination is "nearby" when directions serve the traveller better than a
+ * flight search. The model's per-destination transportMode is a suggestion, not
+ * an instruction: it happily picks "car" for a 1400 km trip, and turning that
+ * into a driving route throws away both the useful action and the commission.
  */
 function isNearby(dest: Destination, transports?: TransportMode[]): boolean {
-  if (dest.isLocal) return true;
-  if (dest.transportMode && dest.transportMode !== "plane") return true;
+  // The traveller explicitly ruled out flying
   if (transports && transports.length > 0 && !transports.includes("plane")) return true;
-  // No flight link could be built (missing IATA codes) and nothing to pay for one
-  return dest.flightPrice === 0 && !dest.flightUrl;
+  if (dest.isLocal) return true;
+
+  const ground = Boolean(dest.transportMode && dest.transportMode !== "plane");
+  if (!ground) return false;
+  // Ground transport over a long distance still deserves a flight option.
+  if (dest.distanceKm && dest.distanceKm > 700) return false;
+  return true;
 }
 
 interface DestCardProps {
@@ -138,9 +144,16 @@ export function DestCard({
       ? [dest.photoUrl]
       : [];
   const nearby = isNearby(dest, transports);
-  const primaryUrl = nearby
-    ? buildDirectionsUrl(`${dest.name}, ${dest.country}`, originCity)
-    : dest.flightUrl;
+  // When the IATA lookup fails there is no flight link to offer. Falling through
+  // to nothing left the card with no primary action at all, so hotels take the
+  // slot — still the useful next step, and still monetised.
+  const primary: { url: string; kind: "directions" | "flights" | "hotels" } | null = nearby
+    ? { url: buildDirectionsUrl(`${dest.name}, ${dest.country}`, originCity), kind: "directions" }
+    : dest.flightUrl
+      ? { url: dest.flightUrl, kind: "flights" }
+      : dest.hotelUrl
+        ? { url: dest.hotelUrl, kind: "hotels" }
+        : null;
   const groupTotal = dest.totalPerPerson * travelers;
 
   const handleShare = async () => {
@@ -502,9 +515,9 @@ export function DestCard({
           >
             <Share2 size={14} />
           </button>
-          {primaryUrl && (
+          {primary && (
             <a
-              href={primaryUrl}
+              href={primary.url}
               target="_blank"
               rel="noopener noreferrer sponsored"
               className="flex-1"
@@ -516,20 +529,26 @@ export function DestCard({
                 className="w-full py-2.5 text-sm font-medium"
               >
                 <span className="inline-flex items-center gap-1.5">
-                  {nearby ? (
+                  {primary.kind === "directions" && (
                     <>
                       <MapPin size={13} /> {t("getDirections")}
                     </>
-                  ) : (
+                  )}
+                  {primary.kind === "flights" && (
                     <>
                       <ExternalLink size={13} /> {t("seeFlights")}
+                    </>
+                  )}
+                  {primary.kind === "hotels" && (
+                    <>
+                      <Hotel size={13} /> {t("seeHotels")}
                     </>
                   )}
                 </span>
               </ShimmerButton>
             </a>
           )}
-          {dest.hotelUrl && (
+          {dest.hotelUrl && primary?.kind !== "hotels" && (
             <a
               href={dest.hotelUrl}
               target="_blank"

@@ -287,6 +287,10 @@ export async function POST(request: Request) {
     const originCode = form.city.trim()
       ? await cityToIATA(form.city, form.locale).catch(() => null)
       : null;
+    if (form.city.trim() && !originCode) {
+      // Every flight link on the page depends on this one lookup.
+      console.warn(`[wandeal] no IATA for origin "${form.city}" — flight links disabled`);
+    }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
