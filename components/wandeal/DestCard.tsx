@@ -64,9 +64,12 @@ function isNearby(dest: Destination, transports?: TransportMode[]): boolean {
 
   const ground = Boolean(dest.transportMode && dest.transportMode !== "plane");
   if (!ground) return false;
-  // Ground transport over a long distance still deserves a flight option.
-  if (dest.distanceKm && dest.distanceKm > 700) return false;
-  return true;
+
+  // Only a *known* short distance justifies a driving route over a flight
+  // search. The model omits distanceKm almost every time, and treating that
+  // silence as "it must be close" turned distant destinations into Google Maps
+  // links — no useful action for the traveller, no commission for us.
+  return typeof dest.distanceKm === "number" && dest.distanceKm > 0 && dest.distanceKm <= 700;
 }
 
 interface DestCardProps {

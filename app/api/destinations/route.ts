@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { buildPrompt } from "@/lib/destinations";
 import { cityToIATA, searchFlights } from "@/lib/flights";
+import { cityIata } from "@/lib/cities";
 import { buildFlightUrl, buildHotelUrl, getMarker } from "@/lib/affiliate";
 import { getWeather } from "@/lib/weather";
 import { getDatePeriod } from "@/lib/school-holidays";
@@ -284,11 +285,13 @@ export async function POST(request: Request) {
     }
 
     // --- Step 2: Enrich with real data + photos ---
+    // The departure city comes from our own curated list, so its airport is
+    // known offline. Only fall back to the network for a hand-typed city.
     const originCode = form.city.trim()
-      ? await cityToIATA(form.city, form.locale).catch(() => null)
+      ? cityIata(form.city) || (await cityToIATA(form.city, form.locale).catch(() => null))
       : null;
     if (form.city.trim() && !originCode) {
-      // Every flight link on the page depends on this one lookup.
+      // Every flight link on the page depends on this one code.
       console.warn(`[wandeal] no IATA for origin "${form.city}" — flight links disabled`);
     }
 
