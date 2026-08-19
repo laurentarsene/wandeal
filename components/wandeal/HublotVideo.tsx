@@ -13,6 +13,8 @@ export function HublotVideo({ variant = "round" }: HublotVideoProps) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    // An autoplaying loop is motion the user may have asked us not to produce.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     video.muted = true;
     video.setAttribute("muted", "");
@@ -52,9 +54,14 @@ export function HublotVideo({ variant = "round" }: HublotVideoProps) {
         boxShadow: "0 0 0 5px #e5e7eb, 0 0 0 7px #d1d5db",
       } : undefined}
     >
+      {/* Poster frame beneath the video. next/image cannot be layered here
+          without breaking the fill, and the asset is already optimised. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/hero-travel-poster.jpg"
         alt=""
+        aria-hidden="true"
+        fetchPriority="high"
         style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
       />
       <video
@@ -65,6 +72,8 @@ export function HublotVideo({ variant = "round" }: HublotVideoProps) {
         muted
         playsInline
         preload="auto"
+        aria-hidden="true"
+        tabIndex={-1}
         style={{
           position: "absolute",
           top: 0, left: 0, width: "100%", height: "100%",

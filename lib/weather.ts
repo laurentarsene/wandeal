@@ -1,5 +1,7 @@
 // Open-Meteo — completely free, no API key needed
 
+import { slugify } from "./utils";
+
 interface GeoResult {
   latitude: number;
   longitude: number;
@@ -12,15 +14,31 @@ interface WeatherResult {
   icon: "sun" | "cloud" | "rain" | "snow";
 }
 
-// Geocode a city name to lat/lon
-async function geocode(city: string): Promise<GeoResult | null> {
+// Geocode a city name to lat/lon. The country disambiguates homonyms — without
+// it "Valence" and "Sicile" land hundreds of kilometres from the real place, and
+// the forecast we show is simply someone else's weather.
+async function geocode(city: string, country?: string): Promise<GeoResult | null> {
   const res = await fetch(
-    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=fr`
+    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+      city
+    )}&count=10&language=fr`,
+    { signal: AbortSignal.timeout(5000) }
   );
   if (!res.ok) return null;
   const data = await res.json();
-  const loc = data.results?.[0];
-  if (!loc) return null;
+  const results: Array<{ latitude: number; longitude: number; name: string; country?: string }> =
+    data.results || [];
+  if (!results.length) return null;
+
+  const wanted = country ? slugify(country) : "";
+  const loc =
+    (wanted &&
+      results.find((r) => {
+        const c = slugify(r.country || "");
+        return c && (c === wanted || c.includes(wanted) || wanted.includes(c));
+      })) ||
+    results[0];
+
   return {
     latitude: loc.latitude,
     longitude: loc.longitude,
@@ -32,9 +50,10 @@ async function geocode(city: string): Promise<GeoResult | null> {
 export async function getWeather(
   city: string,
   dateFrom?: string,
-  dateTo?: string
+  dateTo?: string,
+  country?: string
 ): Promise<WeatherResult | null> {
-  const geo = await geocode(city);
+  const geo = await geocode(city, country);
   if (!geo) return null;
 
   let url: string;
@@ -73,7 +92,7 @@ export async function getWeather(
     url = `https://archive-api.open-meteo.com/v1/archive?latitude=${geo.latitude}&longitude=${geo.longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&start_date=${startDate}&end_date=${endDate}&timezone=auto`;
   }
 
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
   if (!res.ok) return null;
   const data = await res.json();
 

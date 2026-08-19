@@ -9,11 +9,25 @@ const localeNames: Record<string, string> = {
   es: "español",
   it: "italiano",
   pt: "português",
-  hi: "English",
+  hi: "हिन्दी (Hindi)",
+};
+
+/** Written in the target language itself, so the instruction is unmissable. */
+const languageDirective: Record<string, string> = {
+  fr: "Écris TOUS les textes en français.",
+  en: "Write ALL text in English.",
+  nl: "Schrijf ALLE teksten in het Nederlands.",
+  de: "Schreibe ALLE Texte auf Deutsch.",
+  es: "Escribe TODOS los textos en español.",
+  it: "Scrivi TUTTI i testi in italiano.",
+  pt: "Escreve TODOS os textos em português.",
+  hi: "सभी पाठ हिन्दी में लिखें।",
 };
 
 export function buildPrompt(form: SearchFormData & { locale?: string }): string {
-  const lang = localeNames[form.locale || "fr"] || "français";
+  const localeKey = form.locale || "fr";
+  const lang = localeNames[localeKey] || "français";
+  const langDirective = languageDirective[localeKey] || languageDirective.fr;
   const budgetPart = form.budgetEnabled
     ? `Budget STRICT max ${form.budget}€/personne tout compris (transport + hébergement). AUCUNE destination au-dessus de ce budget.`
     : "Pas de contrainte de budget";
@@ -125,6 +139,14 @@ export function buildPrompt(form: SearchFormData & { locale?: string }): string 
   const hasDates = form.dateFrom && form.dateTo;
   const hasOnlyDeparture = form.dateFrom && !form.dateTo;
 
+  const travelers = Math.min(10, Math.max(1, Math.round(form.travelers || 1)));
+  const partyLine =
+    travelers === 1
+      ? "- Voyageurs : 1 personne (voyage solo)"
+      : travelers === 2
+        ? "- Voyageurs : 2 personnes (couple ou duo, chambre double)"
+        : `- Voyageurs : ${travelers} personnes (groupe). Privilegie des hebergements adaptes : appartements, gites, chambres familiales. hotelPerNight = cout PAR PERSONNE une fois le logement partage entre ${travelers}.`;
+
   const cityLine = hasCity
     ? `- Départ depuis : ${form.city}`
     : "- Départ depuis : non précisé (propose des destinations accessibles depuis l'Europe de l'Ouest)";
@@ -187,7 +209,6 @@ export function buildPrompt(form: SearchFormData & { locale?: string }): string 
   if (dateConstraintLine) {
     datesRule += `\n${dateConstraintLine}`;
   }
-  const periodLabelRule = ""; // datePeriodLabel is now computed server-side from real calendar data
 
   const localRule = hasCity
     ? `4. TOUJOURS exactement 1 destination avec isLocal: true → rester dans ou près de ${form.city}, proposer un hôtel ou hébergement pas cher + expériences locales`
@@ -197,12 +218,15 @@ export function buildPrompt(form: SearchFormData & { locale?: string }): string 
     ? `\n11. VÉRIFICATION BUDGET : totalPerPerson DOIT être ≤ ${form.budget}€ pour CHAQUE destination. Si le budget est très serré (< 200€), propose camping, auberges de jeunesse, couchsurfing. Si budget = 100€, propose uniquement des destinations très proches et gratuites ou quasi-gratuites.`
     : "";
 
-  return `Tu es un expert en voyages et en bons plans. Génère des recommandations de vacances personnalisées et réalistes.
-LANGUE : Tous les textes (why, activities) DOIVENT être en ${lang}.
+  return `${langDirective}
+
+Tu es un expert en voyages et en bons plans. Génère des recommandations de vacances personnalisées et réalistes.
+LANGUE OBLIGATOIRE : les champs "why" et "activities" DOIVENT être rédigés en ${lang}, et en ${lang} uniquement. Les noms propres (name, country) restent dans leur forme usuelle en ${lang}.
 IMPORTANT : Toutes les destinations et tous les prix doivent être calculés DEPUIS ${origin}. La ville de départ est ${origin}, PAS Bruxelles (sauf si c'est la ville choisie).
 
 Voyageur :
 ${cityLine}
+${partyLine}
 ${datesLine}
 ${transportLine}
 ${accommodationLine ? accommodationLine + "\n" : ""}- Contrainte : ${budgetPart}. ${durationPart}
@@ -225,6 +249,7 @@ Retourne UNIQUEMENT un objet JSON valide (sans backticks markdown), avec exactem
     "dateFrom": "2026-09-15",
     "dateTo": "2026-09-20",
     "transportMode": "plane",
+    "airportIata": "LIS",
     "tempMin": 22,
     "tempMax": 28,
     "weatherIcon": "sun",
@@ -256,6 +281,8 @@ ${weatherRule}
 9. Si budget serré (< 400€), proposer des destinations vraiment accessibles (proches, low-cost, auberges)
 10. JSON UNIQUEMENT — aucun texte avant ou après
 11. IMPORTANT "why" : Le champ "why" doit être SPÉCIFIQUE et CONCRET — explique POURQUOI cette destination est parfaite pour les envies sélectionnées. Cite des lieux précis, des spécialités, des expériences uniques. PAS de phrases génériques. Ex: pour "shopping" à Marrakech → parle des souks, du cuir, des épices. Pour "surf" à Biarritz → parle de la Côte des Basques, des vagues.
-${datesRule}${periodLabelRule}${accommodationConstraint ? "\n" + accommodationConstraint : ""}
-14. transportMode : OBLIGATOIRE — indique le mode de transport choisi pour chaque destination parmi ceux sélectionnés ("plane", "train", "car" ou "bike"). Si transport terrestre, ajoute aussi distanceKm (aller en km) et travelHours (aller en heures, ex: 4.5). Pour l'avion, omets distanceKm et travelHours.${budgetFilter}`;
+${datesRule}${accommodationConstraint ? "\n" + accommodationConstraint : ""}
+14. RAPPEL LANGUE : ${langDirective} Les champs "why" et "activities" en ${lang}.
+15. airportIata : OBLIGATOIRE — code IATA (3 lettres majuscules) de l'aéroport principal qui dessert cette destination. Pour une région ou un village, donne l'aéroport le plus proche (ex: Algarve → FAO, Dolomites → VRN, Cinque Terre → PSA, Forêt Noire → STR). Si la destination n'est desservie par aucun aéroport pertinent, mets "".
+16. transportMode : OBLIGATOIRE — indique le mode de transport choisi pour chaque destination parmi ceux sélectionnés ("plane", "train", "car" ou "bike"). Si transport terrestre, ajoute aussi distanceKm (aller en km) et travelHours (aller en heures, ex: 4.5). Pour l'avion, omets distanceKm et travelHours.${budgetFilter}`;
 }

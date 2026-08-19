@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import {
@@ -10,7 +10,6 @@ import {
   Plus,
   Wallet,
   Clock,
-  Search,
   Sparkles,
   CalendarDays,
   Sun,
@@ -186,7 +185,7 @@ function SectionLabel({
   children: React.ReactNode;
 }) {
   return (
-    <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] mb-2">
+    <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#6B7280] mb-2">
       <Icon size={16} className="text-[#6B7280]" />
       {children}
     </label>
@@ -210,10 +209,13 @@ function RotatingIcon() {
 }
 
 export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error }: SearchFormProps) {
+  const errorRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("form");
   const tHero = useTranslations("hero");
   const tPresets = useTranslations("presets");
-  const [cityHint, setCityHint] = useState(false);
+  const [cityHintRequested, setCityHint] = useState(false);
+  // Typing a city answers the hint, so derive it rather than clearing it in an effect.
+  const cityHint = cityHintRequested && !form.city.trim();
   const [formVisible, setFormVisible] = useState(false);
 
   // JS-based snap between video and form sections on mobile.
@@ -221,6 +223,8 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
   // Deep in the form or below → page scrolls freely, no snap at all.
   useEffect(() => {
     if (window.innerWidth >= 1024) return;
+    // Hijacking scroll is exactly what "reduce motion" asks us not to do.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const NAVBAR_H = 64;
     let isSnapping = false;
@@ -268,9 +272,10 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
     };
   }, []);
 
+  // The form is long: without this the error banner can land off-screen.
   useEffect(() => {
-    if (form.city.trim()) setCityHint(false);
-  }, [form.city]);
+    if (error) errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [error]);
 
   // Track mobile form visibility for floating CTA
   useEffect(() => {
@@ -302,7 +307,6 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
     const has = current.includes(key);
 
     // Incompatible groups: holidays vs off-holidays
-    const holidayTags: DateConstraintTag[] = ["holidays-wb", "holidays-fl"];
     const incompatible: Record<string, DateConstraintTag[]> = {
       "holidays-wb": ["off-holidays"],
       "holidays-fl": ["off-holidays"],
@@ -325,19 +329,6 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
     } else if (next.includes("bridge")) {
       newForm.duration = 4;
       newForm.durationEnabled = true;
-    }
-    onChange(newForm);
-  };
-
-  const handleDurationChange = (duration: number) => {
-    const newForm = { ...form, duration, durationEnabled: true };
-    if (form.dateFrom) {
-      const from = new Date(form.dateFrom + "T00:00:00");
-      const to = new Date(from.getTime() + duration * 24 * 60 * 60 * 1000);
-      const y = to.getFullYear();
-      const m = String(to.getMonth() + 1).padStart(2, "0");
-      const d = String(to.getDate()).padStart(2, "0");
-      newForm.dateTo = `${y}-${m}-${d}`;
     }
     onChange(newForm);
   };
@@ -496,7 +487,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   {t("cityHint")}
                 </p>
               ) : !form.city && (
-                <p className="text-[10px] text-[#9CA3AF] mt-1">
+                <p className="text-[10px] text-[#6B7280] mt-1">
                   {t("fromHint")}
                 </p>
               )}
@@ -505,14 +496,14 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
             {/* Optional filters divider */}
             <div className="col-span-2 lg:col-span-4 flex items-center gap-3 py-1">
               <div className="flex-1 h-px bg-[#E5E7EB]" />
-              <span className="text-[10px] font-medium text-[#9CA3AF] shrink-0">{t("optionalFilters")}</span>
+              <span className="text-[10px] font-medium text-[#6B7280] shrink-0">{t("optionalFilters")}</span>
               <div className="flex-1 h-px bg-[#E5E7EB]" />
             </div>
 
             {/* Search history */}
             {searchHistory.length > 0 && (
               <div className="col-span-2 lg:col-span-4 flex items-center gap-2 overflow-x-auto scrollbar-hide py-0.5">
-                <History size={13} className="text-[#9CA3AF] shrink-0" />
+                <History size={13} className="text-[#6B7280] shrink-0" />
                 {searchHistory.map((entry) => (
                   <button
                     key={entry.id}
@@ -549,6 +540,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                         key={chip.key}
                         type="button"
                         onClick={() => handleConstraintChange(chip.key)}
+                        aria-pressed={active}
                         className={`
                           px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer
                           ${active
@@ -574,7 +566,9 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   onClick={() =>
                     update({ travelers: Math.max(1, form.travelers - 1) })
                   }
-                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] hover:border-[#1C48CD] hover:text-[#1C48CD] hover:bg-[#EEF2FF] transition-all cursor-pointer shrink-0"
+                  aria-label={`- 1 ${t("travelers")}`}
+                  disabled={form.travelers <= 1}
+                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] enabled:hover:border-[#1C48CD] enabled:hover:text-[#1C48CD] enabled:hover:bg-[#EEF2FF] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shrink-0"
                 >
                   <Minus size={15} />
                 </button>
@@ -582,7 +576,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   <span className="text-4xl font-extrabold text-[#111] tabular-nums leading-none">
                     {form.travelers}
                   </span>
-                  <span className="block text-[10px] text-[#9CA3AF] mt-1">
+                  <span className="block text-[10px] text-[#6B7280] mt-1">
                     {form.travelers > 1 ? t("persons") : t("person")}
                   </span>
                 </div>
@@ -591,7 +585,9 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   onClick={() =>
                     update({ travelers: Math.min(10, form.travelers + 1) })
                   }
-                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] hover:border-[#1C48CD] hover:text-[#1C48CD] hover:bg-[#EEF2FF] transition-all cursor-pointer shrink-0"
+                  aria-label={`+ 1 ${t("travelers")}`}
+                  disabled={form.travelers >= 10}
+                  className="w-9 h-9 rounded-lg border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] enabled:hover:border-[#1C48CD] enabled:hover:text-[#1C48CD] enabled:hover:bg-[#EEF2FF] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shrink-0"
                 >
                   <Plus size={15} />
                 </button>
@@ -606,6 +602,9 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                   <button
                     type="button"
                     onClick={() => update({ budgetEnabled: false })}
+                    role="switch"
+                    aria-checked={true}
+                    aria-label={t("budget")}
                     className="relative w-9 h-5 rounded-full bg-[#1C48CD] cursor-pointer shrink-0"
                   >
                     <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -615,7 +614,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               <div className="flex-1 flex flex-col justify-center">
                 {!form.budgetEnabled ? (
                   <div>
-                    <span className="text-sm font-medium text-[#9CA3AF] leading-snug lg:group-hover:hidden block">{t("budgetAll")}</span>
+                    <span className="text-sm font-medium text-[#6B7280] leading-snug lg:group-hover:hidden block">{t("budgetAll")}</span>
                     <span className="text-sm font-medium text-[#1C48CD] leading-snug hidden lg:group-hover:block">{t("budgetActivate")}</span>
                   </div>
                 ) : (
@@ -624,7 +623,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       <span className="text-3xl font-extrabold text-[#1C48CD] tabular-nums leading-none">
                         {form.budget}€
                       </span>
-                      <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+                      <span className="block text-[10px] text-[#6B7280] mt-0.5">
                         {t("budgetPerPerson")}
                       </span>
                     </div>
@@ -648,10 +647,11 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       const val = parseInt(e.target.value);
                       update({ budget: val, budgetEnabled: true });
                     }}
+                    aria-label={t("budget")}
                     className="absolute inset-0 w-full opacity-0 cursor-pointer"
                   />
                 </div>
-                <div className="flex justify-between text-[9px] text-[#9CA3AF] mt-0.5">
+                <div className="flex justify-between text-[10px] text-[#6B7280] mt-0.5">
                   <span>100€</span>
                   <span>3 000€</span>
                 </div>
@@ -673,6 +673,9 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       <button
                         type="button"
                         onClick={() => update({ durationEnabled: false })}
+                        role="switch"
+                        aria-checked={true}
+                        aria-label={t("duration")}
                         className="relative w-9 h-5 rounded-full bg-[#1C48CD] cursor-pointer shrink-0"
                       >
                         <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -686,13 +689,13 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                           {dc.includes("weekend") && dc.includes("bridge") ? "2-4" : dc.includes("weekend") ? "2-3" : dc.includes("bridge") ? "3-4" : daysFromDates}
                         </span>
                         <span className="text-lg font-bold text-[#1C48CD] ml-1">{t("durationDays")}</span>
-                        <span className="block text-[10px] text-[#9CA3AF] mt-1">
+                        <span className="block text-[10px] text-[#6B7280] mt-1">
                           {lockedByConstraint ? dc.filter(c => c === "weekend" || c === "bridge").map(c => t(c === "weekend" ? "dateWeekend" : "dateBridge")).join(" + ") : t("durationLocked")}
                         </span>
                       </div>
                     ) : !form.durationEnabled ? (
                       <div>
-                        <span className="text-sm font-medium text-[#9CA3AF] leading-snug lg:group-hover:hidden block">{t("durationAll")}</span>
+                        <span className="text-sm font-medium text-[#6B7280] leading-snug lg:group-hover:hidden block">{t("durationAll")}</span>
                         <span className="text-sm font-medium text-[#1C48CD] leading-snug hidden lg:group-hover:block">{t("durationActivate")}</span>
                       </div>
                     ) : (
@@ -702,7 +705,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                             {form.duration}
                           </span>
                           <span className="text-lg font-bold text-[#1C48CD] ml-1">{t("durationDays")}</span>
-                          <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+                          <span className="block text-[10px] text-[#6B7280] mt-0.5">
                             {t("durationApprox")}
                           </span>
                         </div>
@@ -726,10 +729,11 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                               const val = parseInt(e.target.value);
                               update({ duration: val, durationEnabled: true });
                             }}
+                            aria-label={t("duration")}
                             className="absolute inset-0 w-full opacity-0 cursor-pointer"
                           />
                         </div>
-                        <div className="flex justify-between text-[9px] text-[#9CA3AF] mt-0.5">
+                        <div className="flex justify-between text-[10px] text-[#6B7280] mt-0.5">
                           <span>2j</span>
                           <span>4 sem.</span>
                         </div>
@@ -744,7 +748,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
             <BentoCard className="col-span-1 flex flex-col" active={form.transport.length > 0}>
               <SectionLabel icon={Plane}>{t("transport")}</SectionLabel>
               {form.transport.length === 0 && (
-                <p className="text-sm font-medium text-[#9CA3AF] mb-2">{t("transportAll")}</p>
+                <p className="text-sm font-medium text-[#6B7280] mb-2">{t("transportAll")}</p>
               )}
               <div className="flex-1 grid grid-cols-2 gap-1.5 content-center">
                 {(
@@ -761,6 +765,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                     key={opt.mode}
                     type="button"
                     whileTap={{ scale: 0.93 }}
+                    aria-pressed={isSelected}
                     animate={isSelected ? { scale: [1, 1.06, 1] } : { scale: 1 }}
                     transition={{ duration: 0.2 }}
                     onClick={() => {
@@ -796,7 +801,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
             <BentoCard className="col-span-2 flex flex-col" active={form.accommodation.length > 0 || form.comfort !== "standard"}>
               <SectionLabel icon={BedDouble}>{t("accommodation")}</SectionLabel>
               {form.accommodation.length === 0 && (
-                <p className="text-sm font-medium text-[#9CA3AF] mb-1.5">{t("accommodationAll")}</p>
+                <p className="text-sm font-medium text-[#6B7280] mb-1.5">{t("accommodationAll")}</p>
               )}
               <div className="grid grid-cols-2 gap-1.5 mb-2.5">
                 {(
@@ -813,6 +818,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       key={opt.mode}
                       type="button"
                       whileTap={{ scale: 0.93 }}
+                      aria-pressed={isSelected}
                       animate={isSelected ? { scale: [1, 1.06, 1] } : { scale: 1 }}
                       transition={{ duration: 0.2 }}
                       onClick={() => {
@@ -837,7 +843,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
               </div>
               <div className="flex items-center gap-2 mt-2 mb-1">
                 <div className="flex-1 h-px bg-[#E5E7EB]" />
-                <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#9CA3AF] shrink-0">{t("comfortLabel")}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#6B7280] shrink-0">{t("comfortLabel")}</span>
                 <div className="flex-1 h-px bg-[#E5E7EB]" />
               </div>
               <div className="flex gap-1.5">
@@ -854,6 +860,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                       key={opt.level}
                       type="button"
                       whileTap={{ scale: 0.93 }}
+                      aria-pressed={isActive}
                       animate={isActive ? { scale: [1, 1.06, 1] } : { scale: 1 }}
                       transition={{ duration: 0.2 }}
                       onClick={() => update({ comfort: opt.level })}
@@ -879,7 +886,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
           >
             <div className="flex items-baseline gap-2 mb-2">
               <SectionLabel icon={Sparkles}>{t("interests")}</SectionLabel>
-              <span className="text-[10px] text-[#9CA3AF] font-normal normal-case tracking-normal">{t("interestsHint")}</span>
+              <span className="text-[10px] text-[#6B7280] font-normal normal-case tracking-normal">{t("interestsHint")}</span>
             </div>
             <div className="overflow-y-auto max-h-full -mb-4 pb-4">
               <InterestChips
@@ -893,7 +900,11 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
 
             {/* Error message */}
             {error && (
-              <div className="mt-3 px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-sm text-red-700">
+              <div
+                ref={errorRef}
+                role="alert"
+                className="mt-3 px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-sm text-red-700"
+              >
                 {error}
               </div>
             )}
@@ -923,7 +934,7 @@ export function SearchForm({ form, onChange, onSubmit, searchHistory = [], error
                           setCityHint(true);
                           document.querySelector<HTMLInputElement>("[data-city-input]")?.focus();
                         }}
-                        className="w-full py-3.5 text-sm font-bold rounded-xl bg-[#9CA3AF] text-white cursor-pointer transition-colors hover:bg-[#6B7280]"
+                        className="w-full py-3.5 text-sm font-bold rounded-xl bg-[#6B7280] text-white cursor-pointer transition-colors hover:bg-[#4B5563]"
                       >
                         <span className="inline-flex items-center gap-2">
                           <MapPin size={16} />

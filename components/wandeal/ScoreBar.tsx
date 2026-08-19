@@ -12,7 +12,13 @@ export function ScoreBar({ score }: ScoreBarProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex-1 h-2 rounded-full bg-[#F3F4F6] overflow-hidden">
+      <div
+        role="progressbar"
+        aria-valuenow={score}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        className="flex-1 h-2 rounded-full bg-[#F3F4F6] overflow-hidden"
+      >
         <motion.div
           className="h-full rounded-full"
           style={{

@@ -8,6 +8,8 @@ import {
   Hotel,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
   Home,
   Sparkles,
@@ -23,13 +25,13 @@ import {
   Car,
   TrainFront,
   Bike,
-  Clock,
   Share2,
 } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { ScoreBar } from "./ScoreBar";
-import type { Destination, WeatherIcon } from "@/lib/types";
+import { buildDirectionsUrl } from "@/lib/affiliate";
+import type { Destination, WeatherIcon, TransportMode } from "@/lib/types";
 import { colorThemes } from "@/lib/types";
 
 const weatherIconMap: Record<
@@ -42,81 +44,45 @@ const weatherIconMap: Record<
   rain: CloudRain,
 };
 
-function toYYMMDD(dateStr: string): string {
-  // "2026-06-15" → "260615"
-  return dateStr.slice(2, 4) + dateStr.slice(5, 7) + dateStr.slice(8, 10);
-}
+const transportIcons: Record<TransportMode, typeof Plane> = {
+  plane: Plane,
+  train: TrainFront,
+  car: Car,
+  bike: Bike,
+};
 
+/**
+ * A destination is "nearby" when no flight is involved — the primary CTA then
+ * becomes directions rather than a flight search.
+ */
 function isNearby(dest: Destination, transports?: TransportMode[]): boolean {
-  if (dest.isLocal || dest.flightPrice === 0) return true;
-  // If the AI chose a ground transport for this destination
+  if (dest.isLocal) return true;
   if (dest.transportMode && dest.transportMode !== "plane") return true;
-  // If only ground transport selected
   if (transports && transports.length > 0 && !transports.includes("plane")) return true;
-  return false;
+  // No flight link could be built (missing IATA codes) and nothing to pay for one
+  return dest.flightPrice === 0 && !dest.flightUrl;
 }
-
-function buildDirectionsUrl(dest: Destination, originCity?: string): string {
-  const from = encodeURIComponent(originCity || "");
-  const to = encodeURIComponent(`${dest.name}, ${dest.country}`);
-  return `https://www.google.com/maps/dir/${from}/${to}/`;
-}
-
-function buildFlightUrl(dest: Destination): string {
-  const from = dest.originIata?.toUpperCase();
-  const to = dest.destIata?.toUpperCase();
-  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "";
-
-  // Aviasales affiliate link (Travelpayouts)
-  if (from && to && dest.dateFrom) {
-    const dd = dest.dateFrom.slice(8, 10);
-    const mm = dest.dateFrom.slice(5, 7);
-    const url = `https://www.aviasales.com/search/${from}${dd}${mm}${to}1`;
-    return marker ? `${url}?marker=${marker}` : url;
-  }
-
-  // Fallback: Google Flights
-  const parts = ["flights"];
-  if (from) parts.push(`from ${from}`);
-  parts.push(`to ${dest.name}`);
-  if (dest.dateFrom && dest.dateTo) {
-    const fmt = (s: string) => {
-      const d = new Date(s + "T00:00:00");
-      return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    };
-    parts.push(`on ${fmt(dest.dateFrom)} to ${fmt(dest.dateTo)}`);
-  }
-  return `https://www.google.com/travel/flights?q=${encodeURIComponent(parts.join(" "))}`;
-}
-
-function buildHotelUrl(dest: Destination): string {
-  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER || "";
-  const city = encodeURIComponent(dest.name);
-  const checkIn = dest.dateFrom || "";
-  const checkOut = dest.dateTo || "";
-  const base = `https://search.hotellook.com/hotels?destination=${city}&checkIn=${checkIn}&checkOut=${checkOut}&currency=EUR`;
-  return marker ? `${base}&marker=${marker}` : base;
-}
-
-type TransportMode = "plane" | "train" | "car" | "bike";
 
 interface DestCardProps {
   dest: Destination;
   originCity?: string;
   transports?: TransportMode[];
+  travelers?: number;
   isFavorite?: boolean;
   onToggleFavorite?: (dest: Destination) => void;
 }
 
-const transportDisplay: Record<TransportMode, { icon: typeof Plane; label: string }> = {
-  plane: { icon: Plane, label: "Vol" },
-  train: { icon: TrainFront, label: "Train" },
-  car: { icon: Car, label: "Trajet" },
-  bike: { icon: Bike, label: "Velo" },
-};
-
-export function DestCard({ dest, originCity, transports, isFavorite, onToggleFavorite }: DestCardProps) {
+export function DestCard({
+  dest,
+  originCity,
+  transports,
+  travelers = 1,
+  isFavorite,
+  onToggleFavorite,
+}: DestCardProps) {
   const t = useTranslations("results");
+  const tA11y = useTranslations("a11y");
+  const tSeason = useTranslations("season");
   const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
   const [photoIdx, setPhotoIdx] = useState(0);
@@ -134,13 +100,92 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
     const d = new Date(s + "T00:00:00");
     return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
   };
-  const dateLabel = dest.dateFrom && dest.dateTo
-    ? `${fmtDate(dest.dateFrom)} → ${fmtDate(dest.dateTo)}`
-    : null;
+  const dateLabel =
+    dest.dateFrom && dest.dateTo
+      ? `${fmtDate(dest.dateFrom)} → ${fmtDate(dest.dateTo)}`
+      : null;
+
+  // Travel-period badge — computed server-side from real calendar data, rendered
+  // in the user's language here.
+  let periodLabel: string | null = null;
+  if (dest.datePeriodKey === "weekend") {
+    periodLabel = t("periodWeekend");
+  } else if (dest.datePeriodKey === "bridge" && dest.datePeriodName) {
+    periodLabel = t("periodBridge", { name: dest.datePeriodName });
+  } else if (dest.datePeriodKey === "schoolHolidays" && dest.datePeriodName) {
+    const season = dest.datePeriodName.match(
+      /^(Printemps|Été|Automne|Noël|Détente|Pâques|Carnaval)/
+    );
+    const seasonKeys: Record<string, string> = {
+      Printemps: "spring",
+      Été: "summer",
+      Automne: "autumn",
+      Noël: "christmas",
+      Détente: "relax",
+      Pâques: "easter",
+      Carnaval: "carnival",
+    };
+    const year = dest.datePeriodName.match(/\d{4}/)?.[0];
+    const key = season ? seasonKeys[season[1]] : undefined;
+    periodLabel = key
+      ? `${tSeason(key)}${year ? ` ${year}` : ""}`
+      : t("periodHolidays", { name: dest.datePeriodName });
+  }
+
+  const photos = dest.photoUrls?.length
+    ? dest.photoUrls
+    : dest.photoUrl
+      ? [dest.photoUrl]
+      : [];
+  const nearby = isNearby(dest, transports);
+  const primaryUrl = nearby
+    ? buildDirectionsUrl(`${dest.name}, ${dest.country}`, originCity)
+    : dest.flightUrl;
+  const groupTotal = dest.totalPerPerson * travelers;
+
+  const handleShare = async () => {
+    const dates = dateLabel ? ` · ${dateLabel}` : "";
+    const nights = t("nightsCount", { count: dest.nights });
+    const frites =
+      dest.fritesPrice > 0 ? `\n${dest.fritesPrice}€ ${t("fritesLabel")}` : "";
+    const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€${t(
+      "estimate"
+    )} · ${nights}${dates}\n\n${dest.why}${frites}\n\n${t("shareFooter")}`;
+    const title = `${dest.name} — Wandeal`;
+
+    // Sharing with the photo attached, when the platform supports files
+    if (navigator.share && dest.photoUrl) {
+      try {
+        const res = await fetch(dest.photoUrl);
+        const blob = await res.blob();
+        const file = new File([blob], `${dest.name}.jpg`, { type: blob.type });
+        if (!navigator.canShare || navigator.canShare({ files: [file] })) {
+          await navigator.share({ title, text, files: [file] });
+          return;
+        }
+      } catch {
+        // Fall through to text-only sharing
+      }
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text });
+        return;
+      } catch {
+        // User dismissed, or sharing is unavailable
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast();
+    } catch {
+      // Clipboard blocked — nothing useful left to do
+    }
+  };
 
   return (
-    <motion.div
-      className="rounded-[20px] overflow-hidden bg-white border border-[#E5E7EB] transition-all duration-250"
+    <motion.article
+      className="relative rounded-[20px] overflow-hidden bg-white border border-[#E5E7EB] transition-all duration-250 h-full flex flex-col"
       whileHover={{
         y: -3,
         borderColor: "#1C48CD",
@@ -148,71 +193,89 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
       }}
     >
       {/* Photo carousel */}
-      {(dest.photoUrls?.length || dest.photoUrl) && (
+      {photos.length > 0 && (
         <div
-          className="relative h-40 overflow-hidden group/photo"
+          className="relative h-40 overflow-hidden group/photo bg-[#F3F4F6]"
           onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
           onTouchEnd={(e) => {
             if (touchStart === null) return;
             const diff = touchStart - e.changedTouches[0].clientX;
-            const photos = dest.photoUrls?.length ? dest.photoUrls : dest.photoUrl ? [dest.photoUrl] : [];
             if (Math.abs(diff) > 50 && photos.length > 1) {
-              if (diff > 0) setPhotoIdx((photoIdx + 1) % photos.length);
-              else setPhotoIdx((photoIdx - 1 + photos.length) % photos.length);
+              setPhotoIdx((i) =>
+                diff > 0
+                  ? (i + 1) % photos.length
+                  : (i - 1 + photos.length) % photos.length
+              );
             }
             setTouchStart(null);
           }}
         >
-          {(() => {
-            const photos = dest.photoUrls?.length ? dest.photoUrls : dest.photoUrl ? [dest.photoUrl] : [];
-            const current = photos[photoIdx % photos.length];
-            return (
-              <>
-                <img
-                  src={current}
-                  alt={dest.name}
-                  className="w-full h-full object-cover transition-opacity duration-300"
-                  loading="lazy"
-                />
-                {photos.length > 1 && (
-                  <>
-                    {/* Dots */}
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-                      {photos.map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={(e) => { e.stopPropagation(); setPhotoIdx(i); }}
-                          className={`w-1.5 h-1.5 rounded-full transition-all cursor-pointer ${i === photoIdx % photos.length ? "bg-white w-3" : "bg-white/50"}`}
-                        />
-                      ))}
-                    </div>
-                    {/* Arrows — always visible on mobile, hover on desktop */}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setPhotoIdx((photoIdx - 1 + photos.length) % photos.length); }}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-100 lg:opacity-0 lg:group-hover/photo:opacity-100 transition-opacity cursor-pointer"
-                    >
-                      <ChevronUp size={14} className="rotate-[-90deg]" />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setPhotoIdx((photoIdx + 1) % photos.length); }}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white opacity-100 lg:opacity-0 lg:group-hover/photo:opacity-100 transition-opacity cursor-pointer"
-                    >
-                      <ChevronDown size={14} className="rotate-[-90deg]" />
-                    </button>
-                  </>
-                )}
-              </>
-            );
-          })()}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photos[photoIdx % photos.length]}
+            alt={`${dest.name}, ${dest.country}`}
+            className="w-full h-full object-cover transition-opacity duration-300"
+            loading="lazy"
+            decoding="async"
+          />
+          {photos.length > 1 && (
+            <>
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {photos.map((url, i) => (
+                  <button
+                    key={url}
+                    type="button"
+                    aria-label={tA11y("goToPhoto", { index: i + 1 })}
+                    aria-current={i === photoIdx % photos.length}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPhotoIdx(i);
+                    }}
+                    className={`h-1.5 rounded-full transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${
+                      i === photoIdx % photos.length ? "bg-white w-3" : "bg-white/50 w-1.5"
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                aria-label={tA11y("prevPhoto")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+                }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white opacity-100 lg:opacity-0 lg:group-hover/photo:opacity-100 lg:focus-visible:opacity-100 transition-opacity cursor-pointer"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label={tA11y("nextPhoto")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPhotoIdx((i) => (i + 1) % photos.length);
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white opacity-100 lg:opacity-0 lg:group-hover/photo:opacity-100 lg:focus-visible:opacity-100 transition-opacity cursor-pointer"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-          {/* Preload next photos */}
-          {(dest.photoUrls || []).filter((_, i) => i !== photoIdx % (dest.photoUrls?.length || 1)).map((url) => (
-            <img key={url} src={url} alt="" className="hidden" />
+          {/* Warm the browser cache for the other photos in the carousel */}
+          {photos.slice(1).map((url) => (
+            <link key={url} rel="preload" as="image" href={url} />
           ))}
           {onToggleFavorite && (
             <button
-              onClick={(e) => { e.stopPropagation(); onToggleFavorite(dest); }}
-              className="absolute top-3 right-3 p-2 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-colors cursor-pointer"
+              type="button"
+              aria-label={isFavorite ? tA11y("removeFavorite") : tA11y("addFavorite")}
+              aria-pressed={!!isFavorite}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(dest);
+              }}
+              className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors cursor-pointer"
             >
               <Heart
                 size={18}
@@ -231,252 +294,262 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
           borderBottom: `3px solid ${theme.stripe}`,
         }}
       >
-        {/* Fav button (no photo fallback) */}
-        {!dest.photoUrl && onToggleFavorite && (
+        {photos.length === 0 && onToggleFavorite && (
           <div className="absolute top-4 right-4">
             <button
-              onClick={(e) => { e.stopPropagation(); onToggleFavorite(dest); }}
+              type="button"
+              aria-label={isFavorite ? tA11y("removeFavorite") : tA11y("addFavorite")}
+              aria-pressed={!!isFavorite}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(dest);
+              }}
               className="p-1.5 rounded-full hover:bg-white/50 transition-colors cursor-pointer"
             >
               <Heart
                 size={18}
-                className={isFavorite ? "fill-red-500 text-red-500" : "text-[#9CA3AF] hover:text-[#6B7280]"}
+                className={isFavorite ? "fill-red-500 text-red-500" : "text-[#6B7280]"}
               />
             </button>
           </div>
         )}
 
         {/* Destination name + price */}
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-2xl">{dest.flag}</span>
-              <h3
-                className="text-xl font-extrabold"
-                style={{ color: theme.text }}
-              >
+              <span className="text-2xl" aria-hidden="true">
+                {dest.flag}
+              </span>
+              <h3 className="text-xl font-extrabold" style={{ color: theme.text }}>
                 {dest.name}
               </h3>
             </div>
-            <div className="flex items-center gap-2">
-              <p className="text-sm" style={{ color: theme.text, opacity: 0.7 }}>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm" style={{ color: theme.text, opacity: 0.75 }}>
                 {dest.country}
               </p>
               {(dest.isLocal || dest.isSurprise) && (
                 <span
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold border"
                   style={{
                     borderColor: dest.isSurprise ? "#1C48CD" : theme.stripe,
                     color: dest.isSurprise ? "#1C48CD" : theme.text,
                   }}
                 >
                   {dest.isLocal ? (
-                    <><Home size={10} /> {t("badgeLocal")}</>
+                    <>
+                      <Home size={10} /> {t("badgeLocal")}
+                    </>
                   ) : (
-                    <><Sparkles size={10} /> {t("badgeSurprise")}</>
+                    <>
+                      <Sparkles size={10} /> {t("badgeSurprise")}
+                    </>
                   )}
                 </span>
               )}
             </div>
           </div>
           <div className="text-right shrink-0">
-            <div
-              className="text-2xl font-extrabold"
-              style={{ color: theme.text }}
-            >
-              ~<NumberTicker
-                value={dest.totalPerPerson}
-                className="!text-inherit"
-              />{" "}
-              €
+            <div className="text-2xl font-extrabold" style={{ color: theme.text }}>
+              ~<NumberTicker value={dest.totalPerPerson} className="!text-inherit" /> €
             </div>
             <p
-              className="text-[10px] font-medium uppercase tracking-wide px-2 py-0.5 rounded-full mt-1"
-              style={{ backgroundColor: theme.stripe + "20", color: theme.text, opacity: 0.8 }}
+              className="text-[11px] font-medium uppercase tracking-wide px-2 py-0.5 rounded-full mt-1"
+              style={{ backgroundColor: theme.stripe + "26", color: theme.text }}
             >
               {t("estimate")}
             </p>
+            {travelers > 1 && (
+              <p className="text-[11px] mt-1" style={{ color: theme.text, opacity: 0.75 }}>
+                {t("groupTotal", { total: groupTotal, count: travelers })}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Info pills */}
         <div className="flex flex-wrap gap-2 mt-4">
           {dateLabel && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/90 text-[#4B5563]">
               <CalendarDays size={13} />
               {dateLabel}
-              {dest.datePeriodLabel && (
-                <span className="font-semibold text-[#1C48CD]">· {dest.datePeriodLabel}</span>
+              {periodLabel && (
+                <span className="font-semibold text-[#1C48CD]">· {periodLabel}</span>
               )}
             </span>
           )}
           {(() => {
-            const nearby = isNearby(dest, transports);
-            const mode = (dest.transportMode as TransportMode) || (transports?.length === 1 ? transports[0] : nearby ? "car" : "plane");
-            const display = transportDisplay[mode] || transportDisplay.plane;
-            const TransportIcon = display.icon;
-            const hasDistance = dest.distanceKm && dest.distanceKm > 0;
-            const hasTime = dest.travelHours && dest.travelHours > 0;
-            const fmtTime = hasTime ? (dest.travelHours! >= 1 ? `${Math.floor(dest.travelHours!)}h${dest.travelHours! % 1 >= 0.5 ? "30" : ""}` : `${Math.round(dest.travelHours! * 60)}min`) : null;
+            const mode: TransportMode =
+              dest.transportMode ||
+              (transports?.length === 1 ? transports[0] : nearby ? "car" : "plane");
+            const TransportIcon = transportIcons[mode] || Plane;
+            const hasDistance = !!dest.distanceKm && dest.distanceKm > 0;
+            const hours = dest.travelHours;
+            const fmtTime =
+              hours && hours > 0
+                ? hours >= 1
+                  ? `${Math.floor(hours)}h${hours % 1 >= 0.5 ? "30" : ""}`
+                  : `${Math.round(hours * 60)}min`
+                : null;
 
             return (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/90 text-[#4B5563]">
                 <TransportIcon size={13} />
                 {nearby && dest.flightPrice === 0 ? t("reachable") : `~${dest.flightPrice}€`}
-                {hasDistance && mode !== "train" && mode !== "plane" && <span className="text-[#9CA3AF]">· {dest.distanceKm}km</span>}
-                {fmtTime && <span className="text-[#9CA3AF]">· {fmtTime}</span>}
+                {hasDistance && mode !== "train" && mode !== "plane" && (
+                  <span className="text-[#6B7280]">· {dest.distanceKm}km</span>
+                )}
+                {fmtTime && <span className="text-[#6B7280]">· {fmtTime}</span>}
               </span>
             );
           })()}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
-            <Hotel size={13} />
-            ~{dest.hotelPerNight}€/{t("perNight")}
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/90 text-[#4B5563]">
+            <Hotel size={13} />~{dest.hotelPerNight}€/{t("perNight")}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/90 text-[#4B5563]">
             <WeatherIc size={13} />
             <Thermometer size={11} />
             {dest.tempMin}-{dest.tempMax}°
           </span>
           {dest.mealPrice > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/90 text-[#4B5563]">
               <UtensilsCrossed size={13} />
-              {dest.mealPrice}€/repas
+              {dest.mealPrice}€/{t("perMeal")}
             </span>
           )}
           {dest.fritesPrice > 0 && (
-            <span className="group/frites inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/80 text-[#4B5563] transition-all duration-200 hover:scale-110 hover:bg-[#1C48CD] hover:text-white cursor-default">
-              🍟 {dest.fritesPrice}€
-              <span className="max-w-0 overflow-hidden opacity-0 group-hover/frites:max-w-[80px] group-hover/frites:opacity-100 transition-all duration-300 whitespace-nowrap">la frite</span>
+            <span className="group/frites inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/90 text-[#4B5563] transition-all duration-200 hover:scale-110 hover:bg-[#1C48CD] hover:text-white cursor-default">
+              <span aria-hidden="true">🍟</span> {dest.fritesPrice}€
+              <span className="max-w-0 overflow-hidden opacity-0 group-hover/frites:max-w-[120px] group-hover/frites:opacity-100 transition-all duration-300 whitespace-nowrap">
+                {t("fritesLabel")}
+              </span>
             </span>
           )}
         </div>
       </div>
 
       {/* Body */}
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         <ScoreBar score={dest.matchScore} />
 
-        <p className="text-sm text-[#555] leading-relaxed mt-3">{dest.why}</p>
+        <p className="text-sm text-[#4B5563] leading-relaxed mt-3">{dest.why}</p>
 
-        {/* Expanded section */}
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="mt-4"
-          >
-            <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-2">
-              {t("activities")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {dest.activities.map((act) => (
-                <span
-                  key={act}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#EEF2FF] text-[#1e2a4a]"
-                >
-                  {act}
-                </span>
-              ))}
-            </div>
+        <AnimatePresence initial={false}>
+          {expanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="mt-4 overflow-hidden"
+            >
+              {dest.activities.length > 0 && (
+                <>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6B7280] mb-2">
+                    {t("activities")}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {dest.activities.map((act) => (
+                      <span
+                        key={act}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#EEF2FF] text-[#1e2a4a]"
+                      >
+                        {act}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
 
-            {dest.matchedInterests.length > 0 && (
-              <div className="mt-3">
-                <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#9CA3AF] mb-2">
-                  {t("matchedInterests")}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {dest.matchedInterests.map((interest) => (
-                    <span
-                      key={interest}
-                      className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#1C48CD] text-white"
-                    >
-                      {interest}
-                    </span>
-                  ))}
+              {dest.matchedInterests.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6B7280] mb-2">
+                    {t("matchedInterests")}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {dest.matchedInterests.map((interest) => (
+                      <span
+                        key={interest}
+                        className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#1C48CD] text-white"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </motion.div>
-        )}
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Actions */}
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-4 pt-4 mt-auto">
           <button
+            type="button"
             onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
+            aria-label={expanded ? tA11y("collapse") : tA11y("expand")}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
           >
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
           <button
-            onClick={async () => {
-              const dates = dest.dateFrom && dest.dateTo ? `${fmtDate(dest.dateFrom)} → ${fmtDate(dest.dateTo)}` : "";
-              const frites = dest.fritesPrice > 0 ? `\n🍟 ${dest.fritesPrice}€ la frite` : "";
-              const text = `${dest.flag} ${dest.name}, ${dest.country}\n~${dest.totalPerPerson}€/pers · ${dest.nights} nuits${dates ? ` · ${dates}` : ""}\n\n${dest.why}${frites}\n\nTrouvé sur wandeal.com`;
-
-              // Try sharing with photo (mobile)
-              if (navigator.share && dest.photoUrl) {
-                try {
-                  const res = await fetch(dest.photoUrl);
-                  const blob = await res.blob();
-                  const file = new File([blob], `${dest.name}.jpg`, { type: blob.type });
-                  await navigator.share({ title: `${dest.name} — Wandeal`, text, files: [file] });
-                  return;
-                } catch {
-                  // Fallback to text-only share
-                }
-              }
-              if (navigator.share) {
-                navigator.share({ title: `${dest.name} — Wandeal`, text }).catch(() => {});
-              } else {
-                navigator.clipboard.writeText(text).then(() => showToast());
-              }
-            }}
+            type="button"
+            onClick={handleShare}
+            aria-label={tA11y("share")}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#4B5563] bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] transition-colors cursor-pointer"
           >
             <Share2 size={14} />
           </button>
-          <a
-            href={isNearby(dest, transports) ? buildDirectionsUrl(dest, originCity) : buildFlightUrl(dest)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1"
-          >
-            <ShimmerButton
-              background="#1C48CD"
-              shimmerColor="rgba(255,255,255,0.2)"
-              borderRadius="16px"
-              className="w-full py-2.5 text-sm font-medium"
+          {primaryUrl && (
+            <a
+              href={primaryUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="flex-1"
             >
-              <span className="inline-flex items-center gap-1.5">
-                {isNearby(dest, transports) ? (
-                  <><MapPin size={13} /> {t("getDirections")}</>
-                ) : (
-                  <><ExternalLink size={13} /> {t("seeFlights")}</>
-                )}
-              </span>
-            </ShimmerButton>
-          </a>
-          <a
-            href={buildHotelUrl(dest)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1"
-          >
-            <button className="w-full py-2.5 rounded-2xl text-sm font-medium text-[#1C48CD] bg-[#EEF2FF] hover:bg-[#DEE5FF] transition-colors cursor-pointer">
+              <ShimmerButton
+                background="#1C48CD"
+                shimmerColor="rgba(255,255,255,0.2)"
+                borderRadius="16px"
+                className="w-full py-2.5 text-sm font-medium"
+              >
+                <span className="inline-flex items-center gap-1.5">
+                  {nearby ? (
+                    <>
+                      <MapPin size={13} /> {t("getDirections")}
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink size={13} /> {t("seeFlights")}
+                    </>
+                  )}
+                </span>
+              </ShimmerButton>
+            </a>
+          )}
+          {dest.hotelUrl && (
+            <a
+              href={dest.hotelUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="flex-1 py-2.5 rounded-2xl text-sm font-medium text-center text-[#1C48CD] bg-[#EEF2FF] hover:bg-[#DEE5FF] transition-colors cursor-pointer"
+            >
               <span className="inline-flex items-center gap-1.5">
                 <Hotel size={13} />
                 {t("seeHotels")}
               </span>
-            </button>
-          </a>
+            </a>
+          )}
         </div>
       </div>
+
       {/* Toast */}
       <AnimatePresence>
         {toast && (
           <motion.div
+            role="status"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -486,6 +559,6 @@ export function DestCard({ dest, originCity, transports, isFavorite, onToggleFav
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </motion.article>
   );
 }
