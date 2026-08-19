@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   Sun,
   Waves,
@@ -24,6 +24,7 @@ import {
   Ticket,
   Backpack,
   ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -112,6 +113,7 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
             type="button"
             onClick={() => toggle(opt.value)}
             whileTap={{ scale: 0.93 }}
+            aria-pressed={active}
             animate={active ? { scale: [1, 1.08, 1] } : { scale: 1 }}
             transition={{ duration: 0.2 }}
             className={`
@@ -129,14 +131,15 @@ export function InterestChips({ selected, onChange }: InterestChipsProps) {
           </motion.button>
         );
       })}
-      {hasMore && (
+      {(hasMore || expanded) && (
         <button
           type="button"
-          onClick={() => setExpanded(true)}
+          onClick={() => setExpanded(!expanded)}
+          aria-expanded={expanded}
           className="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-[13px] font-medium text-[#1C48CD] bg-[#EEF2FF] hover:bg-[#DEE5FF] transition-colors cursor-pointer"
         >
-          <ChevronDown size={14} />
-          <span>{t("interestsMore")}</span>
+          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          <span>{t(expanded ? "interestsLess" : "interestsMore")}</span>
         </button>
       )}
     </div>

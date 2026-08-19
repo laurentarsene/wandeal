@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 
 const inspirations = [
   { flag: "🇵🇹", dest: "Lisbonne", price: "89€" },
@@ -17,12 +16,14 @@ const inspirations = [
   { flag: "🇹🇷", dest: "Istanbul", price: "99€" },
 ];
 
+// Illustrative price points used as decoration on the hero. They are not live
+// quotes and are hidden from assistive technology for that reason.
 export function InspirationTicker() {
   // Double the items for seamless loop
   const items = [...inspirations, ...inspirations];
 
   return (
-    <div className="overflow-hidden py-2">
+    <div className="overflow-hidden py-2" aria-hidden="true">
       <div className="flex gap-4 animate-[ticker_30s_linear_infinite] hover:[animation-play-state:paused]">
         {items.map((item, i) => (
           <span

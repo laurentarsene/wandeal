@@ -3,6 +3,8 @@
 
 export interface HolidayPeriod {
   name: string;
+  /** i18n key for the season, so the badge can be shown in the user's language. */
+  seasonKey?: "spring" | "summer" | "autumn" | "christmas" | "carnival" | "easter" | "relax";
   from: string; // YYYY-MM-DD
   to: string;
 }
@@ -10,27 +12,27 @@ export interface HolidayPeriod {
 // Wallonie & Bruxelles (Fédération Wallonie-Bruxelles)
 export const holidaysWB: HolidayPeriod[] = [
   // 2025-2026
-  { name: "Printemps 2026", from: "2026-04-27", to: "2026-05-10" },
-  { name: "Été 2026", from: "2026-07-04", to: "2026-08-23" },
+  { name: "Printemps 2026", seasonKey: "spring", from: "2026-04-27", to: "2026-05-10" },
+  { name: "Été 2026", seasonKey: "summer", from: "2026-07-04", to: "2026-08-23" },
   // 2026-2027
-  { name: "Automne 2026", from: "2026-10-19", to: "2026-10-30" },
-  { name: "Noël 2026", from: "2026-12-21", to: "2027-01-01" },
-  { name: "Détente 2027", from: "2027-02-22", to: "2027-03-05" },
-  { name: "Printemps 2027", from: "2027-04-26", to: "2027-05-07" },
-  { name: "Été 2027", from: "2027-07-03", to: "2027-08-22" },
+  { name: "Automne 2026", seasonKey: "autumn", from: "2026-10-19", to: "2026-10-30" },
+  { name: "Noël 2026", seasonKey: "christmas", from: "2026-12-21", to: "2027-01-01" },
+  { name: "Détente 2027", seasonKey: "relax", from: "2027-02-22", to: "2027-03-05" },
+  { name: "Printemps 2027", seasonKey: "spring", from: "2027-04-26", to: "2027-05-07" },
+  { name: "Été 2027", seasonKey: "summer", from: "2027-07-03", to: "2027-08-22" },
 ];
 
 // Flandre (Communauté flamande)
 export const holidaysFL: HolidayPeriod[] = [
   // 2025-2026
-  { name: "Pâques 2026", from: "2026-04-06", to: "2026-04-19" },
-  { name: "Été 2026", from: "2026-07-01", to: "2026-08-31" },
+  { name: "Pâques 2026", seasonKey: "easter", from: "2026-04-06", to: "2026-04-19" },
+  { name: "Été 2026", seasonKey: "summer", from: "2026-07-01", to: "2026-08-31" },
   // 2026-2027
-  { name: "Automne 2026", from: "2026-10-26", to: "2026-11-01" },
-  { name: "Noël 2026", from: "2026-12-21", to: "2027-01-03" },
-  { name: "Carnaval 2027", from: "2027-02-15", to: "2027-02-21" },
-  { name: "Pâques 2027", from: "2027-03-29", to: "2027-04-11" },
-  { name: "Été 2027", from: "2027-07-01", to: "2027-08-31" },
+  { name: "Automne 2026", seasonKey: "autumn", from: "2026-10-26", to: "2026-11-01" },
+  { name: "Noël 2026", seasonKey: "christmas", from: "2026-12-21", to: "2027-01-03" },
+  { name: "Carnaval 2027", seasonKey: "carnival", from: "2027-02-15", to: "2027-02-21" },
+  { name: "Pâques 2027", seasonKey: "easter", from: "2027-03-29", to: "2027-04-11" },
+  { name: "Été 2027", seasonKey: "summer", from: "2027-07-01", to: "2027-08-31" },
 ];
 
 // Get upcoming holiday periods (filter out past ones)
@@ -77,8 +79,17 @@ export function formatPublicHolidaysForPrompt(): string {
     .join(", ");
 }
 
-// Determine the correct period label for a date range
-export function getDatePeriodLabel(dateFrom: string, dateTo: string): string | null {
+export interface DatePeriod {
+  /** Translation key for the badge shape. */
+  key: "bridge" | "schoolHolidays" | "weekend";
+  /** Proper name to interpolate ("Ascension", "Été 2026"). Absent for plain weekends. */
+  name?: string;
+  seasonKey?: HolidayPeriod["seasonKey"];
+  year?: number;
+}
+
+// Determine the correct period for a date range
+export function getDatePeriod(dateFrom: string, dateTo: string): DatePeriod | null {
   if (!dateFrom || !dateTo) return null;
   const from = new Date(dateFrom + "T00:00:00");
   const to = new Date(dateTo + "T00:00:00");
@@ -87,7 +98,7 @@ export function getDatePeriodLabel(dateFrom: string, dateTo: string): string | n
   for (const h of publicHolidays) {
     const hDate = new Date(h.from + "T00:00:00");
     if (hDate >= from && hDate <= to) {
-      return `Pont ${h.name}`;
+      return { key: "bridge", name: h.name };
     }
   }
 
@@ -98,7 +109,12 @@ export function getDatePeriodLabel(dateFrom: string, dateTo: string): string | n
     const hTo = new Date(h.to + "T00:00:00");
     // Overlap check
     if (from <= hTo && to >= hFrom) {
-      return h.name;
+      return {
+        key: "schoolHolidays",
+        name: h.name,
+        seasonKey: h.seasonKey,
+        year: Number(h.name.match(/\d{4}/)?.[0]) || undefined,
+      };
     }
   }
 
@@ -106,7 +122,7 @@ export function getDatePeriodLabel(dateFrom: string, dateTo: string): string | n
   const dayFrom = from.getDay();
   const nights = Math.round((to.getTime() - from.getTime()) / 86400000);
   if (nights <= 3 && (dayFrom === 5 || dayFrom === 6)) {
-    return "Weekend";
+    return { key: "weekend" };
   }
 
   return null;

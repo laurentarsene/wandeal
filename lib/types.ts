@@ -48,7 +48,6 @@ export interface Destination {
   fritesPrice: number;    // prix d'un cornet de frites 🍟
   dateFrom: string;       // YYYY-MM-DD — dates choisies ou suggérées par l'IA
   dateTo: string;         // YYYY-MM-DD
-  datePeriodLabel?: string; // ex: "Pont de l'Ascension", "Weekend (ven→dim)", "Toussaint 2026"
   isLocal: boolean;
   isSurprise: boolean;
   transportMode?: "plane" | "train" | "car" | "bike"; // mode de transport choisi par l'IA
@@ -56,9 +55,16 @@ export interface Destination {
   travelHours?: number;   // temps de trajet estimé en heures
   originIata?: string;    // code IATA de la ville de départ (ex: BRU)
   destIata?: string;      // code IATA de la destination (ex: LIS)
+  airportIata?: string;   // aéroport desservant la destination, suggéré par l'IA (secours pour les régions)
   bookingUrl?: string;
   photoUrl?: string;
   photoUrls?: string[];
+  /** Affiliate deep links, built server-side so the marker is applied at runtime. */
+  flightUrl?: string;
+  hotelUrl?: string;
+  /** Translation key + params for the travel-period badge ("Pont Ascension", "Weekend"…). */
+  datePeriodKey?: "bridge" | "schoolHolidays" | "weekend";
+  datePeriodName?: string;
 }
 
 export const defaultForm: SearchFormData = {

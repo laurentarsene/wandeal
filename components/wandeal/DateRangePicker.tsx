@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useIsMounted } from "@/lib/useIsMounted";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
@@ -39,28 +40,25 @@ export function DateRangePicker({
   const locale = useLocale();
   const dfLocale = dateFnsLocales[locale] || fr;
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
-  useEffect(() => setMounted(true), []);
-
   const from = parseDate(dateFrom);
   const to = parseDate(dateTo);
 
-  // Internal range state for the calendar
-  const [internalRange, setInternalRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({ from, to });
-
-  // Sync internal state when props change from outside (presets, clear)
-  useEffect(() => {
-    if (!open) {
-      setInternalRange({ from: parseDate(dateFrom), to: parseDate(dateTo) });
-    }
-  }, [dateFrom, dateTo, open]);
+  // Draft range while the calendar is open. Closed, the props are the truth —
+  // deriving here avoids an effect that would re-render on every prop change.
+  const [draft, setDraft] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from,
+    to,
+  });
+  const internalRange = useMemo(
+    () => (open ? draft : { from, to }),
+    [open, draft, from, to]
+  );
+  const setInternalRange = setDraft;
 
   const updatePos = useCallback(() => {
     if (!triggerRef.current) return;
@@ -140,7 +138,7 @@ export function DateRangePicker({
   };
 
   const clear = () => {
-    setInternalRange({ from: undefined, to: undefined });
+    setDraft({ from: undefined, to: undefined });
     onChange("", "");
   };
 
@@ -185,13 +183,13 @@ export function DateRangePicker({
         }}
         className={`
           w-full flex items-center gap-2.5 cursor-pointer text-left transition-colors
-          ${hasAnyDate ? "text-[#111]" : "text-[#9CA3AF]"}
+          ${hasAnyDate ? "text-[#111]" : "text-[#6B7280]"}
         `}
       >
         <div className="flex-1 min-w-0">
           <span className="text-sm font-medium">{label}</span>
           {sublabel && (
-            <span className="block text-[10px] text-[#9CA3AF] mt-0.5">
+            <span className="block text-[10px] text-[#6B7280] mt-0.5">
               {sublabel}
             </span>
           )}
@@ -204,7 +202,7 @@ export function DateRangePicker({
             }}
             className="p-1 rounded-full hover:bg-[#F3F4F6] transition-colors shrink-0"
           >
-            <X size={12} className="text-[#9CA3AF]" />
+            <X size={12} className="text-[#6B7280]" />
           </span>
         )}
       </button>
@@ -240,7 +238,7 @@ export function DateRangePicker({
                 </button>
               </div>
             </div>
-            <p className="text-[11px] text-[#9CA3AF] mb-3">
+            <p className="text-[11px] text-[#6B7280] mb-3">
               {internalRange.from && !internalRange.to
                 ? t("datesCalendarHintReturn")
                 : t("datesCalendarHint")}

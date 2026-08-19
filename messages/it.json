@@ -4,7 +4,7 @@
   },
   "hero": {
     "badge": "Powered by AI",
-    "title1": "Da qualche parte c'e' la",
+    "title1": "Da qualche parte c'è la",
     "title2": "vacanza perfetta per te.",
     "madeIn": "Fatto in Belgio, tra due acquazzoni."
   },
@@ -26,7 +26,7 @@
     "person": "persona",
     "persons": "persone",
     "budget": "Budget massimo",
-    "budgetPerPerson": "max a persona",
+    "budgetPerPerson": "trasporto + alloggio / pers.",
     "budgetAll": "Qualsiasi fascia di prezzo",
     "budgetActivate": "Definire un budget",
     "duration": "Durata",
@@ -80,13 +80,14 @@
     "dateHolidaysFL": "Vacanze Fiandre",
     "dateOffHolidays": "Fuori vacanze",
     "dateBridge": "Ponte festivo",
-    "cityHint": "Inserisci la tua citta' per questa selezione",
+    "cityHint": "Inserisci la tua città per questa selezione",
     "interestsHint": "— cosa ti fa sognare?",
-    "searchNeedsCity": "Indica la tua citta di partenza",
+    "searchNeedsCity": "Indica la tua città di partenza",
     "fromHint": "Troviamo la destinazione per te",
     "comfortLabel": "Livello di comfort",
     "optionalFilters": "Personalizza se vuoi",
-    "interestsMore": "Altre opzioni"
+    "interestsMore": "Altre opzioni",
+    "interestsLess": "Mostra meno"
   },
   "presets": {
     "title": "Voglia di...",
@@ -117,8 +118,8 @@
     "datesChosen": "Date selezionate",
     "departChosen": "Partenza selezionata",
     "everywhere": "Ovunque",
-    "filterMatch": "Piu' adatti",
-    "filterCheap": "Piu' economici",
+    "filterMatch": "Più adatti",
+    "filterCheap": "Più economici",
     "filterLocal": "Vicino a te",
     "filterFav": "Perla nascosta",
     "estimate": "/ pers.",
@@ -128,7 +129,7 @@
     "hotel": "{price}€/notte",
     "activities": "Cose da fare",
     "matchedInterests": "In linea con i tuoi interessi",
-    "seeMore": "Vedi di piu'",
+    "seeMore": "Vedi di più",
     "seeLess": "Vedi di meno",
     "book": "Prenota",
     "seeFlights": "Vedi i voli",
@@ -140,10 +141,23 @@
     "reachable": "Vicino",
     "seeHotels": "Hotel",
     "copied": "Copiato!",
-    "relaunch": "Aggiorna"
+    "relaunch": "Aggiorna",
+    "perMeal": "pasto",
+    "fritesLabel": "le patatine",
+    "shareFooter": "Trovato su wandeal.com",
+    "nightsCount": "{count} notti",
+    "groupTotal": "≈ {total} € per {count} pers.",
+    "periodBridge": "Ponte di {name}",
+    "periodWeekend": "Weekend",
+    "periodHolidays": "{name}",
+    "emptyLocal": "Nessun soggiorno vicino in questa selezione.",
+    "emptyResults": "Niente da mostrare con questo filtro.",
+    "pageTitle": "{count} destinazioni da {city} — Wandeal",
+    "affiliateNote": "Alcuni link sono affiliati: prenotare tramite Wandeal non ti costa un centesimo in più e ci permette di tenere il servizio gratuito.",
+    "priceDisclaimer": "Prezzi stimati a titolo indicativo, non contrattuali. Fa fede il prezzo del fornitore."
   },
   "footer": {
-    "tagline": "Vacanze su misura, trovate dall IA.",
+    "tagline": "Vacanze su misura, trovate dall'IA.",
     "product": "Prodotto",
     "howItWorks": "Come funziona",
     "destinations": "Destinazioni",
@@ -152,6 +166,64 @@
     "privacy": "Privacy",
     "terms": "Termini",
     "rights": "Tutti i diritti riservati.",
-    "madeIn": "Fatto con cura in Belgio."
+    "madeIn": "Fatto con cura in Belgio.",
+    "affiliate": "Link affiliati",
+    "legalLink": "Note legali e privacy"
+  },
+  "meta": {
+    "title": "Wandeal — La tua prossima fuga",
+    "description": "Viaggi su misura, trovati dall'IA. Dicci da dove parti, al resto pensiamo noi."
+  },
+  "errors": {
+    "rateLimited": "Troppe ricerche di fila. Riprova tra qualche minuto.",
+    "noResults": "Nessuna destinazione trovata. Prova ad allentare i filtri.",
+    "serverError": "Il nostro motore si è inceppato. Riprova tra un istante.",
+    "badRequest": "Questa ricerca non è valida. Controlla i criteri.",
+    "network": "Connessione persa. Controlla la rete e riprova.",
+    "timeout": "La ricerca ha impiegato troppo tempo. Riprova.",
+    "retry": "Riprova"
+  },
+  "season": {
+    "spring": "Vacanze di primavera",
+    "summer": "Vacanze estive",
+    "autumn": "Vacanze autunnali",
+    "christmas": "Vacanze di Natale",
+    "carnival": "Vacanze di Carnevale",
+    "easter": "Vacanze di Pasqua",
+    "relax": "Vacanze invernali"
+  },
+  "a11y": {
+    "share": "Condividi questa destinazione",
+    "expand": "Mostra più dettagli",
+    "collapse": "Nascondi i dettagli",
+    "addFavorite": "Aggiungi ai preferiti",
+    "removeFavorite": "Rimuovi dai preferiti",
+    "prevPhoto": "Foto precedente",
+    "nextPhoto": "Foto successiva",
+    "goToPhoto": "Vai alla foto {index}",
+    "language": "Cambia lingua",
+    "home": "Torna alla home",
+    "favorites": "Vedi i miei preferiti ({count})",
+    "shareSearch": "Condividi la mia ricerca",
+    "opensNewTab": "(nuova scheda)"
+  },
+  "legal": {
+    "title": "Note legali e privacy",
+    "back": "Indietro",
+    "updated": "Ultimo aggiornamento: {date}",
+    "editorTitle": "Titolare del sito",
+    "editorBody": "Questo sito è pubblicato da {owner}. Per qualsiasi domanda: {email}.",
+    "hostingTitle": "Hosting",
+    "hostingBody": "Il sito è ospitato da Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA.",
+    "dataTitle": "Dati personali",
+    "dataBody": "Wandeal non richiede alcun account e non raccoglie dati personali. I preferiti e la cronologia delle ricerche restano nella memoria locale del browser e non ci vengono mai inviati. I criteri di ricerca vengono inviati al nostro server e poi a OpenAI per generare i suggerimenti; non sono conservati oltre una cache tecnica di un'ora. Usiamo Vercel Analytics, una misurazione senza cookie né identificatori personali.",
+    "affiliateTitle": "Link affiliati",
+    "affiliateBody": "I pulsanti «Vedi i voli» e «Hotel» rimandano ad Aviasales e Hotellook tramite il programma di affiliazione Travelpayouts. Se prenoti dopo aver cliccato, riceviamo una commissione pagata dal fornitore. Il prezzo che paghi resta identico. Questo non influenza l'ordine delle destinazioni, che dipende solo dai tuoi criteri.",
+    "pricesTitle": "Prezzi e disponibilità",
+    "pricesBody": "Gli importi mostrati sono stime generate da IA e da API tariffarie, puramente indicative. Non costituiscono un'offerta né un impegno contrattuale. Fa fede solo il prezzo del fornitore al momento della prenotazione.",
+    "liabilityTitle": "Responsabilità",
+    "liabilityBody": "Wandeal è un motore di ispirazione, non un'agenzia di viaggi. Non vendiamo voli, alloggi o pacchetti e non interveniamo nel rapporto tra te e il fornitore. Verifica sempre condizioni, formalità d'ingresso e assicurazioni prima di prenotare.",
+    "contactTitle": "Contatti",
+    "contactBody": "Hai una domanda o vuoi segnalare un errore? Scrivici a {email}."
   }
 }

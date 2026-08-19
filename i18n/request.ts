@@ -1,14 +1,15 @@
 import { getRequestConfig } from "next-intl/server";
 import { cookies, headers } from "next/headers";
 
-const SUPPORTED_LOCALES = ["fr", "en", "it", "pt", "es", "hi", "de", "nl"];
+import { SUPPORTED_LOCALES } from "../lib/site";
+
 const DEFAULT_LOCALE = "fr";
 
 async function getLocale(): Promise<string> {
   // 1. Check cookie
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get("locale")?.value;
-  if (cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale)) {
+  if (cookieLocale && (SUPPORTED_LOCALES as readonly string[]).includes(cookieLocale)) {
     return cookieLocale;
   }
 
@@ -18,7 +19,7 @@ async function getLocale(): Promise<string> {
   const preferred = acceptLang
     .split(",")
     .map((part) => part.split(";")[0].trim().split("-")[0])
-    .find((lang) => SUPPORTED_LOCALES.includes(lang));
+    .find((lang) => (SUPPORTED_LOCALES as readonly string[]).includes(lang));
 
   return preferred || DEFAULT_LOCALE;
 }

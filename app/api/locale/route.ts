@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-
-const SUPPORTED = ["fr", "en", "it", "pt", "es", "hi", "de", "nl"];
+import { SUPPORTED_LOCALES } from "@/lib/site";
 
 export async function POST(request: Request) {
-  const { locale } = await request.json();
+  const body = await request.json().catch(() => null);
+  const locale = (body as { locale?: unknown } | null)?.locale;
 
-  if (!SUPPORTED.includes(locale)) {
+  if (typeof locale !== "string" || !(SUPPORTED_LOCALES as readonly string[]).includes(locale)) {
     return NextResponse.json({ error: "Unsupported locale" }, { status: 400 });
   }
 
@@ -14,6 +14,7 @@ export async function POST(request: Request) {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
+    httpOnly: false, // read by the server only; kept readable for debugging
   });
 
   return response;

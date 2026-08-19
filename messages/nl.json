@@ -6,7 +6,7 @@
     "badge": "Powered by AI",
     "title1": "Ergens is er een perfecte",
     "title2": "vakantie voor jou.",
-    "madeIn": "Gemaakt in Belgie, tussen twee regenbuien."
+    "madeIn": "Gemaakt in België, tussen twee regenbuien."
   },
   "form": {
     "from": "Ik vertrek vanuit...",
@@ -86,7 +86,8 @@
     "fromHint": "Wij vinden de bestemming voor jou",
     "comfortLabel": "Comfortniveau",
     "optionalFilters": "Verfijn als je wilt",
-    "interestsMore": "Meer opties"
+    "interestsMore": "Meer opties",
+    "interestsLess": "Minder tonen"
   },
   "presets": {
     "title": "Zin in...",
@@ -140,7 +141,20 @@
     "reachable": "Dichtbij",
     "seeHotels": "Hotels",
     "copied": "Gekopieerd!",
-    "relaunch": "Vernieuwen"
+    "relaunch": "Vernieuwen",
+    "perMeal": "maaltijd",
+    "fritesLabel": "per frietje",
+    "shareFooter": "Gevonden op wandeal.com",
+    "nightsCount": "{count} nachten",
+    "groupTotal": "≈ € {total} voor {count} pers.",
+    "periodBridge": "Brugdag {name}",
+    "periodWeekend": "Weekend",
+    "periodHolidays": "{name}",
+    "emptyLocal": "Geen lokaal verblijf in deze selectie.",
+    "emptyResults": "Niets te tonen met deze filter.",
+    "pageTitle": "{count} bestemmingen vanuit {city} — Wandeal",
+    "affiliateNote": "Sommige links zijn affiliatielinks: boeken via Wandeal kost je niets extra en houdt de dienst gratis.",
+    "priceDisclaimer": "Prijzen zijn indicatieve schattingen, niet bindend. De eindprijs is die van de aanbieder."
   },
   "footer": {
     "tagline": "Vakantie op maat, gevonden door AI.",
@@ -152,6 +166,64 @@
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "rights": "Alle rechten voorbehouden.",
-    "madeIn": "Met zorg gemaakt in Belgie."
+    "madeIn": "Met zorg gemaakt in België.",
+    "affiliate": "Affiliatielinks",
+    "legalLink": "Juridisch & privacy"
+  },
+  "meta": {
+    "title": "Wandeal — Je volgende ontsnapping",
+    "description": "Vakanties op maat, gevonden door AI. Zeg ons vanwaar je vertrekt, wij doen de rest."
+  },
+  "errors": {
+    "rateLimited": "Te veel zoekopdrachten na elkaar. Probeer het over enkele minuten opnieuw.",
+    "noResults": "Geen bestemming gevonden. Probeer je filters te versoepelen.",
+    "serverError": "Onze motor sloeg af. Probeer het zo meteen opnieuw.",
+    "badRequest": "Deze zoekopdracht is ongeldig. Controleer je criteria.",
+    "network": "Verbinding verbroken. Controleer je netwerk en probeer opnieuw.",
+    "timeout": "Het zoeken duurde te lang. Probeer opnieuw.",
+    "retry": "Opnieuw proberen"
+  },
+  "season": {
+    "spring": "Paasvakantie",
+    "summer": "Zomervakantie",
+    "autumn": "Herfstvakantie",
+    "christmas": "Kerstvakantie",
+    "carnival": "Krokusvakantie",
+    "easter": "Paasvakantie",
+    "relax": "Krokusvakantie"
+  },
+  "a11y": {
+    "share": "Deel deze bestemming",
+    "expand": "Meer details tonen",
+    "collapse": "Details verbergen",
+    "addFavorite": "Aan favorieten toevoegen",
+    "removeFavorite": "Uit favorieten verwijderen",
+    "prevPhoto": "Vorige foto",
+    "nextPhoto": "Volgende foto",
+    "goToPhoto": "Ga naar foto {index}",
+    "language": "Taal wijzigen",
+    "home": "Terug naar start",
+    "favorites": "Mijn favorieten bekijken ({count})",
+    "shareSearch": "Mijn zoekopdracht delen",
+    "opensNewTab": "(nieuw tabblad)"
+  },
+  "legal": {
+    "title": "Juridische informatie & privacy",
+    "back": "Terug",
+    "updated": "Laatst bijgewerkt: {date}",
+    "editorTitle": "Uitgever",
+    "editorBody": "Deze site wordt uitgegeven door {owner}. Vragen: {email}.",
+    "hostingTitle": "Hosting",
+    "hostingBody": "De site wordt gehost door Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, VS.",
+    "dataTitle": "Persoonsgegevens",
+    "dataBody": "Wandeal vraagt geen account en verzamelt geen persoonsgegevens. Je favorieten en zoekgeschiedenis blijven in de lokale opslag van je browser en worden nooit naar ons verstuurd. Zoekcriteria gaan naar onze server en vervolgens naar OpenAI om suggesties te genereren; ze worden niet langer bewaard dan een technische cache van één uur. We gebruiken Vercel Analytics, een cookievrije meting zonder persoonlijke identificatie.",
+    "affiliateTitle": "Affiliatielinks",
+    "affiliateBody": "De knoppen \"Vluchten bekijken\" en \"Hotels\" verwijzen naar Aviasales en Hotellook via het Travelpayouts-affiliateprogramma. Als je boekt na een klik, ontvangen wij een commissie van de aanbieder. De prijs die jij betaalt blijft identiek. Dit beïnvloedt de rangschikking van bestemmingen niet.",
+    "pricesTitle": "Prijzen en beschikbaarheid",
+    "pricesBody": "De getoonde bedragen zijn schattingen van AI en prijs-API's, louter indicatief. Ze vormen geen aanbod of contractuele verbintenis. Alleen de prijs bij de aanbieder op het moment van boeken telt.",
+    "liabilityTitle": "Aansprakelijkheid",
+    "liabilityBody": "Wandeal is een inspiratiemotor, geen reisbureau. Wij verkopen geen vluchten, verblijven of pakketten en zijn geen partij in je relatie met de aanbieder. Controleer altijd voorwaarden, inreisformaliteiten en verzekeringen vóór je boekt.",
+    "contactTitle": "Contact",
+    "contactBody": "Een vraag of een fout gezien? Mail ons op {email}."
   }
 }

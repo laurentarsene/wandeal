@@ -41,7 +41,7 @@ export function FavoritesView({ favorites, isFavorite, onToggleFavorite }: Favor
       ) : (
         <div className="text-center py-16">
           <Heart size={32} className="mx-auto mb-3 text-[#D1D5DB]" />
-          <p className="text-sm text-[#9CA3AF]">{t("noFavorites")}</p>
+          <p className="text-sm text-[#6B7280]">{t("noFavorites")}</p>
         </div>
       )}
     </div>

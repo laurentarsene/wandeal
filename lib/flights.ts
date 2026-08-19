@@ -1,64 +1,166 @@
 // Travelpayouts / Aviasales API for real flight prices
 
+import { slugify } from "./utils";
+
 const BASE = "https://api.travelpayouts.com/aviasales";
 
-interface FlightResult {
+export interface FlightResult {
   price: number;
   airline: string;
   departure_at: string;
   return_at: string;
+  /** Relative Aviasales path ("/search/BRU2909LIS1?t=…") for the exact priced itinerary. */
   link: string;
 }
 
-// Search cheapest flights from origin to destination
+interface PriceEntry {
+  price: number;
+  airline: string;
+  departure_at: string;
+  return_at?: string;
+  link?: string;
+}
+
+// Search the cheapest round-trip from origin to destination
 export async function searchFlights(
-  origin: string,  // IATA code e.g. "BRU"
-  destination: string,  // IATA code e.g. "LIS"
-  departDate?: string,  // YYYY-MM or YYYY-MM-DD
+  origin: string, // IATA code e.g. "BRU"
+  destination: string, // IATA code e.g. "LIS"
+  departDate?: string, // YYYY-MM or YYYY-MM-DD
   returnDate?: string,
   token?: string
 ): Promise<FlightResult | null> {
   if (!token) return null;
 
   const params = new URLSearchParams({
-    currency: "EUR",
+    currency: "eur",
     origin,
     destination,
+    sorting: "price",
+    unique: "false",
+    direct: "false",
+    limit: "30",
+    page: "1",
+    one_way: returnDate ? "false" : "true",
     token,
   });
 
   if (departDate) params.set("depart_date", departDate);
   if (returnDate) params.set("return_date", returnDate);
 
-  // Use the prices/cheap endpoint for best prices
-  const res = await fetch(`${BASE}/v3/prices_for_dates?${params.toString()}`);
+  const res = await fetch(`${BASE}/v3/prices_for_dates?${params.toString()}`, {
+    signal: AbortSignal.timeout(6000),
+  });
   if (!res.ok) return null;
 
   const data = await res.json();
-  if (!data.success || !data.data?.length) return null;
+  const entries: PriceEntry[] = Array.isArray(data?.data) ? data.data : [];
+  if (!entries.length) return null;
 
-  const cheapest = data.data[0];
+  // `sorting=price` is best-effort on the API side — sort defensively so the
+  // price we display is genuinely the cheapest one we found.
+  const cheapest = entries
+    .filter((e) => typeof e.price === "number" && e.price > 0)
+    .sort((a, b) => a.price - b.price)[0];
+  if (!cheapest) return null;
 
   return {
-    price: cheapest.price,
+    price: Math.round(cheapest.price),
     airline: cheapest.airline,
     departure_at: cheapest.departure_at,
-    return_at: cheapest.return_at,
-    link: `https://www.aviasales.com/search/${origin}${cheapest.departure_at?.slice(5, 7)}${cheapest.departure_at?.slice(8, 10)}${destination}1`,
+    return_at: cheapest.return_at || "",
+    link: cheapest.link || "",
   };
 }
 
-// Resolve city name to IATA code — free API, no token needed
+/**
+ * Levenshtein distance, capped — used only to tell "Bruxelles/Brussels" apart
+ * from "Dolomites/Dortmund".
+ */
+function editDistance(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  if (!m) return n;
+  if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, i) => i);
+  for (let i = 1; i <= m; i++) {
+    const curr = [i];
+    for (let j = 1; j <= n; j++) {
+      curr[j] = Math.min(
+        prev[j] + 1,
+        curr[j - 1] + 1,
+        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+    }
+    prev = curr;
+  }
+  return prev[n];
+}
+
+/**
+ * The autocomplete is fuzzy: asking for a region ("Dolomites", "Forêt Noire")
+ * happily returns an unrelated city, which would produce a wrong — and therefore
+ * worthless — flight link. Accept a result only when the returned name is
+ * plausibly the place we asked for.
+ */
+function namesMatch(query: string, candidate: string): boolean {
+  const a = slugify(query);
+  const b = slugify(candidate);
+  if (!a || !b) return false;
+  if (a === b) return true;
+  if (a.startsWith(b) || b.startsWith(a) || a.includes(b) || b.includes(a)) return true;
+  // "Bruxelles" vs "Brussels", "Barcelone" vs "Barcelona", "Lisbonne" vs "Lisbon"
+  const tolerance = Math.max(2, Math.floor(Math.min(a.length, b.length) / 3));
+  return editDistance(a, b) <= tolerance;
+}
+
+/**
+ * Resolve a city name to an IATA code. Free API, no token needed.
+ * The locale matters: the place names we search with come from the user's own
+ * language, so querying in another one produces near-misses we would reject.
+ */
+async function lookup(term: string, locale: string): Promise<unknown[] | null> {
+  try {
+    const res = await fetch(
+      `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(
+        term
+      )}&locale=${encodeURIComponent(locale)}&types[]=city`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    return Array.isArray(data) ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function cityToIATA(
   cityName: string,
+  locale = "en"
 ): Promise<string | null> {
-  const res = await fetch(
-    `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(cityName)}&locale=fr&types[]=city`
-  );
-  if (!res.ok) return null;
+  const term = cityName.trim();
+  if (term.length < 2) return null;
 
-  const data = await res.json();
-  if (!data.length) return null;
+  // Retry in English when the localised catalogue has no entry — the two
+  // catalogues do not cover the same places, and a single miss here removes the
+  // flight link from every card at once.
+  let data = await lookup(term, locale);
+  if ((!data || !data.length) && locale !== "en") data = await lookup(term, "en");
+  if (!data || !data.length) return null;
 
-  return data[0].code || null;
+  // Prefer an entry whose name actually resembles the query, not just the first.
+  // The weight filter drops general-aviation strips that share a town's name —
+  // "Cascais" resolves to CAT, an aerodrome with no scheduled service, and a
+  // flight search for it comes back empty. Returning null lets the caller fall
+  // back to the airport that actually serves the destination.
+  const entries = data as Array<{ code?: string; name?: string; weight?: number }>;
+  const match =
+    entries.find(
+      (e) =>
+        e?.code &&
+        Number(e.weight ?? 0) >= 25 &&
+        namesMatch(term, String(e.name || ""))
+    ) || null;
+
+  return match?.code ?? null;
 }
